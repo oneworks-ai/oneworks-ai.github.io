@@ -1,0 +1,121 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro'
+import SiteHeader from '../../components/SiteHeader.astro'
+import {
+  type BlogPost,
+  blogPosts,
+  getBlogPostBySlug
+} from '../../data/blog-posts'
+import PageLayout from '../../layouts/PageLayout.astro'
+
+export function getStaticPaths() {
+  return blogPosts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post }
+  }))
+}
+
+type Props = {
+  post: BlogPost
+}
+
+const post = Astro.props.post ?? getBlogPostBySlug(Astro.params.slug ?? '')
+if (post == null) {
+  throw new Error(`Unknown blog post: ${Astro.params.slug ?? ''}`)
+}
+
+const postIndex = blogPosts.findIndex((item) => item.slug === post.slug)
+const previousPost = postIndex > 0 ? blogPosts[postIndex - 1] : undefined
+const nextPost = postIndex >= 0 ? blogPosts[postIndex + 1] : undefined
+---
+
+<PageLayout title={`${post.title} - One Works Blog`}>
+  <main class="blog-shell blog-shell--detail">
+    <SiteHeader
+      brandClassName="app-release-brand"
+      className="site-header app-release-header"
+    />
+
+    <article class="blog-detail" aria-labelledby="blog-detail-title">
+      <nav class="blog-detail-breadcrumb" aria-label="博客面包屑">
+        <a class="blog-detail-back" href="/blog/" aria-label="返回博客列表">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m15 6-6 6 6 6" />
+          </svg>
+        </a>
+        <a href="/blog/">博客</a>
+        <span aria-hidden="true">/</span>
+        <span>{post.title}</span>
+      </nav>
+
+      <figure class="blog-detail-hero">
+        <img
+          class="blog-detail-cover"
+          src={post.cover.src}
+          alt={post.cover.alt}
+        />
+        <figcaption class="blog-detail-header">
+          <div class="blog-detail-header-content">
+            <div class="blog-detail-meta">
+              <time datetime={post.datetime}>{post.date}</time>
+            </div>
+            <h1 id="blog-detail-title">{post.title}</h1>
+            <p>{post.summary}</p>
+          </div>
+        </figcaption>
+      </figure>
+
+      <div class="blog-detail-body">
+        {
+          post.sections.map((section) => (
+            <section>
+              <h2>{section.heading}</h2>
+              {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
+              {
+                section.items ? (
+                  <ul>
+                    {section.items.map((item) => <li>{item}</li>)}
+                  </ul>
+                ) : null
+              }
+            </section>
+          ))
+        }
+      </div>
+
+      {
+        previousPost || nextPost ? (
+          <nav class="blog-detail-pagination" aria-label="博客上一篇和下一篇">
+            {
+              previousPost ? (
+                <a
+                  class="blog-detail-pagination-link"
+                  href={`/blog/${previousPost.slug}/`}
+                >
+                  <span class="blog-detail-pagination-label">上一篇</span>
+                  <span class="blog-detail-pagination-title">{
+                    previousPost.title
+                  }</span>
+                </a>
+              ) : null
+            }
+            {
+              nextPost ? (
+                <a
+                  class="blog-detail-pagination-link blog-detail-pagination-link--next"
+                  href={`/blog/${nextPost.slug}/`}
+                >
+                  <span class="blog-detail-pagination-label">下一篇</span>
+                  <span class="blog-detail-pagination-title">{
+                    nextPost.title
+                  }</span>
+                </a>
+              ) : null
+            }
+          </nav>
+        ) : null
+      }
+    </article>
+  </main>
+  <SiteFooter />
+</PageLayout>

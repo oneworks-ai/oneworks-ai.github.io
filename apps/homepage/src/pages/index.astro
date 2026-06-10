@@ -1,0 +1,1950 @@
+---
+import { createMobiusSvg } from '@oneworks/icon/svg'
+
+import claudeCodeIcon from '../assets/adapters/claude-code.svg'
+import codexIcon from '../assets/adapters/codex.svg'
+import copilotIcon from '../assets/adapters/copilot.svg'
+import geminiIcon from '../assets/adapters/gemini.svg'
+import kimiIcon from '../assets/adapters/kimi.svg'
+import opencodeIcon from '../assets/adapters/opencode.svg'
+import SiteFooter from '../components/SiteFooter.astro'
+import SiteHeader from '../components/SiteHeader.astro'
+import PageLayout from '../layouts/PageLayout.astro'
+
+const adapterBadges = [
+  {
+    icon: claudeCodeIcon,
+    edge: 'left',
+    highlight: 'claude-code',
+    label: 'Claude Code',
+    progress: 0.24,
+    style:
+      '--r: -14deg; --s: 0.96; --float-x: 7px; --float-y: -6px; --tilt: 2deg; --delay: -1.2s; --duration: 7.2s;'
+  },
+  {
+    icon: codexIcon,
+    edge: 'top',
+    highlight: 'codex',
+    label: 'Codex',
+    progress: 0.2,
+    style:
+      '--r: 9deg; --s: 1.04; --float-x: -5px; --float-y: 7px; --tilt: -2deg; --delay: -3.6s; --duration: 8.1s;'
+  },
+  {
+    icon: kimiIcon,
+    edge: 'top',
+    highlight: 'kimi',
+    label: 'Kimi',
+    progress: 0.48,
+    style:
+      '--r: -5deg; --s: 0.98; --float-x: 6px; --float-y: 5px; --tilt: 2deg; --delay: -2.4s; --duration: 7.6s;'
+  },
+  {
+    icon: geminiIcon,
+    edge: 'bottom',
+    highlight: 'ai-partner',
+    label: 'Gemini',
+    progress: 0.88,
+    style:
+      '--r: 13deg; --s: 0.86; --float-x: -7px; --float-y: -5px; --tilt: -3deg; --delay: -4.1s; --duration: 8.8s;'
+  },
+  {
+    icon: copilotIcon,
+    edge: 'left',
+    highlight: 'ai-partner',
+    label: 'Copilot',
+    progress: 0.68,
+    style:
+      '--r: 8deg; --s: 0.9; --float-x: 6px; --float-y: 8px; --tilt: -2deg; --delay: -0.7s; --duration: 7.9s;'
+  },
+  {
+    icon: opencodeIcon,
+    edge: 'top',
+    highlight: 'ai-partner',
+    label: 'OpenCode',
+    progress: 0.78,
+    style:
+      '--r: -11deg; --s: 0.88; --float-x: -6px; --float-y: 5px; --tilt: 2deg; --delay: -5.2s; --duration: 9.2s;'
+  }
+]
+const mobiusMarkLight = createMobiusSvg({
+  mode: 'light',
+  noBackground: true,
+  shadow: false,
+  size: 900,
+  theme: 'metal',
+  title: 'One Works Mobius mark'
+}).replace(/^<\?xml[^>]*>\s*/, '')
+const mobiusMarkDark = createMobiusSvg({
+  mode: 'dark',
+  noBackground: true,
+  shadow: false,
+  size: 900,
+  theme: 'metal',
+  title: 'One Works Mobius mark'
+}).replace(/^<\?xml[^>]*>\s*/, '')
+const downloadMarkLight = createMobiusSvg({
+  mode: 'light',
+  noBackground: true,
+  shadow: false,
+  size: 160,
+  theme: 'metal',
+  title: 'One Works mark'
+}).replace(/^<\?xml[^>]*>\s*/, '')
+const downloadMarkDark = createMobiusSvg({
+  mode: 'dark',
+  noBackground: true,
+  shadow: false,
+  size: 160,
+  theme: 'metal',
+  title: 'One Works mark'
+}).replace(/^<\?xml[^>]*>\s*/, '')
+const githubReleasesUrl = 'https://github.com/oneworks-ai/app/releases'
+const githubReleasesApiUrl =
+  'https://api.github.com/repos/oneworks-ai/app/releases?per_page=30'
+const homepageDownloadUrl = githubReleasesUrl
+const homepagePreviewLocale = 'zh'
+const homepagePreviewSessionId = 'homepage-preview'
+const previewRoomId = 'homepage-agent-room'
+const buildHomepagePreviewUrl = (
+  baseUrl: string,
+  mode: 'new' | 'room' | 'sidebar'
+) => {
+  const url = new URL(baseUrl)
+  const basePath = url.pathname.endsWith('/')
+    ? url.pathname
+    : `${url.pathname}/`
+  if (mode === 'room') {
+    url.pathname = `${basePath}rooms/${previewRoomId}`.replace(/\/{2,}/g, '/')
+  } else if (mode === 'sidebar') {
+    url.pathname = `${basePath}session/${homepagePreviewSessionId}`.replace(
+      /\/{2,}/g,
+      '/'
+    )
+  } else {
+    url.pathname = basePath.replace(/\/{2,}/g, '/')
+  }
+  url.searchParams.set('owPreview', 'homepage')
+  url.searchParams.set('locale', homepagePreviewLocale)
+  url.searchParams.set('downloadUrl', homepageDownloadUrl)
+  url.searchParams.set('__oneworks_desktop', 'macos')
+  url.searchParams.set('senderHeader', 'collapsed')
+  url.searchParams.set('sidebar', mode === 'sidebar' ? 'expanded' : 'collapsed')
+  if (mode === 'new') {
+    url.searchParams.set('adapterSelect', 'open')
+  }
+  return url.toString()
+}
+const localPwaPreviewUrl = buildHomepagePreviewUrl(
+  import.meta.env.PUBLIC_PWA_PREVIEW_URL ?? 'http://localhost:4173/',
+  'new'
+)
+const localPwaRoomPreviewUrl = buildHomepagePreviewUrl(
+  import.meta.env.PUBLIC_PWA_PREVIEW_URL ?? 'http://localhost:4173/',
+  'room'
+)
+const localPwaSidebarPreviewUrl = buildHomepagePreviewUrl(
+  import.meta.env.PUBLIC_PWA_PREVIEW_URL ?? 'http://localhost:4173/',
+  'sidebar'
+)
+const pwaPreviewUrl = import.meta.env.DEV
+  ? localPwaPreviewUrl
+  : buildHomepagePreviewUrl('https://oneworks-ai.github.io/pwa/', 'new')
+const pwaRoomPreviewUrl = import.meta.env.DEV
+  ? localPwaRoomPreviewUrl
+  : buildHomepagePreviewUrl('https://oneworks-ai.github.io/pwa/', 'room')
+const pwaSidebarPreviewUrl = import.meta.env.DEV
+  ? localPwaSidebarPreviewUrl
+  : buildHomepagePreviewUrl('https://oneworks-ai.github.io/pwa/', 'sidebar')
+---
+
+<PageLayout title="One Works">
+  <main
+    class="home-shell"
+    aria-label="One Works homepage"
+    data-github-releases-api-url={githubReleasesApiUrl}
+    data-github-releases-url={githubReleasesUrl}
+    data-homepage-download-url={homepageDownloadUrl}
+  >
+    <div class="metal-background" data-metal-background aria-hidden="true">
+    </div>
+
+    <SiteHeader downloadUrl={homepageDownloadUrl} i18n showCornerDownload />
+
+    <section class="hero" aria-label="One Works">
+      <div class="hero-actions">
+        <div id="download" class="download-panel">
+          <div class="download-icon" aria-hidden="true">
+            <span
+              class="download-icon-mark download-icon-mark--light"
+              set:html={downloadMarkLight}
+            ></span>
+            <span
+              class="download-icon-mark download-icon-mark--dark"
+              set:html={downloadMarkDark}
+            ></span>
+          </div>
+          <p class="download-wordmark" data-text="One Works">One Works</p>
+          <div class="download-actions">
+            <a
+              class="download-button"
+              href={homepageDownloadUrl}
+              data-homepage-download-link
+              data-i18n="hero.download"
+            >
+              下载桌面端
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-stage">
+        <div class="adapter-badges" aria-label="Supported adapters">
+          {
+            adapterBadges.map((adapter) => (
+              <span
+                class="adapter-badge"
+                aria-label={adapter.label}
+                data-edge={adapter.edge}
+                data-highlight-target={adapter.highlight}
+                data-progress={adapter.progress}
+                role="button"
+                tabindex="0"
+                title={adapter.label}
+                style={adapter.style}
+              >
+                <span class="adapter-badge-card">
+                  <img
+                    src={adapter.icon.src}
+                    alt={adapter.label}
+                    loading="eager"
+                  />
+                </span>
+              </span>
+            ))
+          }
+        </div>
+
+        <div class="product-window-stack">
+          <div class="product-window">
+            <div class="window-preview">
+              <iframe
+                data-pwa-preview-frame
+                data-new-src={pwaPreviewUrl}
+                data-room-src={pwaRoomPreviewUrl}
+                data-sidebar-src={pwaSidebarPreviewUrl}
+                src={pwaPreviewUrl}
+                title="One Works PWA preview"
+                loading="eager"
+                referrerpolicy="no-referrer"
+              ></iframe>
+            </div>
+          </div>
+          <p class="window-tagline" data-window-tagline>
+            <span class="tagline-text">
+              <span>在一个应用里去调度 </span>
+              <span class="tagline-token" data-highlight-token="claude-code"
+              >Claude Code</span>
+              <span>、</span>
+              <span class="tagline-token" data-highlight-token="codex"
+              >Codex</span>
+              <span>、</span>
+              <span class="tagline-token" data-highlight-token="kimi"
+              >Kimi</span>
+              <span> 等 </span>
+              <span class="tagline-token" data-highlight-token="ai-partner"
+              >AI 编程伙伴</span>
+              <span>。</span>
+            </span>
+          </p>
+          <div class="room-mode-copy">
+            <h2 data-i18n="room.title">多智能体协同编排</h2>
+            <p data-i18n="room.body">
+              将规划、实现、验证和交付拆分给不同 AI
+              编程伙伴，并在同一个上下文里持续追踪进展与确认节点。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mobius-ribbon" data-mobius-loader>
+        <div
+          class="mobius-ribbon-static mobius-ribbon-static-light"
+          data-mobius-static
+          set:html={mobiusMarkLight}
+        >
+        </div>
+        <div
+          class="mobius-ribbon-static mobius-ribbon-static-dark"
+          data-mobius-static
+          set:html={mobiusMarkDark}
+        >
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="room-scroll-section"
+      data-room-section
+      aria-label="Agent Room showcase"
+    >
+    </section>
+
+    <section
+      class="sidebar-showcase-section"
+      data-sidebar-section
+      aria-label="Sidebar workspace showcase"
+    >
+      <div class="sidebar-showcase-copy">
+        <p class="section-eyebrow" data-i18n="sidebar.eyebrow">可扩展侧栏</p>
+        <h2 data-i18n="sidebar.title">为 AI 工作流准备的可扩展空间</h2>
+        <p class="sidebar-showcase-lede" data-i18n="sidebar.body">
+          左侧不只是会话列表。你可以接入自己的插件，也可以直接使用内置的资产管理、任务安排等能力。
+        </p>
+        <div class="sidebar-feature-cards" aria-label="Sidebar capabilities">
+          <article class="sidebar-feature-card">
+            <span class="sidebar-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M8 8h8v8H8z" />
+                <path d="M12 3v5m0 8v5M3 12h5m8 0h5" />
+                <path d="M6 6.5 8 8m10-1.5L16 8M6 17.5 8 16m10 1.5L16 16" />
+              </svg>
+            </span>
+            <span class="sidebar-feature-index">01</span>
+            <h3 data-i18n="sidebar.card.sessions.title">自定义插件</h3>
+            <p data-i18n="sidebar.card.sessions.body">
+              把团队自己的工具、入口和工作流组件接到侧栏里。
+            </p>
+          </article>
+          <article class="sidebar-feature-card">
+            <span class="sidebar-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 7.5h6l1.7 2H20v8.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
+                <path d="M4 7.5V6a2 2 0 0 1 2-2h3.3L11 6h7a2 2 0 0 1 2 2v1.5" />
+                <path d="M8 14h8M8 17h5" />
+              </svg>
+            </span>
+            <span class="sidebar-feature-index">02</span>
+            <h3 data-i18n="sidebar.card.assets.title">资产管理</h3>
+            <p data-i18n="sidebar.card.assets.body">
+              项目文件、规则、素材和知识库集中整理，随时带入会话。
+            </p>
+          </article>
+          <article class="sidebar-feature-card">
+            <span class="sidebar-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M6 5h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" />
+                <path d="M8 3v4m8-4v4M4 10h16" />
+                <path d="m8 15 2 2 5-5" />
+              </svg>
+            </span>
+            <span class="sidebar-feature-index">03</span>
+            <h3 data-i18n="sidebar.card.tasks.title">任务安排</h3>
+            <p data-i18n="sidebar.card.tasks.body">
+              定时任务、项目计划和待确认节点都能放在同一个入口。
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <SiteFooter downloadUrl={homepageDownloadUrl} i18n />
+  </main>
+
+  <script>
+  import { mountOneWorksIconLoader } from '@oneworks/icon/loader'
+
+  const initializeHomepage = () => {
+    const backgroundHost = document.querySelector('[data-metal-background]')
+    const host = document.querySelector('[data-mobius-loader]')
+    const homeShell = document.querySelector<HTMLElement>('.home-shell')
+    if (
+      !(homeShell instanceof HTMLElement) ||
+      homeShell.dataset.homepageInitialized === 'true'
+    ) {
+      return
+    }
+    homeShell.dataset.homepageInitialized = 'true'
+    const roomSection = document.querySelector<HTMLElement>(
+      '[data-room-section]'
+    )
+    const sidebarSection = document.querySelector<HTMLElement>(
+      '[data-sidebar-section]'
+    )
+    const productStage = document.querySelector<HTMLElement>('.product-stage')
+    const previewWindow = document.querySelector('.product-window')
+    const pwaPreviewFrame = document.querySelector<HTMLIFrameElement>(
+      '[data-pwa-preview-frame]'
+    )
+    const languageMenu = document.querySelector<HTMLDetailsElement>(
+      '[data-language-menu]'
+    )
+    const languageTrigger = document.querySelector<HTMLElement>(
+      '[data-language-trigger]'
+    )
+    const languageOptions = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('[data-language-option]')
+    )
+    const adapterBadges = Array.from(
+      document.querySelectorAll<HTMLElement>('.adapter-badge')
+    )
+    const downloadLinks = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>(
+        '[data-homepage-download-link]'
+      )
+    )
+    const windowTagline = document.querySelector<HTMLElement>(
+      '[data-window-tagline]'
+    )
+    const handles: Array<ReturnType<typeof mountOneWorksIconLoader>> = []
+    const cleanupDragListeners: Array<() => void> = []
+    let previewResizeObserver: ResizeObserver | undefined
+    const systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const getSystemMode = (): 'light' | 'dark' =>
+      systemDarkQuery.matches ? 'dark' : 'light'
+    const githubReleasesUrl = homeShell?.dataset.githubReleasesUrl?.trim() ||
+      'https://github.com/oneworks-ai/app/releases'
+    const githubReleasesApiUrl =
+      homeShell?.dataset.githubReleasesApiUrl?.trim() ||
+      'https://api.github.com/repos/oneworks-ai/app/releases?per_page=30'
+    let currentDownloadUrl = homeShell?.dataset.homepageDownloadUrl?.trim() ||
+      githubReleasesUrl
+    const iconMode = getSystemMode()
+    const adapterDragLimit = 72
+    let adapterPositionFrame: number | undefined
+    let scrollNarrativeFrame: number | undefined
+    let scrollSnapTimer: number | undefined
+    let scrollSnapFrame: number | undefined
+    let isAutoSnapping = false
+    let lastScrollY = window.scrollY
+    let scrollDirection: 'down' | 'up' | undefined
+    type PreviewMode = 'new' | 'room' | 'sidebar'
+    type SnapPage = 'new' | 'room' | 'sidebar'
+    let previewMode: PreviewMode = 'new'
+    type PreviewWindowRect = {
+      height: number
+      left: number
+      top: number
+      width: number
+    }
+    type PreviewWindowAnchorRect = PreviewWindowRect & { documentTop: number }
+    let previewWindowAnchorRect: PreviewWindowAnchorRect | undefined
+    type HomepageLocale = 'en' | 'zh'
+    type DownloadArchitecture = 'arm64' | 'unknown' | 'x64'
+    type DownloadPlatform = 'linux' | 'mac' | 'unknown' | 'windows'
+    type GithubReleaseAsset = {
+      browser_download_url?: unknown
+      name?: unknown
+    }
+    type GithubRelease = {
+      assets?: unknown
+      draft?: unknown
+      html_url?: unknown
+      name?: unknown
+      prerelease?: unknown
+      tag_name?: unknown
+    }
+    type UserAgentDataLike = {
+      getHighEntropyValues?: (
+        hints: Array<'architecture' | 'platform'>
+      ) => Promise<{ architecture?: string; platform?: string }>
+      platform?: string
+    }
+    const homepageCopy: Record<HomepageLocale, Record<string, string>> = {
+      en: {
+        'hero.download': 'Download desktop app',
+        'footer.copyright': '© 2026 One Works. All rights reserved.',
+        'footer.links.docs': 'Docs',
+        'footer.links.download': 'Download',
+        'footer.links.support': 'Support',
+        'footer.note.local':
+          'Real local project access, terminal execution, IM connections, and multi-device handoff require installing the One Works desktop app and run only within the permissions you grant.',
+        'footer.note.model':
+          'One Works connects AI coding partners powered by large language models. Model responses, summaries, and tool-call results may be inaccurate, incomplete, or outdated. Please verify important information before acting on it.',
+        'footer.note.title': 'Please note',
+        'footer.tagline': 'One app to orchestrate your AI coding partners.',
+        'nav.app': 'App',
+        'nav.blog': 'Blog',
+        'nav.cli': 'CLI',
+        'nav.docs': 'Docs',
+        'nav.product': 'Product',
+        'nav.pwa': 'PWA',
+        'room.body':
+          'Split planning, implementation, verification, and delivery across different AI coding partners while keeping progress and confirmations in one shared context.',
+        'room.title': 'Multi-agent orchestration',
+        'sidebar.body':
+          'The left side is more than a chat list. Bring in your own plugins, or use built-in asset management and task scheduling right away.',
+        'sidebar.card.assets.body':
+          'Keep project files, rules, visual assets, and knowledge organized, ready to bring into a conversation.',
+        'sidebar.card.assets.title': 'Asset management',
+        'sidebar.card.sessions.body':
+          'Connect your team tools, entry points, and workflow components into the sidebar.',
+        'sidebar.card.sessions.title': 'Custom plugins',
+        'sidebar.card.tasks.body':
+          'Keep scheduled work, project plans, and pending confirmations in one place.',
+        'sidebar.card.tasks.title': 'Task scheduling',
+        'sidebar.eyebrow': 'Extensible sidebar',
+        'sidebar.title': 'An extensible space for AI workflows',
+        languageLabel: 'Choose language'
+      },
+      zh: {
+        'hero.download': '下载桌面端',
+        'footer.copyright': '© 2026 One Works. 保留所有权利。',
+        'footer.links.docs': '文档',
+        'footer.links.download': '下载',
+        'footer.links.support': '支持',
+        'footer.note.local':
+          '真实的本地项目访问、终端执行、IM 连接和多设备接管需要安装 One Works 桌面端，并按你的授权范围运行。',
+        'footer.note.model':
+          'One Works 会连接由大语言模型驱动的 AI 编程伙伴。模型回复、总结和工具调用结果可能不准确、不完整或过时，请在执行重要操作前自行确认。',
+        'footer.note.title': '请注意',
+        'footer.tagline': '一个应用，调度你的 AI 编程伙伴。',
+        'nav.app': 'App',
+        'nav.blog': '博客',
+        'nav.cli': 'CLI',
+        'nav.docs': '文档',
+        'nav.product': '产品',
+        'nav.pwa': 'PWA',
+        'room.body':
+          '将规划、实现、验证和交付拆分给不同 AI 编程伙伴，并在同一个上下文里持续追踪进展与确认节点。',
+        'room.title': '多智能体协同编排',
+        'sidebar.body':
+          '左侧不只是会话列表。你可以接入自己的插件，也可以直接使用内置的资产管理、任务安排等能力。',
+        'sidebar.card.assets.body':
+          '项目文件、规则、素材和知识库集中整理，随时带入会话。',
+        'sidebar.card.assets.title': '资产管理',
+        'sidebar.card.sessions.body':
+          '把团队自己的工具、入口和工作流组件接到侧栏里。',
+        'sidebar.card.sessions.title': '自定义插件',
+        'sidebar.card.tasks.body':
+          '定时任务、项目计划和待确认节点都能放在同一个入口。',
+        'sidebar.card.tasks.title': '任务安排',
+        'sidebar.eyebrow': '可扩展侧栏',
+        'sidebar.title': '为 AI 工作流准备的可扩展空间',
+        languageLabel: '选择语言'
+      }
+    }
+    const taglineMarkup: Record<HomepageLocale, string> = {
+      en: [
+        '<span class="tagline-text">',
+        '<span>Orchestrate </span>',
+        '<span class="tagline-token" data-highlight-token="claude-code">Claude Code</span>',
+        '<span>, </span>',
+        '<span class="tagline-token" data-highlight-token="codex">Codex</span>',
+        '<span>, </span>',
+        '<span class="tagline-token" data-highlight-token="kimi">Kimi</span>',
+        '<span> and more </span>',
+        '<span class="tagline-token" data-highlight-token="ai-partner">AI coding partners</span>',
+        '<span> from one app.</span>',
+        '</span>'
+      ].join(''),
+      zh: [
+        '<span class="tagline-text">',
+        '<span>在一个应用里去调度 </span>',
+        '<span class="tagline-token" data-highlight-token="claude-code">Claude Code</span>',
+        '<span>、</span>',
+        '<span class="tagline-token" data-highlight-token="codex">Codex</span>',
+        '<span>、</span>',
+        '<span class="tagline-token" data-highlight-token="kimi">Kimi</span>',
+        '<span> 等 </span>',
+        '<span class="tagline-token" data-highlight-token="ai-partner">AI 编程伙伴</span>',
+        '<span>。</span>',
+        '</span>'
+      ].join('')
+    }
+    const normalizeHomepageLocale = (
+      locale: string | null | undefined
+    ): HomepageLocale => {
+      return locale?.toLowerCase().startsWith('en') ? 'en' : 'zh'
+    }
+    const getStoredHomepageLocale = () => {
+      try {
+        return window.localStorage.getItem('oneworks-homepage-locale')
+      } catch (error) {
+        void error
+        return null
+      }
+    }
+    const setTaglineHighlight = (target: string | undefined) => {
+      if (!(windowTagline instanceof HTMLElement)) {
+        return
+      }
+
+      windowTagline.querySelectorAll<HTMLElement>('[data-highlight-token]')
+        .forEach((token) => {
+          token.classList.toggle(
+            'is-highlighted',
+            token.dataset.highlightToken === target
+          )
+        })
+    }
+    const renderWindowTagline = (locale: HomepageLocale) => {
+      if (!(windowTagline instanceof HTMLElement)) {
+        return
+      }
+
+      const activeTarget = windowTagline.querySelector<HTMLElement>(
+        '.tagline-token.is-highlighted'
+      )?.dataset.highlightToken
+      windowTagline.innerHTML = taglineMarkup[locale]
+      setTaglineHighlight(activeTarget)
+    }
+    const getHomepagePreviewLocale = () => {
+      return normalizeHomepageLocale(
+        document.documentElement.lang || navigator.language || 'zh'
+      )
+    }
+    const getNavigatorUserAgentData = () => {
+      return (navigator as Navigator & { userAgentData?: UserAgentDataLike })
+        .userAgentData
+    }
+    const normalizeReleaseString = (value: unknown) => {
+      return typeof value === 'string' ? value.trim() : ''
+    }
+    const resolveDownloadTarget = async (): Promise<{
+      architecture: DownloadArchitecture
+      platform: DownloadPlatform
+    }> => {
+      const uaData = getNavigatorUserAgentData()
+      let highEntropyValues:
+        | { architecture?: string; platform?: string }
+        | undefined
+      try {
+        highEntropyValues = await uaData?.getHighEntropyValues?.([
+          'architecture',
+          'platform'
+        ])
+      } catch (error) {
+        void error
+      }
+
+      const platformText = [
+        navigator.platform,
+        navigator.userAgent,
+        uaData?.platform,
+        highEntropyValues?.platform
+      ].filter(Boolean).join(' ').toLowerCase()
+      const architectureText = [
+        highEntropyValues?.architecture,
+        navigator.platform,
+        navigator.userAgent
+      ].filter(Boolean).join(' ').toLowerCase()
+      const platform: DownloadPlatform =
+        platformText.includes('mac') || platformText.includes('darwin')
+          ? 'mac'
+          : platformText.includes('win')
+          ? 'windows'
+          : platformText.includes('linux')
+          ? 'linux'
+          : 'unknown'
+      const architecture: DownloadArchitecture =
+        architectureText.includes('arm') ||
+          architectureText.includes('aarch64')
+          ? 'arm64'
+          : architectureText.includes('x86') ||
+              architectureText.includes('x64') ||
+              architectureText.includes('amd64') ||
+              architectureText.includes('intel')
+          ? 'x64'
+          : 'unknown'
+
+      return { architecture, platform }
+    }
+    const fetchDesktopReleases = async () => {
+      try {
+        const response = await fetch(githubReleasesApiUrl, {
+          headers: { Accept: 'application/vnd.github+json' }
+        })
+        if (!response.ok) {
+          return undefined
+        }
+
+        const releaseData = await response.json()
+        return Array.isArray(releaseData)
+          ? releaseData as GithubRelease[]
+          : undefined
+      } catch (error) {
+        void error
+        return undefined
+      }
+    }
+    const getReleaseAssets = (release: GithubRelease) => {
+      return Array.isArray(release.assets)
+        ? release.assets as GithubReleaseAsset[]
+        : []
+    }
+    const isDesktopRelease = (release: GithubRelease) => {
+      const tagName = normalizeReleaseString(release.tag_name)
+      if (
+        tagName.startsWith('pkg/oneworks-desktop/v') ||
+        tagName.startsWith('desktop-v')
+      ) {
+        return true
+      }
+
+      return getReleaseAssets(release).some((asset) => {
+        return normalizeReleaseString(asset.name).startsWith('oneworks-')
+      })
+    }
+    const scoreDownloadAsset = (
+      asset: GithubReleaseAsset,
+      target: {
+        architecture: DownloadArchitecture
+        platform: DownloadPlatform
+      }
+    ) => {
+      const assetName = normalizeReleaseString(asset.name).toLowerCase()
+      const downloadUrl = normalizeReleaseString(asset.browser_download_url)
+      if (assetName === '' || downloadUrl === '') {
+        return -1
+      }
+      if (
+        assetName.endsWith('.blockmap') ||
+        assetName.endsWith('.yml') ||
+        assetName.endsWith('.plist')
+      ) {
+        return -1
+      }
+
+      if (target.platform === 'mac') {
+        if (!assetName.includes('-mac-')) {
+          return -1
+        }
+
+        let score = 100
+        if (
+          target.architecture !== 'unknown' &&
+          assetName.includes(`-${target.architecture}.`)
+        ) {
+          score += 30
+        }
+        if (assetName.endsWith('.dmg')) {
+          score += 20
+        } else if (assetName.endsWith('.pkg')) {
+          score += 10
+        } else if (assetName.endsWith('.zip')) {
+          score += 5
+        }
+        return score
+      }
+
+      if (target.platform === 'linux') {
+        if (!assetName.includes('linux')) {
+          return -1
+        }
+
+        let score = 100
+        if (
+          target.architecture === 'x64' &&
+          (assetName.includes('x64') ||
+            assetName.includes('x86_64') ||
+            assetName.includes('amd64'))
+        ) {
+          score += 30
+        }
+        if (assetName.endsWith('.appimage')) {
+          score += 20
+        } else if (assetName.endsWith('.deb')) {
+          score += 10
+        } else if (assetName.endsWith('.tar.gz')) {
+          score += 5
+        }
+        return score
+      }
+
+      if (target.platform === 'windows') {
+        if (
+          !assetName.includes('win') &&
+          !assetName.endsWith('.exe') &&
+          !assetName.endsWith('.msi')
+        ) {
+          return -1
+        }
+
+        let score = 100
+        if (
+          target.architecture === 'x64' &&
+          (assetName.includes('x64') || assetName.includes('x86_64'))
+        ) {
+          score += 30
+        }
+        if (assetName.endsWith('.exe')) {
+          score += 20
+        } else if (assetName.endsWith('.msi')) {
+          score += 10
+        } else if (assetName.endsWith('.zip')) {
+          score += 5
+        }
+        return score
+      }
+
+      return -1
+    }
+    const pickDesktopDownloadAsset = (
+      releases: GithubRelease[],
+      target: {
+        architecture: DownloadArchitecture
+        platform: DownloadPlatform
+      }
+    ) => {
+      for (const release of releases) {
+        if (release.draft === true || !isDesktopRelease(release)) {
+          continue
+        }
+
+        let bestAsset: GithubReleaseAsset | undefined
+        let bestScore = -1
+        for (const asset of getReleaseAssets(release)) {
+          const score = scoreDownloadAsset(asset, target)
+          if (score > bestScore) {
+            bestAsset = asset
+            bestScore = score
+          }
+        }
+
+        const downloadUrl = normalizeReleaseString(
+          bestAsset?.browser_download_url
+        )
+        if (downloadUrl !== '') {
+          return downloadUrl
+        }
+      }
+
+      return undefined
+    }
+    const resolveDesktopDownloadUrl = async () => {
+      const target = await resolveDownloadTarget()
+      if (target.platform === 'unknown') {
+        return githubReleasesUrl
+      }
+
+      const releases = await fetchDesktopReleases()
+      if (releases == null) {
+        return githubReleasesUrl
+      }
+
+      return pickDesktopDownloadAsset(releases, target) ?? githubReleasesUrl
+    }
+    const syncPreviewDownloadUrl = (downloadUrl: string) => {
+      if (!(pwaPreviewFrame instanceof HTMLIFrameElement)) {
+        return
+      }
+
+      const syncUrl = (rawUrl: string | undefined) => {
+        if (rawUrl == null || rawUrl.trim() === '') {
+          return rawUrl
+        }
+
+        const url = new URL(rawUrl, window.location.href)
+        url.searchParams.set('downloadUrl', downloadUrl)
+        return url.toString()
+      }
+
+      const nextNewSrc = syncUrl(pwaPreviewFrame.dataset.newSrc)
+      const nextRoomSrc = syncUrl(pwaPreviewFrame.dataset.roomSrc)
+      const nextSidebarSrc = syncUrl(pwaPreviewFrame.dataset.sidebarSrc)
+      if (nextNewSrc != null) {
+        pwaPreviewFrame.dataset.newSrc = nextNewSrc
+      }
+      if (nextRoomSrc != null) {
+        pwaPreviewFrame.dataset.roomSrc = nextRoomSrc
+      }
+      if (nextSidebarSrc != null) {
+        pwaPreviewFrame.dataset.sidebarSrc = nextSidebarSrc
+      }
+    }
+    const applyDesktopDownloadUrl = (downloadUrl: string) => {
+      currentDownloadUrl = downloadUrl
+      downloadLinks.forEach((link) => {
+        link.href = downloadUrl
+      })
+      syncPreviewDownloadUrl(downloadUrl)
+    }
+    const getHomepagePreviewMockData = () => {
+      const locale = getHomepagePreviewLocale()
+      if (locale === 'en') {
+        return {
+          sessionId: 'homepage-preview',
+          title: 'One Works preview',
+          messages: [
+            {
+              role: 'user',
+              content: 'How can One Works help me take over AI coding work?'
+            },
+            {
+              role: 'assistant',
+              content:
+                'You can choose Claude Code, Codex, Kimi, and other coding agents from one app. Download the desktop app when you want to connect a real local project, terminal, or IM channel.'
+            }
+          ]
+        }
+      }
+
+      return {
+        sessionId: 'homepage-preview',
+        title: 'One Works 预览',
+        messages: [
+          {
+            role: 'user',
+            content: 'One Works 可以怎么帮我接管 AI 编程任务？'
+          },
+          {
+            role: 'assistant',
+            content:
+              '你可以在一个应用里选择 Claude Code、Codex、Kimi 等 AI 编程伙伴。需要真实连接本地项目、终端或 IM 时，下载桌面端就能继续。'
+          }
+        ]
+      }
+    }
+    const sendHomepagePreviewConfig = () => {
+      if (
+        !(pwaPreviewFrame instanceof HTMLIFrameElement) ||
+        pwaPreviewFrame.contentWindow == null
+      ) {
+        return
+      }
+
+      const navigationUrl = previewMode === 'room'
+        ? pwaPreviewFrame.dataset.roomSrc
+        : previewMode === 'sidebar'
+        ? pwaPreviewFrame.dataset.sidebarSrc
+        : pwaPreviewFrame.dataset.newSrc
+      const targetOrigin =
+        new URL(pwaPreviewFrame.src, window.location.href).origin
+      pwaPreviewFrame.contentWindow.postMessage({
+        type: 'oneworks:homepage-preview',
+        source: 'oneworks-homepage',
+        version: 1,
+        payload: {
+          downloadUrl: currentDownloadUrl,
+          locale: getHomepagePreviewLocale(),
+          mockData: getHomepagePreviewMockData(),
+          ...(navigationUrl != null && navigationUrl.trim() !== ''
+            ? { navigationUrl }
+            : {}),
+          theme: getSystemMode()
+        }
+      }, targetOrigin)
+    }
+    const syncPwaPreviewLocale = (locale: HomepageLocale) => {
+      if (!(pwaPreviewFrame instanceof HTMLIFrameElement)) {
+        return
+      }
+
+      const syncLocale = (rawUrl: string | undefined) => {
+        if (rawUrl == null || rawUrl.trim() === '') {
+          return rawUrl
+        }
+
+        const url = new URL(rawUrl, window.location.href)
+        url.searchParams.set('locale', locale)
+        return url.toString()
+      }
+
+      const nextNewSrc = syncLocale(pwaPreviewFrame.dataset.newSrc)
+      const nextRoomSrc = syncLocale(pwaPreviewFrame.dataset.roomSrc)
+      const nextSidebarSrc = syncLocale(pwaPreviewFrame.dataset.sidebarSrc)
+      if (nextNewSrc != null) {
+        pwaPreviewFrame.dataset.newSrc = nextNewSrc
+      }
+      if (nextRoomSrc != null) {
+        pwaPreviewFrame.dataset.roomSrc = nextRoomSrc
+      }
+      if (nextSidebarSrc != null) {
+        pwaPreviewFrame.dataset.sidebarSrc = nextSidebarSrc
+      }
+    }
+    const applyHomepageLocale = (
+      locale: HomepageLocale,
+      options: { notify?: boolean; persist?: boolean; syncFrame?: boolean } =
+        {}
+    ) => {
+      const copy = homepageCopy[locale]
+      document.documentElement.lang = locale === 'en' ? 'en' : 'zh-CN'
+      document.querySelectorAll<HTMLElement>('[data-i18n]').forEach(
+        (element) => {
+          const key = element.dataset.i18n
+          if (key != null && copy[key] != null) {
+            element.textContent = copy[key]
+          }
+        }
+      )
+      renderWindowTagline(locale)
+
+      languageTrigger?.setAttribute('aria-label', copy.languageLabel)
+      languageTrigger?.setAttribute('title', copy.languageLabel)
+      languageTrigger?.setAttribute('data-locale', locale)
+      for (const option of languageOptions) {
+        const isActive = option.dataset.languageOption === locale
+        option.classList.toggle('is-active', isActive)
+        option.setAttribute('aria-checked', String(isActive))
+      }
+
+      if (options.persist === true) {
+        try {
+          window.localStorage.setItem('oneworks-homepage-locale', locale)
+        } catch (error) {
+          void error
+        }
+      }
+
+      if (options.syncFrame === true) {
+        syncPwaPreviewLocale(locale)
+      }
+
+      if (options.notify === true) {
+        sendHomepagePreviewConfig()
+      }
+    }
+    const handleLanguageOptionClick = (event: MouseEvent) => {
+      const option = event.currentTarget
+      if (!(option instanceof HTMLButtonElement)) {
+        return
+      }
+
+      const nextLocale = normalizeHomepageLocale(
+        option.dataset.languageOption
+      )
+      applyHomepageLocale(nextLocale, {
+        notify: true,
+        persist: true,
+        syncFrame: true
+      })
+      languageMenu?.removeAttribute('open')
+    }
+    const handleLanguageOutsidePointerDown = (event: PointerEvent) => {
+      if (
+        languageMenu == null || !languageMenu.open ||
+        !(event.target instanceof Node)
+      ) {
+        return
+      }
+
+      if (!languageMenu.contains(event.target)) {
+        languageMenu.open = false
+      }
+    }
+    const handleLanguageKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        languageMenu?.removeAttribute('open')
+      }
+    }
+
+    applyHomepageLocale(
+      normalizeHomepageLocale(
+        getStoredHomepageLocale() ?? document.documentElement.lang
+      ),
+      {
+        syncFrame: true
+      }
+    )
+    for (const option of languageOptions) {
+      option.addEventListener('click', handleLanguageOptionClick)
+    }
+    document.addEventListener('pointerdown', handleLanguageOutsidePointerDown)
+    document.addEventListener('keydown', handleLanguageKeyDown)
+
+    const readPreviewWindowRect = () => {
+      if (!(previewWindow instanceof HTMLElement)) {
+        return undefined
+      }
+
+      const rect = previewWindow.getBoundingClientRect()
+      return {
+        height: rect.height,
+        left: rect.left,
+        top: rect.top,
+        width: rect.width
+      }
+    }
+
+    const rememberPreviewWindowAnchorRect = () => {
+      const rect = readPreviewWindowRect()
+      if (rect == null) {
+        return
+      }
+
+      previewWindowAnchorRect = {
+        ...rect,
+        documentTop: rect.top + window.scrollY
+      }
+    }
+
+    const getRoomWindowRect = (): PreviewWindowRect => {
+      const horizontalInset = Math.min(
+        128,
+        Math.max(32, window.innerWidth * 0.08)
+      )
+      const width = Math.min(
+        960,
+        Math.max(320, window.innerWidth - horizontalInset)
+      )
+      const height = width * 9 / 16
+
+      return {
+        height,
+        left: (window.innerWidth - width) / 2,
+        top: (window.innerHeight - height) / 2,
+        width
+      }
+    }
+
+    const getSidebarWindowRect = (): PreviewWindowRect => {
+      const width = Math.min(960, Math.max(640, window.innerWidth * 0.72))
+      const height = width * 9 / 16
+
+      return {
+        height,
+        left: window.innerWidth - width / 2,
+        top: (window.innerHeight - height) / 2,
+        width
+      }
+    }
+
+    const getFixedStageHeight = (
+      rect: PreviewWindowRect,
+      includeCopySpace = true
+    ) => {
+      if (!includeCopySpace) {
+        return rect.height
+      }
+
+      return rect.height +
+        Math.min(170, Math.max(120, window.innerHeight * 0.18))
+    }
+
+    const setFixedWindowRect = (
+      rect: PreviewWindowRect,
+      options: { includeCopySpace?: boolean } = {}
+    ) => {
+      if (!(productStage instanceof HTMLElement)) {
+        return
+      }
+
+      const includeCopySpace = options.includeCopySpace !== false
+      productStage.style.setProperty(
+        '--fixed-stage-left',
+        `${rect.left.toFixed(2)}px`
+      )
+      productStage.style.setProperty(
+        '--fixed-stage-top',
+        `${rect.top.toFixed(2)}px`
+      )
+      productStage.style.setProperty(
+        '--fixed-stage-width',
+        `${rect.width.toFixed(2)}px`
+      )
+      productStage.style.setProperty(
+        '--fixed-stage-height',
+        `${getFixedStageHeight(rect, includeCopySpace).toFixed(2)}px`
+      )
+    }
+
+    const resetFixedWindowState = () => {
+      homeShell?.classList.remove('is-window-fixed', 'is-window-jump')
+      if (productStage instanceof HTMLElement) {
+        productStage.style.removeProperty('--fixed-stage-left')
+        productStage.style.removeProperty('--fixed-stage-top')
+        productStage.style.removeProperty('--fixed-stage-width')
+        productStage.style.removeProperty('--fixed-stage-height')
+        productStage.style.removeProperty('--room-copy-opacity')
+        productStage.style.removeProperty('--room-copy-y')
+        productStage.style.removeProperty('--window-tagline-opacity')
+        productStage.style.removeProperty('--window-tagline-y')
+      }
+    }
+
+    const setPreviewMode = (nextMode: PreviewMode) => {
+      if (previewMode === nextMode) {
+        return
+      }
+
+      previewMode = nextMode
+      homeShell?.classList.toggle('is-showcase-mode', nextMode !== 'new')
+      homeShell?.classList.toggle('is-room-mode', nextMode === 'room')
+      scheduleAdapterBadgePositions()
+      sendHomepagePreviewConfig()
+    }
+
+    const clamp = (value: number, min: number, max: number) =>
+      Math.min(max, Math.max(min, value))
+    const clamp01 = (value: number) => clamp(value, 0, 1)
+    const lerp = (from: number, to: number, progress: number) =>
+      from + (to - from) * progress
+    const smoothstep = (progress: number) =>
+      progress * progress * (3 - 2 * progress)
+
+    const getRoomModeThreshold = () => {
+      if (!(roomSection instanceof HTMLElement)) {
+        return window.innerHeight * 0.42
+      }
+
+      return Math.max(120, roomSection.offsetTop - window.innerHeight * 0.46)
+    }
+
+    const getScrollAnimationStart = () => {
+      const threshold = getRoomModeThreshold()
+      return Math.max(48, Math.min(threshold - 1, window.innerHeight * 0.14))
+    }
+
+    const getScrollAnimationEnd = () => {
+      if (!(roomSection instanceof HTMLElement)) {
+        return getRoomModeThreshold()
+      }
+
+      return Math.max(getRoomModeThreshold() + 1, roomSection.offsetTop)
+    }
+
+    const getSidebarTransitionRange = () => {
+      if (!(sidebarSection instanceof HTMLElement)) {
+        return {
+          end: Number.POSITIVE_INFINITY,
+          start: Number.POSITIVE_INFINITY
+        }
+      }
+
+      const sectionTop = sidebarSection.offsetTop
+      const start = Math.max(
+        getRoomPageScrollY() + 1,
+        sectionTop - window.innerHeight * 0.72
+      )
+      const end = Math.max(start + 1, sectionTop - window.innerHeight * 0.08)
+
+      return { end, start }
+    }
+
+    const getSidebarTransitionProgress = () => {
+      const { end, start } = getSidebarTransitionRange()
+      return clamp01((window.scrollY - start) / Math.max(1, end - start))
+    }
+
+    const getScrollAnimationProgress = () => {
+      const start = getScrollAnimationStart()
+      const end = Math.max(start + 1, getScrollAnimationEnd())
+      return clamp01((window.scrollY - start) / (end - start))
+    }
+
+    const getNaturalWindowRectAtScroll = (scrollY: number) => {
+      if (previewWindowAnchorRect == null) {
+        rememberPreviewWindowAnchorRect()
+      }
+      if (previewWindowAnchorRect == null) {
+        return readPreviewWindowRect()
+      }
+
+      return {
+        height: previewWindowAnchorRect.height,
+        left: previewWindowAnchorRect.left,
+        top: previewWindowAnchorRect.documentTop - scrollY,
+        width: previewWindowAnchorRect.width
+      }
+    }
+
+    const interpolateWindowRect = (
+      progress: number
+    ): PreviewWindowRect | undefined => {
+      const start = getScrollAnimationStart()
+      const fromRect = getNaturalWindowRectAtScroll(start)
+      const toRect = getRoomWindowRect()
+      if (fromRect == null) {
+        return undefined
+      }
+
+      return {
+        height: lerp(fromRect.height, toRect.height, progress),
+        left: lerp(fromRect.left, toRect.left, progress),
+        top: lerp(fromRect.top, toRect.top, progress),
+        width: lerp(fromRect.width, toRect.width, progress)
+      }
+    }
+
+    const interpolatePreviewWindowRect = (
+      fromRect: PreviewWindowRect,
+      toRect: PreviewWindowRect,
+      progress: number
+    ): PreviewWindowRect => {
+      return {
+        height: lerp(fromRect.height, toRect.height, progress),
+        left: lerp(fromRect.left, toRect.left, progress),
+        top: lerp(fromRect.top, toRect.top, progress),
+        width: lerp(fromRect.width, toRect.width, progress)
+      }
+    }
+
+    const setNarrativeProgress = (progress: number) => {
+      if (!(productStage instanceof HTMLElement)) {
+        return
+      }
+
+      const copyProgress = clamp01((progress - 0.62) / 0.38)
+      productStage.style.setProperty(
+        '--room-copy-opacity',
+        copyProgress.toFixed(3)
+      )
+      productStage.style.setProperty(
+        '--room-copy-y',
+        `${(18 * (1 - copyProgress)).toFixed(2)}px`
+      )
+      productStage.style.setProperty(
+        '--window-tagline-opacity',
+        (1 - copyProgress).toFixed(3)
+      )
+      productStage.style.setProperty(
+        '--window-tagline-y',
+        `${(-10 * copyProgress).toFixed(2)}px`
+      )
+    }
+
+    // Keep scrollY as the source of truth; snap only moves scroll, and this derives the window state.
+    const syncScrollNarrative = () => {
+      scrollNarrativeFrame = undefined
+      if (window.scrollY < 8) {
+        rememberPreviewWindowAnchorRect()
+      }
+      const sidebarProgress = getSidebarTransitionProgress()
+      const isSidebarShowcase = sidebarProgress > 0
+      homeShell?.classList.toggle(
+        'is-sidebar-showcase-mode',
+        isSidebarShowcase
+      )
+      if (isSidebarShowcase) {
+        const rect = interpolatePreviewWindowRect(
+          getRoomWindowRect(),
+          getSidebarWindowRect(),
+          smoothstep(sidebarProgress)
+        )
+        if (homeShell instanceof HTMLElement) {
+          homeShell.classList.add('is-window-fixed')
+        }
+        setFixedWindowRect(rect, { includeCopySpace: false })
+        setNarrativeProgress(1)
+        setPreviewMode('sidebar')
+        scheduleAdapterBadgePositions()
+        return
+      }
+      const progress = getScrollAnimationProgress()
+      const nextMode = progress >= 0.62 ? 'room' : 'new'
+
+      if (!(homeShell instanceof HTMLElement) || progress <= 0) {
+        setPreviewMode('new')
+        resetFixedWindowState()
+        return
+      }
+
+      const rect = interpolateWindowRect(progress)
+      if (rect != null) {
+        homeShell.classList.add('is-window-fixed')
+        setFixedWindowRect(rect)
+        setNarrativeProgress(progress)
+      }
+
+      setPreviewMode(nextMode)
+      scheduleAdapterBadgePositions()
+    }
+
+    const scheduleScrollNarrative = () => {
+      if (scrollNarrativeFrame != null) {
+        return
+      }
+
+      scrollNarrativeFrame = window.requestAnimationFrame(syncScrollNarrative)
+    }
+
+    const clearScrollSnapTimers = () => {
+      if (scrollSnapTimer != null) {
+        window.clearTimeout(scrollSnapTimer)
+        scrollSnapTimer = undefined
+      }
+      if (scrollSnapFrame != null) {
+        window.cancelAnimationFrame(scrollSnapFrame)
+        scrollSnapFrame = undefined
+      }
+      isAutoSnapping = false
+    }
+
+    const getRoomPageScrollY = () => {
+      if (!(roomSection instanceof HTMLElement)) {
+        return getRoomModeThreshold()
+      }
+
+      return Math.max(1, roomSection.offsetTop)
+    }
+
+    const getSidebarPageScrollY = () => {
+      if (!(sidebarSection instanceof HTMLElement)) {
+        return getRoomPageScrollY()
+      }
+
+      return Math.max(getRoomPageScrollY() + 1, sidebarSection.offsetTop)
+    }
+
+    const getSnapPages = (): Array<{ page: SnapPage; y: number }> => {
+      return [
+        { page: 'new', y: 0 },
+        { page: 'room', y: getRoomPageScrollY() },
+        { page: 'sidebar', y: getSidebarPageScrollY() }
+      ]
+    }
+
+    const getSnapPageScrollY = (page: SnapPage) => {
+      if (page === 'sidebar') {
+        return getSidebarPageScrollY()
+      }
+
+      if (page === 'room') {
+        return getRoomPageScrollY()
+      }
+
+      return 0
+    }
+
+    const getPageSnapProgress = (fromY: number, toY: number) => {
+      return clamp01((window.scrollY - fromY) / Math.max(1, toY - fromY))
+    }
+
+    const getSnapTargetPage = (): SnapPage | undefined => {
+      const pages = getSnapPages()
+      const activeIndex = pages.findIndex((page, index) => {
+        const nextPage = pages[index + 1]
+        return nextPage != null && window.scrollY > page.y &&
+          window.scrollY < nextPage.y
+      })
+      if (activeIndex < 0) {
+        return undefined
+      }
+
+      const currentPage = pages[activeIndex]
+      const nextPage = pages[activeIndex + 1]
+      if (nextPage == null) {
+        return undefined
+      }
+
+      const progress = getPageSnapProgress(currentPage.y, nextPage.y)
+      if (scrollDirection === 'down') {
+        return progress >= 0.2 ? nextPage.page : currentPage.page
+      }
+      if (scrollDirection === 'up') {
+        return progress <= 0.8 ? currentPage.page : nextPage.page
+      }
+
+      return progress >= 0.5 ? nextPage.page : currentPage.page
+    }
+
+    const snapToPage = (page: SnapPage) => {
+      clearScrollSnapTimers()
+      isAutoSnapping = true
+      const fromY = window.scrollY
+      const toY = getSnapPageScrollY(page)
+      const distance = Math.abs(toY - fromY)
+      const duration = Math.min(1320, Math.max(1040, distance * 1.85))
+      const startedAt = performance.now()
+
+      if (distance < 1) {
+        isAutoSnapping = false
+        scheduleScrollNarrative()
+        return
+      }
+
+      const animateSnap = (time: number) => {
+        const progress = clamp01((time - startedAt) / duration)
+        const easedProgress = 0.5 - Math.cos(Math.PI * progress) / 2
+        window.scrollTo(0, fromY + (toY - fromY) * easedProgress)
+        if (scrollNarrativeFrame != null) {
+          window.cancelAnimationFrame(scrollNarrativeFrame)
+          scrollNarrativeFrame = undefined
+        }
+        syncScrollNarrative()
+
+        if (progress < 1) {
+          scrollSnapFrame = window.requestAnimationFrame(animateSnap)
+          return
+        }
+
+        scrollSnapFrame = undefined
+        isAutoSnapping = false
+        lastScrollY = window.scrollY
+        scheduleScrollNarrative()
+      }
+
+      scrollSnapFrame = window.requestAnimationFrame(animateSnap)
+    }
+
+    const schedulePageSnap = () => {
+      if (isAutoSnapping) {
+        scheduleScrollNarrative()
+        return
+      }
+
+      if (scrollSnapTimer != null) {
+        window.clearTimeout(scrollSnapTimer)
+      }
+
+      scrollSnapTimer = window.setTimeout(() => {
+        scrollSnapTimer = undefined
+        const targetPage = getSnapTargetPage()
+        if (targetPage == null) {
+          return
+        }
+
+        snapToPage(targetPage)
+      }, 50)
+    }
+
+    const handleScroll = () => {
+      const nextScrollY = window.scrollY
+      if (Math.abs(nextScrollY - lastScrollY) > 1) {
+        scrollDirection = nextScrollY > lastScrollY ? 'down' : 'up'
+        lastScrollY = nextScrollY
+      }
+
+      scheduleScrollNarrative()
+      schedulePageSnap()
+    }
+
+    const handleScrollSnapInterrupt = () => {
+      if (!isAutoSnapping) {
+        return
+      }
+
+      clearScrollSnapTimers()
+      scheduleScrollNarrative()
+      schedulePageSnap()
+    }
+
+    const clampDragOffset = (x: number, y: number) => {
+      const distance = Math.hypot(x, y)
+
+      if (distance <= adapterDragLimit) {
+        return { x, y }
+      }
+
+      const ratio = adapterDragLimit / distance
+      return {
+        x: x * ratio,
+        y: y * ratio
+      }
+    }
+
+    const setAdapterDragOffset = (
+      element: HTMLElement,
+      x: number,
+      y: number
+    ) => {
+      element.style.setProperty('--drag-x', `${x.toFixed(2)}px`)
+      element.style.setProperty('--drag-y', `${y.toFixed(2)}px`)
+    }
+
+    const getBadgeAnchor = (
+      badge: HTMLElement,
+      windowRect: DOMRect,
+      badgeRect: DOMRect
+    ) => {
+      const edge = badge.dataset.edge ?? 'top'
+      const progress = clamp(
+        Number.parseFloat(badge.dataset.progress ?? '0.5') || 0.5,
+        0.08,
+        0.92
+      )
+      const outwardOffset = Math.max(
+        Math.min(badgeRect.width, badgeRect.height) * 0.55,
+        22
+      )
+
+      switch (edge) {
+        case 'left':
+          return {
+            x: windowRect.left - outwardOffset,
+            y: windowRect.top + windowRect.height * progress
+          }
+        case 'right':
+          return {
+            x: windowRect.right + outwardOffset,
+            y: windowRect.top + windowRect.height * progress
+          }
+        case 'bottom':
+          return {
+            x: windowRect.left + windowRect.width * progress,
+            y: windowRect.bottom + outwardOffset
+          }
+        default:
+          return {
+            x: windowRect.left + windowRect.width * progress,
+            y: windowRect.top - outwardOffset
+          }
+      }
+    }
+
+    const syncAdapterBadgePositions = () => {
+      if (
+        !(productStage instanceof HTMLElement) ||
+        !(previewWindow instanceof HTMLElement)
+      ) {
+        return
+      }
+
+      const stageRect = productStage.getBoundingClientRect()
+      const windowRect = previewWindow.getBoundingClientRect()
+      const viewportPadding = 14
+
+      for (const badge of adapterBadges) {
+        const badgeRect = badge.getBoundingClientRect()
+        const halfWidth = badgeRect.width / 2
+        const halfHeight = badgeRect.height / 2
+        const anchor = getBadgeAnchor(badge, windowRect, badgeRect)
+        const x = clamp(
+          anchor.x,
+          viewportPadding + halfWidth,
+          window.innerWidth - viewportPadding - halfWidth
+        )
+        const y = clamp(
+          anchor.y,
+          viewportPadding + halfHeight,
+          window.innerHeight - viewportPadding - halfHeight
+        )
+
+        badge.style.setProperty(
+          '--badge-x',
+          `${(x - stageRect.left).toFixed(2)}px`
+        )
+        badge.style.setProperty(
+          '--badge-y',
+          `${(y - stageRect.top).toFixed(2)}px`
+        )
+        badge.classList.add('is-positioned')
+      }
+    }
+
+    const scheduleAdapterBadgePositions = () => {
+      if (adapterPositionFrame != null) {
+        window.cancelAnimationFrame(adapterPositionFrame)
+      }
+
+      adapterPositionFrame = window.requestAnimationFrame(() => {
+        adapterPositionFrame = undefined
+        syncAdapterBadgePositions()
+      })
+    }
+
+    for (const badge of adapterBadges) {
+      if (badge.querySelector('.adapter-badge-card') == null) {
+        continue
+      }
+
+      let activePointerId: number | undefined
+      let originX = 0
+      let originY = 0
+      let currentDragX = 0
+      let currentDragY = 0
+      let releaseAnimationFrame: number | undefined
+      let releaseTimer: number | undefined
+
+      const applyAdapterHighlight = () => {
+        setTaglineHighlight(badge.dataset.highlightTarget)
+      }
+
+      const clearAdapterHighlight = () => {
+        setTaglineHighlight(undefined)
+      }
+
+      const setAdapterDragScale = (scale: number) => {
+        badge.style.setProperty('--drag-scale', scale.toFixed(4))
+      }
+
+      const easeOutBack = (progress: number) => {
+        const overshoot = 1.42
+        const shiftedProgress = progress - 1
+
+        return 1 + (overshoot + 1) * shiftedProgress ** 3 +
+          overshoot * shiftedProgress ** 2
+      }
+
+      const clearReleaseTimer = () => {
+        if (releaseTimer != null) {
+          window.clearTimeout(releaseTimer)
+          releaseTimer = undefined
+        }
+      }
+
+      const clearReleaseFrame = () => {
+        if (releaseAnimationFrame != null) {
+          window.cancelAnimationFrame(releaseAnimationFrame)
+          releaseAnimationFrame = undefined
+        }
+      }
+
+      const finishReleaseState = () => {
+        badge.classList.remove('is-releasing')
+        clearReleaseTimer()
+        clearReleaseFrame()
+        currentDragX = 0
+        currentDragY = 0
+        setAdapterDragOffset(badge, 0, 0)
+        badge.style.removeProperty('--drag-scale')
+      }
+
+      const cancelReleaseState = () => {
+        finishReleaseState()
+      }
+
+      const startRelease = () => {
+        const releaseX = currentDragX
+        const releaseY = currentDragY
+        cancelReleaseState()
+        badge.classList.remove('is-dragging')
+        badge.classList.add('is-releasing')
+
+        if (Math.hypot(releaseX, releaseY) < 0.5) {
+          finishReleaseState()
+          return
+        }
+
+        const duration = 620
+        const startedAt = performance.now()
+        setAdapterDragOffset(badge, releaseX, releaseY)
+        setAdapterDragScale(1.04)
+
+        const animateRelease = (time: number) => {
+          const progress = Math.min(1, (time - startedAt) / duration)
+          const easedProgress = easeOutBack(progress)
+          const remaining = 1 - easedProgress
+          const scaleRemaining = 1 - Math.min(1, easedProgress)
+
+          currentDragX = releaseX * remaining
+          currentDragY = releaseY * remaining
+          setAdapterDragOffset(badge, currentDragX, currentDragY)
+          setAdapterDragScale(1 + 0.04 * scaleRemaining)
+
+          if (progress < 1) {
+            releaseAnimationFrame = window.requestAnimationFrame(
+              animateRelease
+            )
+            return
+          }
+
+          finishReleaseState()
+        }
+
+        releaseAnimationFrame = window.requestAnimationFrame(animateRelease)
+        releaseTimer = window.setTimeout(finishReleaseState, duration + 160)
+      }
+
+      const handlePointerDown = (event: PointerEvent) => {
+        if (event.button !== 0 && event.pointerType === 'mouse') {
+          return
+        }
+
+        event.preventDefault()
+        activePointerId = event.pointerId
+        originX = event.clientX
+        originY = event.clientY
+        cancelReleaseState()
+        badge.classList.add('is-dragging')
+
+        try {
+          badge.setPointerCapture(event.pointerId)
+        } catch (error) {
+          void error
+        }
+      }
+
+      const handlePointerMove = (event: PointerEvent) => {
+        if (activePointerId !== event.pointerId) {
+          return
+        }
+
+        const offset = clampDragOffset(
+          event.clientX - originX,
+          event.clientY - originY
+        )
+        currentDragX = offset.x
+        currentDragY = offset.y
+        setAdapterDragOffset(badge, offset.x, offset.y)
+      }
+
+      const handlePointerEnd = (event: PointerEvent) => {
+        if (activePointerId !== event.pointerId) {
+          return
+        }
+
+        activePointerId = undefined
+        try {
+          badge.releasePointerCapture(event.pointerId)
+        } catch (error) {
+          void error
+        }
+        startRelease()
+      }
+
+      const handleLostPointerCapture = () => {
+        if (activePointerId == null) {
+          return
+        }
+
+        activePointerId = undefined
+        startRelease()
+      }
+
+      badge.addEventListener('pointerdown', handlePointerDown)
+      badge.addEventListener('pointerenter', applyAdapterHighlight)
+      badge.addEventListener('pointerleave', clearAdapterHighlight)
+      badge.addEventListener('focusin', applyAdapterHighlight)
+      badge.addEventListener('focusout', clearAdapterHighlight)
+      badge.addEventListener('pointermove', handlePointerMove)
+      badge.addEventListener('pointerup', handlePointerEnd)
+      badge.addEventListener('pointercancel', handlePointerEnd)
+      badge.addEventListener('lostpointercapture', handleLostPointerCapture)
+      window.addEventListener('pointermove', handlePointerMove)
+      window.addEventListener('pointerup', handlePointerEnd)
+      window.addEventListener('pointercancel', handlePointerEnd)
+
+      cleanupDragListeners.push(() => {
+        badge.removeEventListener('pointerdown', handlePointerDown)
+        badge.removeEventListener('pointerenter', applyAdapterHighlight)
+        badge.removeEventListener('pointerleave', clearAdapterHighlight)
+        badge.removeEventListener('focusin', applyAdapterHighlight)
+        badge.removeEventListener('focusout', clearAdapterHighlight)
+        badge.removeEventListener('pointermove', handlePointerMove)
+        badge.removeEventListener('pointerup', handlePointerEnd)
+        badge.removeEventListener('pointercancel', handlePointerEnd)
+        badge.removeEventListener(
+          'lostpointercapture',
+          handleLostPointerCapture
+        )
+        window.removeEventListener('pointermove', handlePointerMove)
+        window.removeEventListener('pointerup', handlePointerEnd)
+        window.removeEventListener('pointercancel', handlePointerEnd)
+        finishReleaseState()
+      })
+    }
+
+    if (previewWindow instanceof HTMLElement) {
+      const syncPreviewScale = () => {
+        const width = previewWindow.getBoundingClientRect().width
+        const sourceWidth = Number.parseFloat(
+          getComputedStyle(previewWindow).getPropertyValue(
+            '--pwa-preview-source-width'
+          )
+        ) || 960
+        previewWindow.style.setProperty(
+          '--pwa-preview-scale',
+          `${width / sourceWidth}`
+        )
+        if (previewMode === 'new' && window.scrollY < 8) {
+          rememberPreviewWindowAnchorRect()
+        }
+        scheduleAdapterBadgePositions()
+      }
+
+      syncPreviewScale()
+
+      previewResizeObserver = new ResizeObserver(syncPreviewScale)
+      previewResizeObserver.observe(previewWindow)
+      if (productStage instanceof HTMLElement) {
+        previewResizeObserver.observe(productStage)
+      }
+    }
+
+    if (backgroundHost instanceof HTMLElement) {
+      handles.push(mountOneWorksIconLoader(backgroundHost, {
+        appearance: 'system',
+        background: true,
+        canvasClassName: 'metal-background-canvas',
+        className: 'metal-background-loader',
+        fullscreen: true,
+        mode: iconMode,
+        motion: true,
+        seed: 'homepage-metal-background',
+        shadow: false,
+        size: '100%',
+        theme: 'metal'
+      }))
+    }
+
+    if (host instanceof HTMLElement) {
+      handles.push(mountOneWorksIconLoader(host, {
+        appearance: 'system',
+        background: false,
+        canvasClassName: 'mobius-ribbon-canvas',
+        className: 'mobius-ribbon-loader',
+        mode: iconMode,
+        motion: true,
+        seed: 'oneworks',
+        shadow: false,
+        size: '100%',
+        theme: 'metal'
+      }))
+
+      host.querySelectorAll('[data-mobius-static]').forEach((element) =>
+        element.remove()
+      )
+    }
+
+    const handleColorSchemeChange = () => {
+      const mode = getSystemMode()
+      for (const handle of handles) handle.update({ mode })
+      sendHomepagePreviewConfig()
+    }
+
+    pwaPreviewFrame?.addEventListener('load', sendHomepagePreviewConfig)
+    void resolveDesktopDownloadUrl().then((downloadUrl) => {
+      applyDesktopDownloadUrl(downloadUrl)
+      sendHomepagePreviewConfig()
+    })
+    window.setTimeout(sendHomepagePreviewConfig, 0)
+    window.setTimeout(syncScrollNarrative, 0)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('touchstart', handleScrollSnapInterrupt, {
+      passive: true
+    })
+    window.addEventListener('wheel', handleScrollSnapInterrupt, {
+      passive: true
+    })
+    window.addEventListener('resize', scheduleAdapterBadgePositions)
+    window.addEventListener('resize', scheduleScrollNarrative)
+    systemDarkQuery.addEventListener('change', handleColorSchemeChange)
+
+    let didCleanupHomepage = false
+    const cleanupHomepage = () => {
+      if (didCleanupHomepage) {
+        return
+      }
+
+      didCleanupHomepage = true
+      systemDarkQuery.removeEventListener('change', handleColorSchemeChange)
+      pwaPreviewFrame?.removeEventListener('load', sendHomepagePreviewConfig)
+      for (const option of languageOptions) {
+        option.removeEventListener('click', handleLanguageOptionClick)
+      }
+      document.removeEventListener(
+        'pointerdown',
+        handleLanguageOutsidePointerDown
+      )
+      document.removeEventListener('keydown', handleLanguageKeyDown)
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('touchstart', handleScrollSnapInterrupt)
+      window.removeEventListener('wheel', handleScrollSnapInterrupt)
+      window.removeEventListener('resize', scheduleAdapterBadgePositions)
+      window.removeEventListener('resize', scheduleScrollNarrative)
+      if (adapterPositionFrame != null) {
+        window.cancelAnimationFrame(adapterPositionFrame)
+      }
+      if (scrollNarrativeFrame != null) {
+        window.cancelAnimationFrame(scrollNarrativeFrame)
+      }
+      clearScrollSnapTimers()
+      resetFixedWindowState()
+      previewResizeObserver?.disconnect()
+      for (const cleanup of cleanupDragListeners) cleanup()
+      for (const handle of handles) handle.dispose()
+    }
+
+    window.addEventListener('pagehide', cleanupHomepage, { once: true })
+    document.addEventListener('astro:before-swap', cleanupHomepage, {
+      once: true
+    })
+  }
+
+  initializeHomepage()
+  document.addEventListener('astro:page-load', initializeHomepage)
+  </script>
+</PageLayout>

@@ -1,0 +1,135 @@
+---
+import SiteFooter from '../../components/SiteFooter.astro'
+import SiteHeader from '../../components/SiteHeader.astro'
+import { blogPosts } from '../../data/blog-posts'
+import PageLayout from '../../layouts/PageLayout.astro'
+
+const searchPlaceholder = '搜索标题或摘要'
+---
+
+<PageLayout title="One Works Blog">
+  <main class="blog-shell">
+    <SiteHeader
+      brandClassName="app-release-brand"
+      className="site-header app-release-header"
+    />
+
+    <section class="blog-main" aria-labelledby="blog-title">
+      <h1 id="blog-title" class="visually-hidden">One Works 博客</h1>
+
+      <div class="blog-toolbar">
+        <span class="visually-hidden" data-blog-result-count>{blogPosts.length}
+          篇文章</span>
+
+        <label class="blog-search">
+          <span class="visually-hidden">搜索博客</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m20 20-4.2-4.2M17 10.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" />
+          </svg>
+          <input
+            type="search"
+            placeholder={searchPlaceholder}
+            autocomplete="off"
+            data-blog-search-input
+          />
+        </label>
+      </div>
+
+      <div class="blog-post-list" aria-label="博客文章列表">
+        {
+          blogPosts.map((post) => {
+            const sectionSearchText = post.sections
+              .map((section) =>
+                [
+                  section.heading,
+                  ...(section.paragraphs ?? []),
+                  ...(section.items ?? [])
+                ].join(' ')
+              )
+              .join(' ')
+            const searchText = [
+              post.title,
+              post.summary,
+              post.date,
+              sectionSearchText
+            ].join(' ')
+            return (
+            <a
+              class="blog-post-row"
+              href={`/blog/${post.slug}/`}
+              data-blog-post
+              data-blog-search={searchText}
+            >
+              <span class="blog-post-cover" aria-hidden="true">
+                <img src={post.cover.src} alt="" loading="lazy" />
+              </span>
+              <div class="blog-post-content">
+                <div class="blog-post-meta">
+                  <time datetime={post.datetime}>{post.date}</time>
+                </div>
+                <h2 class="blog-post-title">{post.title}</h2>
+                <p>{post.summary}</p>
+              </div>
+            </a>
+          )
+          })
+        }
+      </div>
+
+      <p class="blog-empty" data-blog-empty hidden>没有找到匹配的博客。</p>
+    </section>
+
+    <script is:inline data-astro-rerun>
+    ;(() => {
+      const blogMain = document.querySelector('.blog-main')
+      if (!(blogMain instanceof HTMLElement)) {
+        return
+      }
+
+      const searchInput = blogMain.querySelector('[data-blog-search-input]')
+      if (!(searchInput instanceof HTMLInputElement)) {
+        return
+      }
+
+      const resultCount = blogMain.querySelector('[data-blog-result-count]')
+      const emptyState = blogMain.querySelector('[data-blog-empty]')
+      const posts = Array.from(
+        blogMain.querySelectorAll('[data-blog-post]')
+      )
+
+      const normalizeSearch = (value) => value.trim().toLocaleLowerCase()
+      const updateSearch = () => {
+        const query = normalizeSearch(searchInput.value)
+        let visibleCount = 0
+
+        for (const post of posts) {
+          if (!(post instanceof HTMLElement)) {
+            continue
+          }
+
+          const searchText = normalizeSearch(
+            post.getAttribute('data-blog-search') ?? ''
+          )
+          const visible = query.length === 0 || searchText.includes(query)
+          post.hidden = !visible
+          if (visible) {
+            visibleCount += 1
+          }
+        }
+
+        if (resultCount instanceof HTMLElement) {
+          resultCount.textContent = `${visibleCount} 篇文章`
+        }
+
+        if (emptyState instanceof HTMLElement) {
+          emptyState.hidden = visibleCount > 0
+        }
+      }
+
+      searchInput.addEventListener('input', updateSearch)
+      updateSearch()
+    })()
+    </script>
+  </main>
+  <SiteFooter />
+</PageLayout>

@@ -1,0 +1,41 @@
+{
+  "name": "@oneworks/icon",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0-alpha.0",
+  "description": "One Works icon geometry, SVG renderer, and browser loader",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./canvas": {
+      "default": "./src/canvas.ts",
+      "types": "./src/canvas.ts"
+    },
+    "./core": {
+      "default": "./src/core.ts",
+      "types": "./src/core.ts"
+    },
+    "./loader": {
+      "default": "./src/loader.ts",
+      "types": "./src/loader.ts"
+    },
+    "./presets": {
+      "default": "./src/presets.ts",
+      "types": "./src/presets.ts"
+    },
+    "./svg": {
+      "default": "./src/svg.ts",
+      "types": "./src/svg.ts"
+    },
+    "./types": {
+      "default": "./src/types.ts",
+      "types": "./src/types.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@paper-design/shaders": "^0.0.76"
+  }
+}

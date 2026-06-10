@@ -1,0 +1,68 @@
+---
+import { ClientRouter } from 'astro:transitions'
+
+import appleTouchIcon from '../assets/brand/apple-touch-icon-transparent.png'
+import faviconDarkPng from '../assets/brand/favicon-metal-dark-transparent.png'
+import faviconDarkSvg from '../assets/brand/favicon-metal-dark-transparent.svg'
+import faviconLightPng from '../assets/brand/favicon-metal-light-transparent.png'
+import faviconLightSvg from '../assets/brand/favicon-metal-light-transparent.svg'
+import '../styles/global.css'
+
+interface Props {
+  lang?: string
+  title: string
+}
+
+const { lang = 'zh-CN', title } = Astro.props
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta
+      name="theme-color"
+      content="#ffffff"
+      media="(prefers-color-scheme: light)"
+    >
+    <meta
+      name="theme-color"
+      content="#141414"
+      media="(prefers-color-scheme: dark)"
+    >
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href={faviconLightSvg.src}
+      media="(prefers-color-scheme: light)"
+    >
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href={faviconDarkSvg.src}
+      media="(prefers-color-scheme: dark)"
+    >
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="300x300"
+      href={faviconLightPng.src}
+      media="(prefers-color-scheme: light)"
+    >
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="300x300"
+      href={faviconDarkPng.src}
+      media="(prefers-color-scheme: dark)"
+    >
+    <link rel="apple-touch-icon" href={appleTouchIcon.src}>
+    <title>{title}</title>
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
