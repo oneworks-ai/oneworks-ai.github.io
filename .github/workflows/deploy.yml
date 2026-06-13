@@ -64,7 +64,7 @@ jobs:
         run: pnpm build
         working-directory: homepage
         env:
-          ONEWORKS_APP_ROOT: ../app
+          ONEWORKS_DOCS_SOURCE_DIR: ${{ github.workspace }}/app/.oo/docs
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
