@@ -3,6 +3,7 @@
 ## Scope
 
 - This workspace contains the public web surfaces for One Works: `apps/homepage` for the Astro homepage and release/download pages, and `apps/docs` for the documentation site.
+- `apps/docs` is the VitePress shell. Public page content is staged from the app repository `.oo/docs` by `scripts/prepare-docs-content.mjs`; keep theme, navigation, sidebar, dependencies, and build tooling in this homepage workspace.
 - For any homepage page, release page, visual layout, navigation, or download UX change, continue reading `apps/homepage/AGENTS.md` before editing.
 - For docs-only changes, work in `apps/docs` and keep homepage layout rules out of docs pages.
 - `apps/docs` is an independently built VitePress app. Keep its theme, plugins, navigation, and sidebar in `apps/docs/.vitepress`; do not couple docs pages to Astro homepage components or styles.

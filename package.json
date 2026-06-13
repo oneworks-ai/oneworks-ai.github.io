@@ -9,7 +9,9 @@
     "build": "pnpm build:homepage && pnpm build:docs && pnpm assemble",
     "build:homepage": "pnpm --filter @oneworks/homepage build",
     "build:docs": "pnpm --filter @oneworks/docs build",
+    "prepare:docs": "pnpm --filter @oneworks/docs prepare-content",
+    "prepare:docs:dry-run": "node scripts/prepare-docs-content.mjs --dry-run",
     "assemble": "node scripts/assemble-pages.mjs",
-    "check": "pnpm --filter @oneworks/homepage check && pnpm --filter @oneworks/docs build"
+    "check": "pnpm --filter @oneworks/homepage check && pnpm build:docs"
   }
 }
