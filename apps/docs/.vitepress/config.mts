@@ -3,6 +3,16 @@ import llmstxt from 'vitepress-plugin-llms'
 
 const repositoryUrl = 'https://github.com/oneworks-ai/app'
 const homepageUrl = process.env.VITE_ONEWORKS_DOCS_HOMEPAGE_URL?.trim() || '/'
+const docsSourceDir = 'src'
+const docsEditLinkPattern = ({ filePath }: { filePath: string }) => {
+  const normalizedFilePath = filePath.replace(/\\/g, '/')
+  const sourcePrefix = 'src/'
+  const docsSourcePath = normalizedFilePath.startsWith(sourcePrefix)
+    ? normalizedFilePath.slice(sourcePrefix.length)
+    : normalizedFilePath
+
+  return `https://github.com/oneworks-ai/app/edit/main/.oo/docs/${encodeURI(docsSourcePath)}`
+}
 
 const usageSidebar: DefaultTheme.SidebarItem[] = [
   {
@@ -218,7 +228,7 @@ export default defineConfig({
           message: 'Standalone One Works documentation site for user integration and usage.'
         },
         editLink: {
-          pattern: `${repositoryUrl}/edit/main/assets/homepage/apps/docs/:path`,
+          pattern: docsEditLinkPattern,
           text: 'Edit this page'
         },
         langMenuLabel: 'Change language',
@@ -301,7 +311,8 @@ export default defineConfig({
       title: 'One Works Docs'
     }
   },
-  srcExclude: ['**/AGENTS.md'],
+  srcDir: docsSourceDir,
+  srcExclude: ['**/AGENTS.md', '**/README.md', '**/README.*.md'],
   markdown: {
     image: {
       lazyLoading: true
@@ -313,7 +324,7 @@ export default defineConfig({
       prev: '上一页'
     },
     editLink: {
-      pattern: `${repositoryUrl}/edit/main/assets/homepage/apps/docs/:path`,
+      pattern: docsEditLinkPattern,
       text: '编辑此页'
     },
     footer: {

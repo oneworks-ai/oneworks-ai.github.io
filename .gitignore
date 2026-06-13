@@ -3,5 +3,6 @@ dist/
 .astro/
 
 apps/homepage/dist/
+apps/docs/src/
 apps/docs/.vitepress/cache/
 apps/docs/.vitepress/dist/

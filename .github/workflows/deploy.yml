@@ -5,6 +5,14 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      source_ref:
+        description: "oneworks-ai/app ref to use as the docs content source"
+        required: false
+        default: main
+      source_sha:
+        description: "oneworks-ai/app commit SHA to use as the docs content source"
+        required: false
 
 permissions:
   contents: read
@@ -24,8 +32,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout homepage
         uses: actions/checkout@v4
+        with:
+          path: homepage
+
+      - name: Checkout app docs source
+        uses: actions/checkout@v4
+        with:
+          repository: oneworks-ai/app
+          ref: ${{ github.event.inputs.source_sha || github.event.inputs.source_ref || 'main' }}
+          path: app
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -37,12 +54,17 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
+          cache-dependency-path: homepage/pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        working-directory: homepage
 
       - name: Build sites
         run: pnpm build
+        working-directory: homepage
+        env:
+          ONEWORKS_APP_ROOT: ../app
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -50,7 +72,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: homepage/dist
 
   deploy:
     environment:

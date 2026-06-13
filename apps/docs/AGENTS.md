@@ -3,15 +3,15 @@
 ## Scope
 
 - This app is the standalone VitePress documentation site for user-facing One Works docs.
-- Source pages live in this directory and are assembled into the homepage build under `/docs/`.
+- Source pages are staged into `src/` by `../../scripts/prepare-docs-content.mjs` from the app repository `.oo/docs` content source, then assembled into the homepage build under `/docs/`.
 - Keep VitePress theme, plugin registration, sidebar search, and Markdown tooling in `.vitepress/`.
 
 ## Content
 
-- User-facing usage changes should be reflected here first.
-- Repository-local `.oo/docs/` content is only for README-style module documentation that should not live in the public root docs site.
+- User-facing docs content changes should be made in the app repository `.oo/docs` source. Do not edit generated `src/` files.
+- The source can be selected with `ONEWORKS_DOCS_SOURCE_DIR=/path/to/app/.oo/docs` or `ONEWORKS_APP_ROOT=/path/to/app`; the app submodule layout is auto-detected when available.
 - Internal maintenance, packaging, release, CI, signing, hidden debug, and agent guide content should stay out of the public VitePress build. Keep `AGENTS.md` excluded through VitePress config.
-- Public documentation images belong in `public/` or a nearby docs asset folder; avoid relative paths that escape this app.
+- Public documentation images that belong to page content should live alongside `.oo/docs` Markdown. Site-level assets, such as the logo, remain in `public/`.
 
 ## Style
 
@@ -21,5 +21,6 @@
 
 ## Validation
 
-- Run `pnpm -C assets/homepage --filter @oneworks/docs build` after structural, config, theme, or content migration changes.
+- Run `pnpm -C assets/homepage build:docs` after structural, config, theme, or content migration changes.
+- Use `pnpm -C assets/homepage prepare:docs:dry-run` to inspect which app `.oo/docs` files would be staged without writing generated files.
 - For local preview, use the repository fast path `pnpm tools dev-start docs` unless the user explicitly asks for a lower-level VitePress command.

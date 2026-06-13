@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev",
-    "build": "vitepress build",
+    "prepare-content": "node ../../scripts/prepare-docs-content.mjs",
+    "dev": "pnpm prepare-content && vitepress dev",
+    "build": "pnpm prepare-content && vitepress build",
     "preview": "vitepress preview"
   },
   "devDependencies": {
