@@ -6,12 +6,12 @@ const homepageUrl = process.env.VITE_ONEWORKS_DOCS_HOMEPAGE_URL?.trim() || '/'
 const docsSourceDir = 'src'
 const docsEditLinkPattern = ({ filePath }: { filePath: string }) => {
   const normalizedFilePath = filePath.replace(/\\/g, '/')
-  const sourcePrefix = `${docsSourceDir}/`
+  const sourcePrefix = 'src/'
   const docsSourcePath = normalizedFilePath.startsWith(sourcePrefix)
     ? normalizedFilePath.slice(sourcePrefix.length)
     : normalizedFilePath
 
-  return `${repositoryUrl}/edit/main/.oo/docs/${encodeURI(docsSourcePath)}`
+  return `https://github.com/oneworks-ai/app/edit/main/.oo/docs/${encodeURI(docsSourcePath)}`
 }
 
 const usageSidebar: DefaultTheme.SidebarItem[] = [
