@@ -64,6 +64,7 @@ jobs:
         run: pnpm build
         working-directory: homepage
         env:
+          GH_TOKEN: ${{ github.token }}
           ONEWORKS_DOCS_SOURCE_DIR: ${{ github.workspace }}/app/.oo/docs
 
       - name: Configure Pages
