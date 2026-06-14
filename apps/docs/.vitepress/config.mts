@@ -2,7 +2,7 @@ import { type DefaultTheme, defineConfig } from 'vitepress'
 import llmstxt from 'vitepress-plugin-llms'
 
 const repositoryUrl = 'https://github.com/oneworks-ai/app'
-const homepageUrl = process.env.VITE_ONEWORKS_DOCS_HOMEPAGE_URL?.trim() || '/'
+const homepageUrl = process.env.VITE_ONEWORKS_DOCS_HOMEPAGE_URL?.trim() || 'https://oneworks.cloud/'
 const docsSourceDir = 'src'
 const docsEditLinkPattern = ({ filePath }: { filePath: string }) => {
   const normalizedFilePath = filePath.replace(/\\/g, '/')
@@ -225,7 +225,7 @@ export default defineConfig({
         },
         footer: {
           copyright: 'Copyright © 2026 One Works',
-          message: 'Standalone One Works documentation site for user integration and usage.'
+          message: 'Standalone One Works documentation site for user integration and usage. Support: <a href="mailto:support@oneworks.cloud">support@oneworks.cloud</a>.'
         },
         editLink: {
           pattern: docsEditLinkPattern,
@@ -329,7 +329,7 @@ export default defineConfig({
     },
     footer: {
       copyright: 'Copyright © 2026 One Works',
-      message: 'One Works 文档站独立构建，面向用户接入与使用。'
+      message: 'One Works 文档站独立构建，面向用户接入与使用。支持邮箱：<a href="mailto:support@oneworks.cloud">support@oneworks.cloud</a>。'
     },
     lastUpdated: {
       text: '最后更新'
@@ -422,7 +422,7 @@ export default defineConfig({
     plugins: [
       llmstxt({
         details: 'One Works 用户文档，覆盖安装、桌面端、Web / PWA、CLI、运行时、插件、适配器与 Skills。',
-        domain: 'https://oneworks-ai.github.io/docs/',
+        domain: 'https://oneworks.cloud/docs/',
         title: 'One Works Docs'
       })
     ]

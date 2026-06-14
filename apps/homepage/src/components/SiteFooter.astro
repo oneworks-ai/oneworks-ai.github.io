@@ -13,6 +13,8 @@ const {
   i18n = false
 } = Astro.props
 
+const supportEmail = 'support@oneworks.cloud'
+const supportUrl = `mailto:${supportEmail}`
 const i18nAttrs = (key: string) => i18n ? { 'data-i18n': key } : {}
 const footerMarkLight = createMobiusSvg({
   mode: 'light',
@@ -90,9 +92,7 @@ const footerMarkDark = createMobiusSvg({
           下载
         </a>
         <a
-          href="https://discord.gg/eXV5KEBP6A"
-          target="_blank"
-          rel="noreferrer"
+          href={supportUrl}
           {...i18nAttrs('footer.links.support')}
         >支持</a>
         <a
