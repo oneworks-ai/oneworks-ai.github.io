@@ -100,8 +100,7 @@ const downloadMarkDark = createMobiusSvg({
   title: 'One Works mark'
 }).replace(/^<\?xml[^>]*>\s*/, '')
 const githubReleasesUrl = 'https://github.com/oneworks-ai/app/releases'
-const githubReleasesApiUrl =
-  'https://api.github.com/repos/oneworks-ai/app/releases?per_page=30'
+const downloadsManifestUrl = '/downloads.json'
 const homepageDownloadUrl = githubReleasesUrl
 const homepagePreviewLocale = 'zh'
 const homepagePreviewSessionId = 'homepage-preview'
@@ -166,7 +165,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
   <main
     class="home-shell"
     aria-label="One Works homepage"
-    data-github-releases-api-url={githubReleasesApiUrl}
+    data-downloads-manifest-url={downloadsManifestUrl}
     data-github-releases-url={githubReleasesUrl}
     data-homepage-download-url={homepageDownloadUrl}
   >
@@ -408,9 +407,8 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       systemDarkQuery.matches ? 'dark' : 'light'
     const githubReleasesUrl = homeShell?.dataset.githubReleasesUrl?.trim() ||
       'https://github.com/oneworks-ai/app/releases'
-    const githubReleasesApiUrl =
-      homeShell?.dataset.githubReleasesApiUrl?.trim() ||
-      'https://api.github.com/repos/oneworks-ai/app/releases?per_page=30'
+    const downloadsManifestUrl =
+      homeShell?.dataset.downloadsManifestUrl?.trim() || '/downloads.json'
     let currentDownloadUrl = homeShell?.dataset.homepageDownloadUrl?.trim() ||
       githubReleasesUrl
     const iconMode = getSystemMode()
@@ -436,17 +434,19 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     type HomepageLocale = 'en' | 'zh'
     type DownloadArchitecture = 'arm64' | 'unknown' | 'x64'
     type DownloadPlatform = 'linux' | 'mac' | 'unknown' | 'windows'
-    type GithubReleaseAsset = {
-      browser_download_url?: unknown
+    type DesktopReleaseAsset = {
+      architecture?: unknown
+      downloadUrl?: unknown
+      format?: unknown
       name?: unknown
+      platform?: unknown
     }
-    type GithubRelease = {
+    type DesktopRelease = {
       assets?: unknown
-      draft?: unknown
-      html_url?: unknown
-      name?: unknown
-      prerelease?: unknown
-      tag_name?: unknown
+    }
+    type DesktopDownloadsManifest = {
+      fallbackUrl?: unknown
+      releases?: unknown
     }
     type UserAgentDataLike = {
       getHighEntropyValues?: (
@@ -654,129 +654,92 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
 
       return { architecture, platform }
     }
-    const fetchDesktopReleases = async () => {
+    const fetchDesktopDownloadsManifest = async () => {
       try {
-        const response = await fetch(githubReleasesApiUrl, {
-          headers: { Accept: 'application/vnd.github+json' }
+        const response = await fetch(downloadsManifestUrl, {
+          headers: { Accept: 'application/json' }
         })
         if (!response.ok) {
           return undefined
         }
 
-        const releaseData = await response.json()
-        return Array.isArray(releaseData)
-          ? releaseData as GithubRelease[]
-          : undefined
+        return await response.json() as DesktopDownloadsManifest
       } catch (error) {
         void error
         return undefined
       }
     }
-    const getReleaseAssets = (release: GithubRelease) => {
+    const getReleaseAssets = (release: DesktopRelease) => {
       return Array.isArray(release.assets)
-        ? release.assets as GithubReleaseAsset[]
+        ? release.assets as DesktopReleaseAsset[]
         : []
     }
-    const isDesktopRelease = (release: GithubRelease) => {
-      const tagName = normalizeReleaseString(release.tag_name)
-      if (
-        tagName.startsWith('pkg/oneworks-desktop/v') ||
-        tagName.startsWith('desktop-v')
-      ) {
-        return true
-      }
-
-      return getReleaseAssets(release).some((asset) => {
-        return normalizeReleaseString(asset.name).startsWith('oneworks-')
-      })
-    }
     const scoreDownloadAsset = (
-      asset: GithubReleaseAsset,
+      asset: DesktopReleaseAsset,
       target: {
         architecture: DownloadArchitecture
         platform: DownloadPlatform
       }
     ) => {
       const assetName = normalizeReleaseString(asset.name).toLowerCase()
-      const downloadUrl = normalizeReleaseString(asset.browser_download_url)
+      const assetArchitecture = normalizeReleaseString(asset.architecture)
+      const assetFormat = normalizeReleaseString(asset.format).toLowerCase()
+      const assetPlatform = normalizeReleaseString(asset.platform)
+      const downloadUrl = normalizeReleaseString(asset.downloadUrl)
       if (assetName === '' || downloadUrl === '') {
         return -1
       }
-      if (
-        assetName.endsWith('.blockmap') ||
-        assetName.endsWith('.yml') ||
-        assetName.endsWith('.plist')
-      ) {
-        return -1
-      }
+      if (assetPlatform !== target.platform) return -1
 
       if (target.platform === 'mac') {
-        if (!assetName.includes('-mac-')) {
-          return -1
-        }
-
         let score = 100
         if (
           target.architecture !== 'unknown' &&
-          assetName.includes(`-${target.architecture}.`)
+          assetArchitecture === target.architecture
         ) {
           score += 30
         }
-        if (assetName.endsWith('.dmg')) {
+        if (assetFormat === 'dmg') {
           score += 20
-        } else if (assetName.endsWith('.pkg')) {
+        } else if (assetFormat === 'pkg') {
           score += 10
-        } else if (assetName.endsWith('.zip')) {
+        } else if (assetFormat === 'zip') {
           score += 5
         }
         return score
       }
 
       if (target.platform === 'linux') {
-        if (!assetName.includes('linux')) {
-          return -1
-        }
-
         let score = 100
         if (
           target.architecture === 'x64' &&
-          (assetName.includes('x64') ||
-            assetName.includes('x86_64') ||
-            assetName.includes('amd64'))
+          assetArchitecture === 'x64'
         ) {
           score += 30
         }
-        if (assetName.endsWith('.appimage')) {
+        if (assetFormat === 'appimage') {
           score += 20
-        } else if (assetName.endsWith('.deb')) {
+        } else if (assetFormat === 'deb') {
           score += 10
-        } else if (assetName.endsWith('.tar.gz')) {
+        } else if (assetFormat === 'tar.gz') {
           score += 5
         }
         return score
       }
 
       if (target.platform === 'windows') {
-        if (
-          !assetName.includes('win') &&
-          !assetName.endsWith('.exe') &&
-          !assetName.endsWith('.msi')
-        ) {
-          return -1
-        }
-
         let score = 100
         if (
           target.architecture === 'x64' &&
-          (assetName.includes('x64') || assetName.includes('x86_64'))
+          assetArchitecture === 'x64'
         ) {
           score += 30
         }
-        if (assetName.endsWith('.exe')) {
+        if (assetFormat === 'exe') {
           score += 20
-        } else if (assetName.endsWith('.msi')) {
+        } else if (assetFormat === 'msi') {
           score += 10
-        } else if (assetName.endsWith('.zip')) {
+        } else if (assetFormat === 'zip') {
           score += 5
         }
         return score
@@ -785,18 +748,14 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       return -1
     }
     const pickDesktopDownloadAsset = (
-      releases: GithubRelease[],
+      releases: DesktopRelease[],
       target: {
         architecture: DownloadArchitecture
         platform: DownloadPlatform
       }
     ) => {
       for (const release of releases) {
-        if (release.draft === true || !isDesktopRelease(release)) {
-          continue
-        }
-
-        let bestAsset: GithubReleaseAsset | undefined
+        let bestAsset: DesktopReleaseAsset | undefined
         let bestScore = -1
         for (const asset of getReleaseAssets(release)) {
           const score = scoreDownloadAsset(asset, target)
@@ -806,9 +765,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
           }
         }
 
-        const downloadUrl = normalizeReleaseString(
-          bestAsset?.browser_download_url
-        )
+        const downloadUrl = normalizeReleaseString(bestAsset?.downloadUrl)
         if (downloadUrl !== '') {
           return downloadUrl
         }
@@ -822,12 +779,16 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         return githubReleasesUrl
       }
 
-      const releases = await fetchDesktopReleases()
+      const manifest = await fetchDesktopDownloadsManifest()
+      const releases = Array.isArray(manifest?.releases)
+        ? manifest.releases as DesktopRelease[]
+        : undefined
       if (releases == null) {
         return githubReleasesUrl
       }
 
-      return pickDesktopDownloadAsset(releases, target) ?? githubReleasesUrl
+      return pickDesktopDownloadAsset(releases, target) ??
+        (normalizeReleaseString(manifest?.fallbackUrl) || githubReleasesUrl)
     }
     const syncPreviewDownloadUrl = (downloadUrl: string) => {
       if (!(pwaPreviewFrame instanceof HTMLIFrameElement)) {

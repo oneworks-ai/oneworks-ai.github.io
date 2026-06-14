@@ -25,6 +25,13 @@ export type DesktopRelease = {
   title: string
 }
 
+export type DesktopDownloadsManifest = {
+  fallbackUrl: string
+  generatedAt: string
+  releases: DesktopRelease[]
+  schemaVersion: 1
+}
+
 type GithubReleaseAsset = {
   browser_download_url?: unknown
   name?: unknown
@@ -197,9 +204,19 @@ const normalizeDesktopReleases = (releaseData: GithubRelease[]) => {
     .filter((release): release is DesktopRelease => release != null)
 }
 
+const readNodeEnv = (key: string) => {
+  const globalWithProcess = globalThis as typeof globalThis & {
+    process?: { env?: Record<string, string | undefined> }
+  }
+  return globalWithProcess.process?.env?.[key]
+}
+
 export const loadDesktopReleases = async () => {
   try {
-    const githubToken = import.meta.env.GITHUB_TOKEN || import.meta.env.GH_TOKEN
+    const githubToken = import.meta.env.GITHUB_TOKEN ||
+      import.meta.env.GH_TOKEN ||
+      readNodeEnv('GITHUB_TOKEN') ||
+      readNodeEnv('GH_TOKEN')
     const headers: Record<string, string> = { Accept: 'application/vnd.github+json' }
     if (typeof githubToken === 'string' && githubToken.trim() !== '') {
       headers.Authorization = `Bearer ${githubToken}`
@@ -220,5 +237,14 @@ export const loadDesktopReleases = async () => {
   } catch (error) {
     void error
     return normalizeDesktopReleases(loadGithubReleaseDataFromCli())
+  }
+}
+
+export const loadDesktopDownloadsManifest = async (): Promise<DesktopDownloadsManifest> => {
+  return {
+    fallbackUrl: githubReleasesUrl,
+    generatedAt: new Date().toISOString(),
+    releases: await loadDesktopReleases(),
+    schemaVersion: 1
   }
 }
