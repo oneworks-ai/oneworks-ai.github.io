@@ -106,6 +106,10 @@ const homepageDownloadUrl = githubReleasesUrl
 const homepagePreviewLocale = 'zh'
 const homepagePreviewSessionId = 'homepage-preview'
 const previewRoomId = 'homepage-agent-room'
+const officialPwaBaseUrl = new URL(
+  '/pwa/',
+  Astro.site ?? 'https://oneworks.cloud/'
+).toString()
 const buildHomepagePreviewUrl = (
   baseUrl: string,
   mode: 'new' | 'room' | 'sidebar'
@@ -149,13 +153,13 @@ const localPwaSidebarPreviewUrl = buildHomepagePreviewUrl(
 )
 const pwaPreviewUrl = import.meta.env.DEV
   ? localPwaPreviewUrl
-  : buildHomepagePreviewUrl('https://oneworks-ai.github.io/pwa/', 'new')
+  : buildHomepagePreviewUrl(officialPwaBaseUrl, 'new')
 const pwaRoomPreviewUrl = import.meta.env.DEV
   ? localPwaRoomPreviewUrl
-  : buildHomepagePreviewUrl('https://oneworks-ai.github.io/pwa/', 'room')
+  : buildHomepagePreviewUrl(officialPwaBaseUrl, 'room')
 const pwaSidebarPreviewUrl = import.meta.env.DEV
   ? localPwaSidebarPreviewUrl
-  : buildHomepagePreviewUrl('https://oneworks-ai.github.io/pwa/', 'sidebar')
+  : buildHomepagePreviewUrl(officialPwaBaseUrl, 'sidebar')
 ---
 
 <PageLayout title="One Works">

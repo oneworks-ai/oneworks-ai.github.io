@@ -20,7 +20,7 @@ const {
 } = Astro.props
 
 const githubUrl = 'https://github.com/oneworks-ai/app'
-const pwaUrl = 'https://oneworks-ai.github.io/pwa/'
+const pwaUrl = new URL('/pwa/', Astro.site ?? 'https://oneworks.cloud/').toString()
 const i18nAttrs = (key: string) => i18n ? { 'data-i18n': key } : {}
 const appendDocsPath = (baseUrl: string, path: string) =>
   `${baseUrl.replace(/\/?$/, '/')}${path.replace(/^\/+/, '')}`
