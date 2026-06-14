@@ -15,6 +15,7 @@ const {
 
 const supportEmail = 'support@oneworks.cloud'
 const supportUrl = `mailto:${supportEmail}`
+const pwaUrl = new URL('/pwa/', Astro.site ?? 'https://oneworks.cloud/').toString()
 const i18nAttrs = (key: string) => i18n ? { 'data-i18n': key } : {}
 const footerMarkLight = createMobiusSvg({
   mode: 'light',
@@ -95,11 +96,7 @@ const footerMarkDark = createMobiusSvg({
           href={supportUrl}
           {...i18nAttrs('footer.links.support')}
         >支持</a>
-        <a
-          href="https://oneworks-ai.github.io/pwa/"
-          target="_blank"
-          rel="noreferrer"
-        >PWA</a>
+        <a href={pwaUrl} target="_blank" rel="noreferrer">PWA</a>
       </nav>
     </div>
 
@@ -170,7 +167,7 @@ const footerMarkDark = createMobiusSvg({
         </svg>
       </a>
       <a
-        href="https://oneworks-ai.github.io/pwa/"
+        href={pwaUrl}
         target="_blank"
         rel="noreferrer"
         aria-label="PWA"
