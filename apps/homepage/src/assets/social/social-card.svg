@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="One Works social preview">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8f7f3"/>
+      <stop offset=".48" stop-color="#e9edf1"/>
+      <stop offset="1" stop-color="#b9c1cc"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff8e6"/>
+      <stop offset=".34" stop-color="#c6cad0"/>
+      <stop offset=".68" stop-color="#737a84"/>
+      <stop offset="1" stop-color="#f6f2e7"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17191f"/>
+      <stop offset="1" stop-color="#0c0e13"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="34" stdDeviation="34" flood-color="#1c2430" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <path d="M-90 492C64 398 171 382 320 449c131 59 241 67 382 7 137-58 273-76 480 8v196H-90z" fill="#ffffff" opacity=".36"/>
+  <path d="M-60 115C113 28 298 38 449 143c114 79 212 96 332 53 138-50 258-37 455 67V-35H-60z" fill="#ffffff" opacity=".42"/>
+  <g transform="translate(76 76)">
+    <rect x="0" y="0" width="88" height="88" rx="25" fill="url(#metal)" filter="url(#shadow)"/>
+    <path d="M25 44c0-12 9-21 21-21 14 0 25 12 35 21-10 9-21 21-35 21-12 0-21-9-21-21Z" fill="none" stroke="#141414" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M64 44c0 12-9 21-21 21-14 0-25-12-35-21 10-9 21-21 35-21 12 0 21 9 21 21Z" fill="none" stroke="#f8f4ea" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".72"/>
+  </g>
+  <text x="76" y="224" fill="#101217" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="64" font-weight="800" letter-spacing="0">One Works</text>
+  <text x="80" y="286" fill="#333946" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="32" font-weight="700" letter-spacing="0">AI coding workspace</text>
+  <text x="80" y="342" fill="#5c6472" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="24" font-weight="600" letter-spacing="0">Orchestrate AI coding partners,</text>
+  <text x="80" y="380" fill="#5c6472" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="24" font-weight="600" letter-spacing="0">plugins, assets, and tasks.</text>
+  <g transform="translate(80 442)" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="0">
+    <rect x="0" y="0" width="108" height="42" rx="21" fill="#12151c"/>
+    <text x="24" y="27" fill="#fff">Desktop</text>
+    <rect x="122" y="0" width="92" height="42" rx="21" fill="#ffffff" opacity=".8"/>
+    <text x="146" y="27" fill="#222831">PWA</text>
+    <rect x="228" y="0" width="88" height="42" rx="21" fill="#ffffff" opacity=".8"/>
+    <text x="252" y="27" fill="#222831">CLI</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="528" y="72" width="648" height="486" rx="40" fill="url(#panel)"/>
+    <rect x="545" y="92" width="614" height="446" rx="30" fill="#0f1117"/>
+    <circle cx="580" cy="124" r="7" fill="#ff645c"/>
+    <circle cx="604" cy="124" r="7" fill="#ffbd4a"/>
+    <circle cx="628" cy="124" r="7" fill="#2ecb70"/>
+    <rect x="565" y="158" width="126" height="354" rx="24" fill="#171b23"/>
+    <rect x="587" y="184" width="78" height="12" rx="6" fill="#eef1f5" opacity=".8"/>
+    <rect x="587" y="222" width="68" height="10" rx="5" fill="#798391"/>
+    <rect x="587" y="252" width="86" height="10" rx="5" fill="#798391"/>
+    <rect x="587" y="282" width="58" height="10" rx="5" fill="#798391"/>
+    <rect x="584" y="332" width="86" height="42" rx="15" fill="#2b3443"/>
+    <rect x="602" y="349" width="50" height="8" rx="4" fill="#dfe5eb"/>
+    <rect x="714" y="158" width="416" height="62" rx="22" fill="#191e28"/>
+    <text x="744" y="196" fill="#e8edf4" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="20" font-weight="750" letter-spacing="0">Agent Room</text>
+    <rect x="714" y="246" width="334" height="58" rx="20" fill="#202733"/>
+    <rect x="738" y="267" width="235" height="10" rx="5" fill="#dbe2ea" opacity=".82"/>
+    <rect x="738" y="286" width="172" height="8" rx="4" fill="#8791a0"/>
+    <rect x="796" y="328" width="334" height="58" rx="20" fill="#f4f0e7"/>
+    <rect x="820" y="349" width="228" height="10" rx="5" fill="#222832" opacity=".88"/>
+    <rect x="820" y="368" width="168" height="8" rx="4" fill="#626b77"/>
+    <rect x="714" y="410" width="194" height="78" rx="24" fill="#1d2430"/>
+    <text x="738" y="443" fill="#e8edf4" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="16" font-weight="750" letter-spacing="0">Codex</text>
+    <rect x="738" y="458" width="116" height="8" rx="4" fill="#8791a0"/>
+    <rect x="930" y="410" width="200" height="78" rx="24" fill="#1d2430"/>
+    <text x="954" y="443" fill="#e8edf4" font-family="Avenir Next, Inter, Arial, sans-serif" font-size="16" font-weight="750" letter-spacing="0">Claude Code</text>
+    <rect x="954" y="458" width="112" height="8" rx="4" fill="#8791a0"/>
+    <rect x="545" y="92" width="614" height="446" rx="30" fill="none" stroke="#ffffff" stroke-opacity=".24" stroke-width="1.5"/>
+  </g>
+</svg>

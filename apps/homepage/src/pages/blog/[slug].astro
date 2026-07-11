@@ -7,6 +7,7 @@ import {
   getBlogPostBySlug
 } from '../../data/blog-posts'
 import PageLayout from '../../layouts/PageLayout.astro'
+import { siteName } from '../../utils/site-metadata'
 
 export function getStaticPaths() {
   return blogPosts.map((post) => ({
@@ -27,9 +28,63 @@ if (post == null) {
 const postIndex = blogPosts.findIndex((item) => item.slug === post.slug)
 const previousPost = postIndex > 0 ? blogPosts[postIndex - 1] : undefined
 const nextPost = postIndex >= 0 ? blogPosts[postIndex + 1] : undefined
+const siteOrigin = Astro.site ?? new URL(Astro.url.origin)
+const postPath = `/blog/${post.slug}/`
+const postUrl = new URL(postPath, siteOrigin).toString()
+const postImageUrl = new URL(post.cover.src, siteOrigin).toString()
+const postStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    author: {
+      '@type': 'Organization',
+      name: post.author
+    },
+    dateModified: post.datetime,
+    datePublished: post.datetime,
+    description: post.summary,
+    headline: post.title,
+    image: postImageUrl,
+    inLanguage: 'zh-CN',
+    mainEntityOfPage: postUrl,
+    publisher: {
+      '@type': 'Organization',
+      name: siteName
+    },
+    url: postUrl
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        item: new URL('/blog/', siteOrigin).toString(),
+        name: '博客',
+        position: 1
+      },
+      {
+        '@type': 'ListItem',
+        item: postUrl,
+        name: post.title,
+        position: 2
+      }
+    ]
+  }
+]
 ---
 
-<PageLayout title={`${post.title} - One Works Blog`}>
+<PageLayout
+  canonicalPath={postPath}
+  description={post.summary}
+  image={post.cover.src}
+  imageAlt={post.cover.alt}
+  modifiedTime={post.datetime}
+  ogType="article"
+  publishedTime={post.datetime}
+  structuredData={postStructuredData}
+  title={`${post.title} - One Works Blog`}
+>
   <main class="blog-shell blog-shell--detail">
     <SiteHeader
       brandClassName="app-release-brand"

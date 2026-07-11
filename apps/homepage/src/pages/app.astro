@@ -2,19 +2,44 @@
 import SiteFooter from '../components/SiteFooter.astro'
 import SiteHeader from '../components/SiteHeader.astro'
 import PageLayout from '../layouts/PageLayout.astro'
+import { appPageDescription, siteName } from '../utils/site-metadata'
 import {
   githubReleasesUrl,
   loadDesktopReleases
 } from '../utils/desktop-releases'
 
 const desktopReleases = await loadDesktopReleases()
+const latestDesktopRelease = desktopReleases[0]
 const desktopReleaseData = JSON.stringify(desktopReleases).replace(
   /</g,
   '\\u003c'
 )
+const siteOrigin = Astro.site ?? new URL(Astro.url.origin)
+const appPageStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  applicationCategory: 'DeveloperApplication',
+  datePublished: latestDesktopRelease?.publishedAt,
+  description: appPageDescription,
+  downloadUrl: githubReleasesUrl,
+  name: siteName,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD'
+  },
+  operatingSystem: 'macOS, Windows, Linux',
+  softwareVersion: latestDesktopRelease?.title,
+  url: new URL('/app/', siteOrigin).toString()
+}
 ---
 
-<PageLayout title="One Works App">
+<PageLayout
+  canonicalPath="/app/"
+  description={appPageDescription}
+  structuredData={appPageStructuredData}
+  title="One Works 桌面端下载"
+>
   <main class="app-release-shell">
     <SiteHeader
       brandClassName="app-release-brand"
