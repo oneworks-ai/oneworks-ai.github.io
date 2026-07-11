@@ -2,18 +2,101 @@
 import { ClientRouter } from 'astro:transitions'
 
 import appleTouchIcon from '../assets/brand/apple-touch-icon-transparent.png'
+import appIconImage from '../assets/brand/app-icon-512.png'
 import faviconDarkPng from '../assets/brand/favicon-metal-dark-transparent.png'
 import faviconDarkSvg from '../assets/brand/favicon-metal-dark-transparent.svg'
 import faviconLightPng from '../assets/brand/favicon-metal-light-transparent.png'
 import faviconLightSvg from '../assets/brand/favicon-metal-light-transparent.svg'
+import defaultSocialImage from '../assets/social/social-card.png'
 import '../styles/global.css'
+import {
+  discordUrl,
+  githubRepositoryUrl,
+  siteDescription,
+  siteName,
+  telegramUrl
+} from '../utils/site-metadata'
+
+type StructuredData = Record<string, unknown>
 
 interface Props {
+  canonicalPath?: string
+  description?: string
+  image?: string
+  imageAlt?: string
   lang?: string
+  modifiedTime?: string
+  noindex?: boolean
+  ogType?: 'article' | 'website'
+  publishedTime?: string
+  structuredData?: StructuredData | StructuredData[]
   title: string
 }
 
-const { lang = 'zh-CN', title } = Astro.props
+const {
+  canonicalPath,
+  description = siteDescription,
+  image,
+  imageAlt = 'One Works AI coding workspace preview',
+  lang = 'zh-CN',
+  modifiedTime,
+  noindex = false,
+  ogType = 'website',
+  publishedTime,
+  structuredData,
+  title
+} = Astro.props
+
+const siteOrigin = Astro.site ?? new URL(Astro.url.origin)
+const pageUrl = new URL(canonicalPath ?? Astro.url.pathname, siteOrigin)
+const canonicalUrl = pageUrl.toString()
+const logoUrl = new URL(appIconImage.src, siteOrigin).toString()
+const imageUrl = new URL(image ?? defaultSocialImage.src, siteOrigin).toString()
+const homeUrl = new URL('/', siteOrigin).toString()
+const organizationId = new URL('/#organization', siteOrigin).toString()
+const websiteId = new URL('/#website', siteOrigin).toString()
+const webpageId = new URL(`${pageUrl.pathname}#webpage`, siteOrigin).toString()
+const ogLocale = lang.toLowerCase().startsWith('en') ? 'en_US' : 'zh_CN'
+const pageStructuredData = Array.isArray(structuredData)
+  ? structuredData
+  : structuredData == null
+    ? []
+    : [structuredData]
+const baseStructuredData: StructuredData[] = [
+  {
+    '@context': 'https://schema.org',
+    '@id': organizationId,
+    '@type': 'Organization',
+    logo: logoUrl,
+    name: siteName,
+    sameAs: [githubRepositoryUrl, discordUrl, telegramUrl],
+    url: homeUrl
+  },
+  {
+    '@context': 'https://schema.org',
+    '@id': websiteId,
+    '@type': 'WebSite',
+    description: siteDescription,
+    inLanguage: lang,
+    name: siteName,
+    publisher: { '@id': organizationId },
+    url: homeUrl
+  },
+  {
+    '@context': 'https://schema.org',
+    '@id': webpageId,
+    '@type': 'WebPage',
+    description,
+    image: imageUrl,
+    inLanguage: lang,
+    isPartOf: { '@id': websiteId },
+    name: title,
+    publisher: { '@id': organizationId },
+    url: canonicalUrl
+  }
+]
+const serializedStructuredData = [...baseStructuredData, ...pageStructuredData]
+  .map((item) => JSON.stringify(item).replace(/</g, '\\u003c'))
 ---
 
 <!DOCTYPE html>
@@ -32,6 +115,12 @@ const { lang = 'zh-CN', title } = Astro.props
       content="#141414"
       media="(prefers-color-scheme: dark)"
     >
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content={noindex ? 'noindex,nofollow' : 'index,follow'}
+    >
+    <link rel="canonical" href={canonicalUrl}>
     <link
       rel="icon"
       type="image/svg+xml"
@@ -59,7 +148,35 @@ const { lang = 'zh-CN', title } = Astro.props
       media="(prefers-color-scheme: dark)"
     >
     <link rel="apple-touch-icon" href={appleTouchIcon.src}>
+    <meta property="og:site_name" content={siteName}>
+    <meta property="og:locale" content={ogLocale}>
+    <meta property="og:type" content={ogType}>
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={canonicalUrl}>
+    <meta property="og:image" content={imageUrl}>
+    <meta property="og:image:alt" content={imageAlt}>
+    {
+      ogType === 'article' && publishedTime != null
+        ? <meta property="article:published_time" content={publishedTime} />
+        : null
+    }
+    {
+      ogType === 'article' && modifiedTime != null
+        ? <meta property="article:modified_time" content={modifiedTime} />
+        : null
+    }
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={imageUrl}>
+    <meta name="twitter:image:alt" content={imageAlt}>
     <title>{title}</title>
+    {
+      serializedStructuredData.map((item) => (
+        <script is:inline type="application/ld+json" set:html={item}></script>
+      ))
+    }
     <ClientRouter />
   </head>
   <body>

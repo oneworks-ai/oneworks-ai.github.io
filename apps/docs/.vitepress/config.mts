@@ -3,6 +3,10 @@ import llmstxt from 'vitepress-plugin-llms'
 
 const repositoryUrl = 'https://github.com/oneworks-ai/app'
 const homepageUrl = process.env.VITE_ONEWORKS_DOCS_HOMEPAGE_URL?.trim() || 'https://oneworks.cloud/'
+const siteUrl = process.env.ONEWORKS_SITE_URL?.trim() ||
+  process.env.PUBLIC_ONEWORKS_SITE_URL?.trim() ||
+  'https://oneworks.cloud'
+const llmsDomain = new URL('/', siteUrl).toString().replace(/\/$/, '')
 const docsSourceDir = 'src'
 const docsEditLinkPattern = ({ filePath }: { filePath: string }) => {
   const normalizedFilePath = filePath.replace(/\\/g, '/')
@@ -422,7 +426,7 @@ export default defineConfig({
     plugins: [
       llmstxt({
         details: 'One Works 用户文档，覆盖安装、桌面端、Web / PWA、CLI、运行时、插件、适配器与 Skills。',
-        domain: 'https://oneworks.cloud/docs/',
+        domain: llmsDomain,
         title: 'One Works Docs'
       })
     ]

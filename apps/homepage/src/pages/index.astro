@@ -10,6 +10,12 @@ import opencodeIcon from '../assets/adapters/opencode.svg'
 import SiteFooter from '../components/SiteFooter.astro'
 import SiteHeader from '../components/SiteHeader.astro'
 import PageLayout from '../layouts/PageLayout.astro'
+import {
+  githubRepositoryUrl,
+  homePageTitle,
+  siteDescription,
+  siteName
+} from '../utils/site-metadata'
 
 const adapterBadges = [
   {
@@ -102,6 +108,24 @@ const downloadMarkDark = createMobiusSvg({
 const githubReleasesUrl = 'https://github.com/oneworks-ai/app/releases'
 const downloadsManifestUrl = '/downloads.json'
 const homepageDownloadUrl = githubReleasesUrl
+const siteOrigin = Astro.site ?? new URL(Astro.url.origin)
+const homepageStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  applicationCategory: 'DeveloperApplication',
+  description: siteDescription,
+  downloadUrl: homepageDownloadUrl,
+  name: siteName,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD'
+  },
+  operatingSystem: 'macOS, Windows, Linux',
+  sameAs: [githubRepositoryUrl],
+  softwareHelp: new URL('/docs/', siteOrigin).toString(),
+  url: new URL('/', siteOrigin).toString()
+}
 const homepagePreviewLocale = 'zh'
 const homepagePreviewSessionId = 'homepage-preview'
 const previewRoomId = 'homepage-agent-room'
@@ -161,7 +185,12 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
   : buildHomepagePreviewUrl(officialPwaBaseUrl, 'sidebar')
 ---
 
-<PageLayout title="One Works">
+<PageLayout
+  canonicalPath="/"
+  description={siteDescription}
+  structuredData={homepageStructuredData}
+  title={homePageTitle}
+>
   <main
     class="home-shell"
     aria-label="One Works homepage"
@@ -174,7 +203,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
 
     <SiteHeader downloadUrl={homepageDownloadUrl} i18n showCornerDownload />
 
-    <section class="hero" aria-label="One Works">
+    <section class="hero" aria-labelledby="home-hero-title">
       <div class="hero-actions">
         <div id="download" class="download-panel">
           <div class="download-icon" aria-hidden="true">
@@ -187,7 +216,19 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
               set:html={downloadMarkDark}
             ></span>
           </div>
-          <p class="download-wordmark" data-text="One Works">One Works</p>
+          <h1
+            id="home-hero-title"
+            class="download-wordmark"
+            data-text="One Works"
+          >
+            One Works
+            <span class="visually-hidden" data-i18n="hero.title.suffix">
+              AI 编程伙伴工作台
+            </span>
+          </h1>
+          <p class="visually-hidden" data-i18n="hero.summary">
+            One Works 是面向 AI 编程伙伴的本地工作台，用一个应用调度 Claude Code、Codex、Kimi 等工具，管理插件、资产、任务和协同流程。
+          </p>
           <div class="download-actions">
             <a
               class="download-button"
@@ -457,6 +498,9 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     const homepageCopy: Record<HomepageLocale, Record<string, string>> = {
       en: {
         'hero.download': 'Download desktop app',
+        'hero.summary':
+          'One Works is a local workspace for AI coding partners, orchestrating Claude Code, Codex, Kimi, plugins, assets, tasks, and multi-agent workflows from one app.',
+        'hero.title.suffix': 'AI coding workspace',
         'footer.copyright': '© 2026 One Works. All rights reserved.',
         'footer.links.docs': 'Docs',
         'footer.links.download': 'Download',
@@ -493,6 +537,9 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       },
       zh: {
         'hero.download': '下载桌面端',
+        'hero.summary':
+          'One Works 是面向 AI 编程伙伴的本地工作台，用一个应用调度 Claude Code、Codex、Kimi 等工具，管理插件、资产、任务和协同流程。',
+        'hero.title.suffix': 'AI 编程伙伴工作台',
         'footer.copyright': '© 2026 One Works. 保留所有权利。',
         'footer.links.docs': '文档',
         'footer.links.download': '下载',

@@ -3,11 +3,32 @@ import SiteFooter from '../../components/SiteFooter.astro'
 import SiteHeader from '../../components/SiteHeader.astro'
 import { blogPosts } from '../../data/blog-posts'
 import PageLayout from '../../layouts/PageLayout.astro'
+import { blogDescription, siteName } from '../../utils/site-metadata'
 
 const searchPlaceholder = '搜索标题或摘要'
+const siteOrigin = Astro.site ?? new URL(Astro.url.origin)
+const blogStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  blogPost: blogPosts.map((post) => ({
+    '@type': 'BlogPosting',
+    datePublished: post.datetime,
+    description: post.summary,
+    headline: post.title,
+    url: new URL(`/blog/${post.slug}/`, siteOrigin).toString()
+  })),
+  description: blogDescription,
+  name: `${siteName} Blog`,
+  url: new URL('/blog/', siteOrigin).toString()
+}
 ---
 
-<PageLayout title="One Works Blog">
+<PageLayout
+  canonicalPath="/blog/"
+  description={blogDescription}
+  structuredData={blogStructuredData}
+  title="One Works Blog"
+>
   <main class="blog-shell">
     <SiteHeader
       brandClassName="app-release-brand"

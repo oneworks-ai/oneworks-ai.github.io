@@ -86,9 +86,60 @@ const groupedPlatforms = platformOrder
   .filter((group) => group.assets.length > 0)
 
 const releaseDate = formatDate(release.publishedAt)
+const siteOrigin = Astro.site ?? new URL(Astro.url.origin)
+const releasePageUrl = new URL(release.detailUrl, siteOrigin).toString()
+const releasePlatforms = groupedPlatforms.map((group) =>
+  platformLabel(group.platform)
+)
+const releasePageDescription =
+  `下载 One Works ${release.title} 桌面端安装包，支持 ${
+    releasePlatforms.join('、')
+  }。`
+const releaseStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    applicationCategory: 'DeveloperApplication',
+    datePublished: release.publishedAt || undefined,
+    description: releasePageDescription,
+    downloadUrl: release.releaseUrl,
+    name: `One Works ${release.title}`,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD'
+    },
+    operatingSystem: releasePlatforms.join(', '),
+    softwareVersion: release.title,
+    url: releasePageUrl
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        item: new URL('/app/', siteOrigin).toString(),
+        name: '桌面端下载',
+        position: 1
+      },
+      {
+        '@type': 'ListItem',
+        item: releasePageUrl,
+        name: release.title,
+        position: 2
+      }
+    ]
+  }
+]
 ---
 
-<PageLayout title={`One Works ${release.title}`}>
+<PageLayout
+  canonicalPath={release.detailUrl}
+  description={releasePageDescription}
+  structuredData={releaseStructuredData}
+  title={`One Works ${release.title} 下载`}
+>
   <main class="app-release-shell">
     <SiteHeader
       brandClassName="app-release-brand"
