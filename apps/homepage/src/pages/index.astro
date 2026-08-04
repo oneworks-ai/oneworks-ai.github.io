@@ -273,18 +273,18 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
 
         <div class="product-window-stack">
           <div class="product-window">
-            <div class="window-preview">
+            <div class="window-preview" data-pwa-preview-host></div>
+            <template data-pwa-preview-template>
               <iframe
                 data-pwa-preview-frame
                 data-new-src={pwaPreviewUrl}
                 data-room-src={pwaRoomPreviewUrl}
                 data-sidebar-src={pwaSidebarPreviewUrl}
-                src={pwaPreviewUrl}
                 title="One Works PWA preview"
                 loading="eager"
                 referrerpolicy="no-referrer"
               ></iframe>
-            </div>
+            </template>
           </div>
           <p class="window-tagline" data-window-tagline>
             <span class="tagline-text">
@@ -420,9 +420,13 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     )
     const productStage = document.querySelector<HTMLElement>('.product-stage')
     const previewWindow = document.querySelector('.product-window')
-    const pwaPreviewFrame = document.querySelector<HTMLIFrameElement>(
-      '[data-pwa-preview-frame]'
+    const pwaPreviewHost = document.querySelector<HTMLElement>(
+      '[data-pwa-preview-host]'
     )
+    const pwaPreviewTemplate = document.querySelector<HTMLTemplateElement>(
+      '[data-pwa-preview-template]'
+    )
+    let pwaPreviewFrame: HTMLIFrameElement | undefined
     const languageMenu = document.querySelector<HTMLDetailsElement>(
       '[data-language-menu]'
     )
@@ -443,10 +447,13 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     const windowTagline = document.querySelector<HTMLElement>(
       '[data-window-tagline]'
     )
-    const handles: Array<ReturnType<typeof mountOneWorksIconLoader>> = []
+    let decorativeIconHandles: Array<
+      ReturnType<typeof mountOneWorksIconLoader>
+    > = []
     const cleanupDragListeners: Array<() => void> = []
     let previewResizeObserver: ResizeObserver | undefined
     const systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const desktopPreviewQuery = window.matchMedia('(min-width: 761px)')
     const getSystemMode = (): 'light' | 'dark' =>
       systemDarkQuery.matches ? 'dark' : 'light'
     const githubReleasesUrl = homeShell?.dataset.githubReleasesUrl?.trim() ||
@@ -455,7 +462,6 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       homeShell?.dataset.downloadsManifestUrl?.trim() || '/downloads.json'
     let currentDownloadUrl = homeShell?.dataset.homepageDownloadUrl?.trim() ||
       githubReleasesUrl
-    const iconMode = getSystemMode()
     const adapterDragLimit = 72
     let adapterPositionFrame: number | undefined
     let scrollNarrativeFrame: number | undefined
@@ -970,6 +976,49 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         pwaPreviewFrame.dataset.sidebarSrc = nextSidebarSrc
       }
     }
+    const unmountPwaPreviewFrame = () => {
+      if (!(pwaPreviewFrame instanceof HTMLIFrameElement)) {
+        return
+      }
+
+      pwaPreviewFrame.removeEventListener('load', sendHomepagePreviewConfig)
+      pwaPreviewFrame.remove()
+      pwaPreviewFrame = undefined
+    }
+    const mountPwaPreviewFrame = () => {
+      if (
+        !desktopPreviewQuery.matches ||
+        pwaPreviewFrame instanceof HTMLIFrameElement ||
+        !(pwaPreviewHost instanceof HTMLElement) ||
+        !(pwaPreviewTemplate instanceof HTMLTemplateElement)
+      ) {
+        return
+      }
+
+      const frame = pwaPreviewTemplate.content
+        .querySelector<HTMLIFrameElement>('[data-pwa-preview-frame]')
+        ?.cloneNode(true)
+      if (!(frame instanceof HTMLIFrameElement)) {
+        return
+      }
+
+      pwaPreviewFrame = frame
+      syncPreviewDownloadUrl(currentDownloadUrl)
+      syncPwaPreviewLocale(getHomepagePreviewLocale())
+      const initialUrl = previewMode === 'room'
+        ? frame.dataset.roomSrc
+        : previewMode === 'sidebar'
+        ? frame.dataset.sidebarSrc
+        : frame.dataset.newSrc
+      if (initialUrl == null || initialUrl.trim() === '') {
+        pwaPreviewFrame = undefined
+        return
+      }
+
+      frame.addEventListener('load', sendHomepagePreviewConfig)
+      frame.src = initialUrl
+      pwaPreviewHost.replaceChildren(frame)
+    }
     const applyHomepageLocale = (
       locale: HomepageLocale,
       options: { notify?: boolean; persist?: boolean; syncFrame?: boolean } =
@@ -1314,6 +1363,9 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     // Keep scrollY as the source of truth; snap only moves scroll, and this derives the window state.
     const syncScrollNarrative = () => {
       scrollNarrativeFrame = undefined
+      if (!desktopPreviewQuery.matches) {
+        return
+      }
       if (window.scrollY < 8) {
         rememberPreviewWindowAnchorRect()
       }
@@ -1507,6 +1559,9 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     }
 
     const handleScroll = () => {
+      if (!desktopPreviewQuery.matches) {
+        return
+      }
       const nextScrollY = window.scrollY
       if (Math.abs(nextScrollY - lastScrollY) > 1) {
         scrollDirection = nextScrollY > lastScrollY ? 'down' : 'up'
@@ -1860,48 +1915,74 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       }
     }
 
-    if (backgroundHost instanceof HTMLElement) {
-      handles.push(mountOneWorksIconLoader(backgroundHost, {
-        appearance: 'system',
-        background: true,
-        canvasClassName: 'linear-background-canvas',
-        className: 'linear-background-loader',
-        fullscreen: true,
-        mode: iconMode,
-        motion: true,
-        seed: 'homepage-linear-background',
-        shadow: false,
-        size: '100%',
-        theme: homepageBrandIconTheme
-      }))
+    const unmountDecorativeIcons = () => {
+      for (const handle of decorativeIconHandles) handle.dispose()
+      decorativeIconHandles = []
     }
+    const mountDecorativeIcons = () => {
+      if (!desktopPreviewQuery.matches || decorativeIconHandles.length > 0) {
+        return
+      }
 
-    if (host instanceof HTMLElement) {
-      handles.push(mountOneWorksIconLoader(host, {
-        appearance: 'system',
-        background: false,
-        canvasClassName: 'mobius-ribbon-canvas',
-        className: 'mobius-ribbon-loader',
-        mode: iconMode,
-        motion: true,
-        seed: 'oneworks',
-        shadow: false,
-        size: '100%',
-        theme: homepageBrandIconTheme
-      }))
+      if (backgroundHost instanceof HTMLElement) {
+        decorativeIconHandles.push(mountOneWorksIconLoader(backgroundHost, {
+          appearance: 'system',
+          background: true,
+          canvasClassName: 'linear-background-canvas',
+          className: 'linear-background-loader',
+          fullscreen: true,
+          mode: getSystemMode(),
+          motion: true,
+          seed: 'homepage-linear-background',
+          shadow: false,
+          size: '100%',
+          theme: homepageBrandIconTheme
+        }))
+      }
 
-      host.querySelectorAll('[data-mobius-static]').forEach((element) =>
-        element.remove()
-      )
+      if (host instanceof HTMLElement) {
+        decorativeIconHandles.push(mountOneWorksIconLoader(host, {
+          appearance: 'system',
+          background: false,
+          canvasClassName: 'mobius-ribbon-canvas',
+          className: 'mobius-ribbon-loader',
+          mode: getSystemMode(),
+          motion: true,
+          seed: 'oneworks',
+          shadow: false,
+          size: '100%',
+          theme: homepageBrandIconTheme
+        }))
+
+        host.querySelectorAll('[data-mobius-static]').forEach((element) =>
+          element.remove()
+        )
+      }
     }
 
     const handleColorSchemeChange = () => {
       const mode = getSystemMode()
-      for (const handle of handles) handle.update({ mode })
+      for (const handle of decorativeIconHandles) handle.update({ mode })
       sendHomepagePreviewConfig()
     }
 
-    pwaPreviewFrame?.addEventListener('load', sendHomepagePreviewConfig)
+    const syncPwaPreviewAvailability = () => {
+      if (desktopPreviewQuery.matches) {
+        mountDecorativeIcons()
+        mountPwaPreviewFrame()
+        scheduleScrollNarrative()
+        return
+      }
+
+      unmountDecorativeIcons()
+      unmountPwaPreviewFrame()
+      clearScrollSnapTimers()
+      homeShell?.classList.remove('is-sidebar-showcase-mode')
+      setPreviewMode('new')
+      resetFixedWindowState()
+    }
+
+    syncPwaPreviewAvailability()
     void resolveDesktopDownloadUrl().then((downloadUrl) => {
       applyDesktopDownloadUrl(downloadUrl)
       sendHomepagePreviewConfig()
@@ -1918,6 +1999,10 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     window.addEventListener('resize', scheduleAdapterBadgePositions)
     window.addEventListener('resize', scheduleScrollNarrative)
     systemDarkQuery.addEventListener('change', handleColorSchemeChange)
+    desktopPreviewQuery.addEventListener(
+      'change',
+      syncPwaPreviewAvailability
+    )
 
     let didCleanupHomepage = false
     const cleanupHomepage = () => {
@@ -1927,7 +2012,11 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
 
       didCleanupHomepage = true
       systemDarkQuery.removeEventListener('change', handleColorSchemeChange)
-      pwaPreviewFrame?.removeEventListener('load', sendHomepagePreviewConfig)
+      desktopPreviewQuery.removeEventListener(
+        'change',
+        syncPwaPreviewAvailability
+      )
+      unmountPwaPreviewFrame()
       for (const option of languageOptions) {
         option.removeEventListener('click', handleLanguageOptionClick)
       }
@@ -1951,7 +2040,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       resetFixedWindowState()
       previewResizeObserver?.disconnect()
       for (const cleanup of cleanupDragListeners) cleanup()
-      for (const handle of handles) handle.dispose()
+      unmountDecorativeIcons()
     }
 
     window.addEventListener('pagehide', cleanupHomepage, { once: true })

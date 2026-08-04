@@ -2879,23 +2879,23 @@ a {
     --hero-padding-top: 112px;
     --hero-padding-bottom: 96px;
     grid-template-columns: 1fr;
-    align-content: start;
+    align-content: center;
     gap: 32px;
     min-height: 100svh;
   }
 
   .hero-actions {
-    order: 2;
-    align-self: start;
+    order: 1;
+    align-self: center;
   }
 
   .download-panel {
-    justify-items: start;
-    text-align: left;
+    justify-items: center;
+    text-align: center;
   }
 
   .download-actions {
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .app-release-shell,
@@ -3012,11 +3012,11 @@ a {
     text-align: left;
   }
 
-  .product-stage {
-    --window-copy-offset: 34px;
-    order: 1;
-    justify-self: center;
-    min-height: min(82vw, 430px);
+  .product-stage,
+  .room-scroll-section,
+  .linear-background,
+  .mobius-ribbon {
+    display: none;
   }
 
   .product-window-stack {

@@ -19,8 +19,9 @@
 
 ## Scroll Narrative
 
-- Keep one PWA iframe instance. Do not remount the iframe or swap the iframe DOM when moving between homepage scenes.
+- On desktop, keep one PWA iframe instance. Do not remount the iframe or swap the iframe DOM when moving between homepage scenes.
 - Never replace the PWA preview with screenshots, static mockups, or a second iframe. If a scene needs a different app state, reuse the existing iframe and drive it with preview URL params plus `postMessage`.
+- At the mobile breakpoint (`max-width: 760px`), do not instantiate the PWA iframe or the decorative background / Mobius canvas loaders. Keep the iframe template inert, center the single primary brand / download group in the first viewport, hide the preview-only product stage and room scroll spacer, and only mount the deferred desktop visuals after the viewport enters the desktop range. This is the mobile performance exception to the desktop narrative.
 - Treat scroll position as the source of truth: `scrollY -> progress -> rect/mode/copy`.
 - Scene-to-scene window movement must be continuous. When moving from one section layout to another, interpolate the same rect fields (`left`, `top`, `width`, `height`) from the previous scene to the next.
 - Offscreen previews should move the real window offscreen by its rect, for example exposing half of the existing iframe window. Do not build a cropped duplicate window to fake this.
