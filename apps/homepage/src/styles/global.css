@@ -54,29 +54,8 @@
   --footer-copy: rgba(229, 231, 235, .58);
   --footer-muted: rgba(229, 231, 235, .45);
   --footer-icon-bg: rgba(255, 255, 255, .035);
-  --wordmark-gradient: linear-gradient(
-    180deg,
-    #07090c 0%,
-    #3e4751 14%,
-    #f7fafc 28%,
-    #69737e 40%,
-    #0b0d10 52%,
-    #d7dde2 64%,
-    #59636d 76%,
-    #090b0e 100%
-  );
-  --wordmark-glint: linear-gradient(
-    105deg,
-    transparent 0 28%,
-    rgba(255, 255, 255, .96) 43%,
-    rgba(255, 255, 255, .12) 54%,
-    transparent 70% 100%
-  );
-  --wordmark-stroke: rgba(9, 13, 18, .34);
-  --wordmark-shadow:
-    0 1px 0 rgba(255, 255, 255, .82),
-    0 2px 1px rgba(0, 0, 0, .26),
-    0 14px 26px rgba(28, 38, 54, .22);
+  --linear-brand-fill: #141d24;
+  --linear-brand-edge: rgba(248, 250, 252, .9);
   --window-bg: #ffffff;
   --window-glass-bg: linear-gradient(
     145deg,
@@ -93,9 +72,9 @@
     linear-gradient(180deg, rgba(255, 255, 255, .12), transparent 58%);
   --window-border: rgba(20, 18, 15, .34);
   --window-shadow: 0 18px 34px rgba(0, 0, 0, .08);
-  --metal-background-opacity: .1;
-  --metal-background-filter: saturate(.22) contrast(.68) brightness(1.24);
-  --metal-background-blend: multiply;
+  --linear-background-opacity: .1;
+  --linear-background-filter: contrast(.68) brightness(1.24);
+  --linear-background-blend: multiply;
   --adapter-card-border: rgba(255, 255, 255, .62);
   --adapter-card-bg:
     linear-gradient(145deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .34)),
@@ -186,29 +165,8 @@
     --footer-copy: rgba(229, 231, 235, .58);
     --footer-muted: rgba(229, 231, 235, .46);
     --footer-icon-bg: rgba(255, 255, 255, .045);
-    --wordmark-gradient: linear-gradient(
-      180deg,
-      #ffffff 0%,
-      #858f9b 13%,
-      #ffffff 27%,
-      #6e7783 40%,
-      #191d24 50%,
-      #f5f8fb 64%,
-      #808b98 76%,
-      #fbfdff 100%
-    );
-    --wordmark-glint: linear-gradient(
-      105deg,
-      transparent 0 30%,
-      rgba(255, 255, 255, .98) 44%,
-      rgba(255, 255, 255, .18) 55%,
-      transparent 72% 100%
-    );
-    --wordmark-stroke: rgba(255, 255, 255, .2);
-    --wordmark-shadow:
-      0 1px 0 rgba(255, 255, 255, .22),
-      0 2px 1px rgba(0, 0, 0, .44),
-      0 16px 32px rgba(0, 0, 0, .42);
+    --linear-brand-fill: #e2ebf2;
+    --linear-brand-edge: rgba(8, 10, 13, .9);
     --window-bg: #171717;
     --window-glass-bg: linear-gradient(
       145deg,
@@ -225,9 +183,9 @@
       linear-gradient(180deg, rgba(255, 255, 255, .08), transparent 58%);
     --window-border: rgba(255, 255, 255, .18);
     --window-shadow: 0 24px 50px rgba(0, 0, 0, .36);
-    --metal-background-opacity: .22;
-    --metal-background-filter: saturate(.46) contrast(.78) brightness(.7);
-    --metal-background-blend: screen;
+    --linear-background-opacity: .22;
+    --linear-background-filter: contrast(.78) brightness(.7);
+    --linear-background-blend: screen;
     --adapter-card-border: rgba(255, 255, 255, .24);
     --adapter-card-bg:
       linear-gradient(
@@ -369,18 +327,18 @@ a {
   );
 }
 
-.metal-background {
+.linear-background {
   position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  opacity: var(--metal-background-opacity);
+  opacity: var(--linear-background-opacity);
   pointer-events: none;
-  filter: var(--metal-background-filter);
-  mix-blend-mode: var(--metal-background-blend);
+  filter: var(--linear-background-filter);
+  mix-blend-mode: var(--linear-background-blend);
 }
 
-.metal-background::after {
+.linear-background::after {
   position: absolute;
   inset: 0;
   background:
@@ -394,7 +352,7 @@ a {
 }
 
 @media (prefers-color-scheme: dark) {
-  .metal-background::after {
+  .linear-background::after {
     background:
       radial-gradient(
         circle at 28% 42%,
@@ -405,7 +363,7 @@ a {
   }
 }
 
-.metal-background canvas {
+.linear-background canvas {
   display: block;
   width: 100%;
   height: 100%;
@@ -439,6 +397,7 @@ a {
   background: var(--nav-glass-surface);
   box-shadow: var(--nav-shadow);
   pointer-events: auto;
+  transition: opacity 220ms ease, transform 260ms cubic-bezier(.22, 1, .36, 1);
   backdrop-filter: blur(22px) saturate(1.22);
   -webkit-backdrop-filter: blur(22px) saturate(1.22);
 }
@@ -822,6 +781,7 @@ a {
   align-self: center;
   display: flex;
   justify-content: center;
+  min-width: 0;
   transition: opacity 360ms ease, transform 520ms cubic-bezier(.22, 1, .36, 1);
 }
 
@@ -835,6 +795,8 @@ a {
   display: grid;
   justify-items: center;
   width: min(430px, 100%);
+  max-width: 100%;
+  min-width: 0;
   text-align: center;
 }
 
@@ -874,55 +836,17 @@ a {
 }
 
 .download-wordmark {
-  position: relative;
-  isolation: isolate;
+  max-width: 100%;
   margin: 0 0 clamp(24px, 3vw, 34px);
-  background: var(--wordmark-gradient);
-  background-size: 100% 120%;
-  color: transparent;
+  color: var(--linear-brand-fill);
   font-family:
     'Avenir Next', 'SF Pro Display', 'Helvetica Neue', var(--font-sans);
   font-size: clamp(34px, 3.35rem, 54px);
-  font-weight: 800;
-  letter-spacing: 0;
+  font-weight: 700;
+  letter-spacing: -.035em;
   line-height: .95;
-  text-shadow: var(--wordmark-shadow);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-stroke: .45px rgba(0, 0, 0, .16);
-}
-
-.download-wordmark::before,
-.download-wordmark::after {
-  position: absolute;
-  inset: 0;
-  content: attr(data-text);
-  letter-spacing: 0;
-  pointer-events: none;
-}
-
-.download-wordmark::before {
-  z-index: -1;
-  color: transparent;
-  -webkit-text-stroke: 3px var(--wordmark-stroke);
-}
-
-.download-wordmark::after {
-  background:
-    var(--wordmark-glint),
-    linear-gradient(
-    180deg,
-    rgba(255, 255, 255, .82) 0 18%,
-    transparent 26% 55%,
-    rgba(255, 255, 255, .28) 64%,
-    transparent 78%
-  );
-  color: transparent;
-  opacity: .42;
-  transform: skewX(-7deg);
-  mix-blend-mode: screen;
-  -webkit-background-clip: text;
-  background-clip: text;
+  text-shadow: none;
+  -webkit-text-stroke: .8px var(--linear-brand-edge);
 }
 
 .download-actions {
@@ -2558,20 +2482,6 @@ a {
   height: 100%;
 }
 
-.footer-brand-mark--dark {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  .footer-brand-mark--light {
-    display: none;
-  }
-
-  .footer-brand-mark--dark {
-    display: block;
-  }
-}
-
 .footer-intro p {
   max-width: 460px;
   margin: clamp(20px, 2.2vw, 28px) 0 0;
@@ -2935,6 +2845,12 @@ a {
     justify-self: start;
   }
 
+  .home-shell.is-showcase-mode .top-nav {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+  }
+
   .top-nav a,
   .nav-product-menu summary {
     min-width: 46px;
@@ -3211,6 +3127,11 @@ a {
 }
 
 @media (max-width: 460px) {
+  .download-wordmark {
+    font-size: clamp(34px, 12vw, 48px);
+    white-space: nowrap;
+  }
+
   .product-stage {
     min-height: 360px;
   }
@@ -3240,6 +3161,7 @@ a {
   }
 
   .download-button,
+  .top-nav,
   .top-nav a,
   .nav-product-menu summary,
   .nav-product-panel,
