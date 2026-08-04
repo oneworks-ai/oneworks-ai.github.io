@@ -10,6 +10,7 @@ import opencodeIcon from '../assets/adapters/opencode.svg'
 import SiteFooter from '../components/SiteFooter.astro'
 import SiteHeader from '../components/SiteHeader.astro'
 import PageLayout from '../layouts/PageLayout.astro'
+import { homepageBrandIconTheme } from '../utils/brand-icon-theme'
 import {
   githubRepositoryUrl,
   homePageTitle,
@@ -78,7 +79,7 @@ const mobiusMarkLight = createMobiusSvg({
   noBackground: true,
   shadow: false,
   size: 900,
-  theme: 'metal',
+  theme: homepageBrandIconTheme,
   title: 'One Works Mobius mark'
 }).replace(/^<\?xml[^>]*>\s*/, '')
 const mobiusMarkDark = createMobiusSvg({
@@ -86,7 +87,7 @@ const mobiusMarkDark = createMobiusSvg({
   noBackground: true,
   shadow: false,
   size: 900,
-  theme: 'metal',
+  theme: homepageBrandIconTheme,
   title: 'One Works Mobius mark'
 }).replace(/^<\?xml[^>]*>\s*/, '')
 const downloadMarkLight = createMobiusSvg({
@@ -94,7 +95,7 @@ const downloadMarkLight = createMobiusSvg({
   noBackground: true,
   shadow: false,
   size: 160,
-  theme: 'metal',
+  theme: homepageBrandIconTheme,
   title: 'One Works mark'
 }).replace(/^<\?xml[^>]*>\s*/, '')
 const downloadMarkDark = createMobiusSvg({
@@ -102,7 +103,7 @@ const downloadMarkDark = createMobiusSvg({
   noBackground: true,
   shadow: false,
   size: 160,
-  theme: 'metal',
+  theme: homepageBrandIconTheme,
   title: 'One Works mark'
 }).replace(/^<\?xml[^>]*>\s*/, '')
 const githubReleasesUrl = 'https://github.com/oneworks-ai/app/releases'
@@ -154,6 +155,7 @@ const buildHomepagePreviewUrl = (
   url.searchParams.set('owPreview', 'homepage')
   url.searchParams.set('locale', homepagePreviewLocale)
   url.searchParams.set('downloadUrl', homepageDownloadUrl)
+  url.searchParams.set('iconTheme', homepageBrandIconTheme)
   url.searchParams.set('__oneworks_desktop', 'macos')
   url.searchParams.set('senderHeader', 'collapsed')
   url.searchParams.set('sidebar', mode === 'sidebar' ? 'expanded' : 'collapsed')
@@ -198,7 +200,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     data-github-releases-url={githubReleasesUrl}
     data-homepage-download-url={homepageDownloadUrl}
   >
-    <div class="metal-background" data-metal-background aria-hidden="true">
+    <div class="linear-background" data-linear-background aria-hidden="true">
     </div>
 
     <SiteHeader downloadUrl={homepageDownloadUrl} i18n showCornerDownload />
@@ -219,7 +221,6 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
           <h1
             id="home-hero-title"
             class="download-wordmark"
-            data-text="One Works"
           >
             One Works
             <span class="visually-hidden" data-i18n="hero.title.suffix">
@@ -227,7 +228,8 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
             </span>
           </h1>
           <p class="visually-hidden" data-i18n="hero.summary">
-            One Works 是面向 AI 编程伙伴的本地工作台，用一个应用调度 Claude Code、Codex、Kimi 等工具，管理插件、资产、任务和协同流程。
+            One Works 是面向 AI 编程伙伴的本地工作台，用一个应用调度 Claude
+            Code、Codex、Kimi 等工具，管理插件、资产、任务和协同流程。
           </p>
           <div class="download-actions">
             <a
@@ -397,9 +399,10 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
 
   <script>
   import { mountOneWorksIconLoader } from '@oneworks/icon/loader'
+  import { homepageBrandIconTheme } from '../utils/brand-icon-theme'
 
   const initializeHomepage = () => {
-    const backgroundHost = document.querySelector('[data-metal-background]')
+    const backgroundHost = document.querySelector('[data-linear-background]')
     const host = document.querySelector('[data-mobius-loader]')
     const homeShell = document.querySelector<HTMLElement>('.home-shell')
     if (
@@ -929,6 +932,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         version: 1,
         payload: {
           downloadUrl: currentDownloadUrl,
+          iconTheme: homepageBrandIconTheme,
           locale: getHomepagePreviewLocale(),
           mockData: getHomepagePreviewMockData(),
           ...(navigationUrl != null && navigationUrl.trim() !== ''
@@ -1860,15 +1864,15 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       handles.push(mountOneWorksIconLoader(backgroundHost, {
         appearance: 'system',
         background: true,
-        canvasClassName: 'metal-background-canvas',
-        className: 'metal-background-loader',
+        canvasClassName: 'linear-background-canvas',
+        className: 'linear-background-loader',
         fullscreen: true,
         mode: iconMode,
         motion: true,
-        seed: 'homepage-metal-background',
+        seed: 'homepage-linear-background',
         shadow: false,
         size: '100%',
-        theme: 'metal'
+        theme: homepageBrandIconTheme
       }))
     }
 
@@ -1883,7 +1887,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         seed: 'oneworks',
         shadow: false,
         size: '100%',
-        theme: 'metal'
+        theme: homepageBrandIconTheme
       }))
 
       host.querySelectorAll('[data-mobius-static]').forEach((element) =>

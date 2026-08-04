@@ -1,6 +1,8 @@
 ---
 import { createMobiusSvg } from '@oneworks/icon/svg'
 
+import { homepageBrandIconTheme } from '../utils/brand-icon-theme'
+
 type Props = {
   brandClassName?: string
   className?: string
@@ -33,7 +35,7 @@ const brandMarkLight = createMobiusSvg({
   noBackground: true,
   shadow: false,
   size: 96,
-  theme: 'metal',
+  theme: homepageBrandIconTheme,
   title: 'One Works mark'
 }).replace(/^<\?xml[^>]*>\s*/, '')
 const brandMarkDark = createMobiusSvg({
@@ -41,7 +43,7 @@ const brandMarkDark = createMobiusSvg({
   noBackground: true,
   shadow: false,
   size: 96,
-  theme: 'metal',
+  theme: homepageBrandIconTheme,
   title: 'One Works mark'
 }).replace(/^<\?xml[^>]*>\s*/, '')
 ---

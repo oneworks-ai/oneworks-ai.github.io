@@ -1,6 +1,8 @@
 ---
 import { createMobiusSvg } from '@oneworks/icon/svg'
 
+import { homepageBrandIconTheme } from '../utils/brand-icon-theme'
+
 type Props = {
   docsUrl?: string
   downloadUrl?: string
@@ -17,20 +19,12 @@ const supportEmail = 'support@oneworks.cloud'
 const supportUrl = `mailto:${supportEmail}`
 const pwaUrl = new URL('/pwa/', Astro.site ?? 'https://oneworks.cloud/').toString()
 const i18nAttrs = (key: string) => i18n ? { 'data-i18n': key } : {}
-const footerMarkLight = createMobiusSvg({
-  mode: 'light',
-  noBackground: true,
-  shadow: false,
-  size: 96,
-  theme: 'metal',
-  title: 'One Works mark'
-}).replace(/^<\?xml[^>]*>\s*/, '')
 const footerMarkDark = createMobiusSvg({
   mode: 'dark',
   noBackground: true,
   shadow: false,
   size: 96,
-  theme: 'metal',
+  theme: homepageBrandIconTheme,
   title: 'One Works mark'
 }).replace(/^<\?xml[^>]*>\s*/, '')
 ---
@@ -46,12 +40,7 @@ const footerMarkDark = createMobiusSvg({
         aria-label="One Works home"
       >
         <span
-          class="footer-brand-mark footer-brand-mark--light"
-          aria-hidden="true"
-          set:html={footerMarkLight}
-        ></span>
-        <span
-          class="footer-brand-mark footer-brand-mark--dark"
+          class="footer-brand-mark"
           aria-hidden="true"
           set:html={footerMarkDark}
         ></span>
