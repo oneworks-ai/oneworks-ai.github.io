@@ -2920,6 +2920,10 @@ a {
     vector-effect: non-scaling-stroke;
   }
 
+  .mobile-agent-network-line--secondary {
+    opacity: .56;
+  }
+
   .mobile-agent-node {
     position: absolute;
     top: var(--node-y);
@@ -2968,6 +2972,27 @@ a {
     height: 25px;
     object-fit: contain;
     filter: var(--adapter-icon-filter);
+  }
+
+  .mobile-agent-node--secondary {
+    width: 40px;
+    height: 40px;
+    opacity: .82;
+  }
+
+  .mobile-agent-node--secondary .mobile-agent-node-card {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+  }
+
+  .mobile-agent-node--secondary .mobile-agent-node-card::before {
+    border-radius: 10px;
+  }
+
+  .mobile-agent-node--secondary .mobile-agent-node-card img {
+    width: 22px;
+    height: 22px;
   }
 
   .download-panel {
