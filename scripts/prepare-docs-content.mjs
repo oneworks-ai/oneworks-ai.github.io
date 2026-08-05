@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const docsAppDir = resolve(rootDir, 'apps/docs')
 const stagingDir = resolve(docsAppDir, 'src')
+const siteAssetsDir = resolve(docsAppDir, 'public')
 
 const ignoredDirectories = new Set([
   '.git',
@@ -58,6 +59,9 @@ await cp(sourceDir, stagingDir, {
   filter: (sourcePath) => shouldCopyPath(sourceDir, sourcePath),
   recursive: true
 })
+if (await isDirectory(siteAssetsDir)) {
+  await cp(siteAssetsDir, resolve(stagingDir, 'public'), { recursive: true })
+}
 
 console.log('[prepare-docs-content] ready')
 
