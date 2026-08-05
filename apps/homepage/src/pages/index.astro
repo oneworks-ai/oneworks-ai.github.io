@@ -24,6 +24,13 @@ const adapterBadges = [
     edge: 'left',
     highlight: 'claude-code',
     label: 'Claude Code',
+    mobile: {
+      priority: 'primary',
+      x: 15,
+      y: 24,
+      style:
+        '--node-r: -8deg; --node-r-active: -3deg; --node-drift-x: 8px; --node-drift-y: -7px; --node-return-x: -4px; --node-return-y: 4px; --node-delay: -1.8s; --node-duration: 8.6s;'
+    },
     progress: 0.24,
     style:
       '--r: -14deg; --s: 0.96; --float-x: 7px; --float-y: -6px; --tilt: 2deg; --delay: -1.2s; --duration: 7.2s;'
@@ -33,6 +40,13 @@ const adapterBadges = [
     edge: 'top',
     highlight: 'codex',
     label: 'Codex',
+    mobile: {
+      priority: 'primary',
+      x: 85,
+      y: 22,
+      style:
+        '--node-r: 7deg; --node-r-active: 2deg; --node-drift-x: -6px; --node-drift-y: 8px; --node-return-x: 4px; --node-return-y: -3px; --node-delay: -4.2s; --node-duration: 9.4s;'
+    },
     progress: 0.2,
     style:
       '--r: 9deg; --s: 1.04; --float-x: -5px; --float-y: 7px; --tilt: -2deg; --delay: -3.6s; --duration: 8.1s;'
@@ -42,6 +56,13 @@ const adapterBadges = [
     edge: 'top',
     highlight: 'kimi',
     label: 'Kimi',
+    mobile: {
+      priority: 'primary',
+      x: 88,
+      y: 48,
+      style:
+        '--node-r: -5deg; --node-r-active: -1deg; --node-drift-x: -8px; --node-drift-y: -5px; --node-return-x: 3px; --node-return-y: 6px; --node-delay: -2.7s; --node-duration: 7.9s;'
+    },
     progress: 0.48,
     style:
       '--r: -5deg; --s: 0.98; --float-x: 6px; --float-y: 5px; --tilt: 2deg; --delay: -2.4s; --duration: 7.6s;'
@@ -51,6 +72,13 @@ const adapterBadges = [
     edge: 'bottom',
     highlight: 'ai-partner',
     label: 'Gemini',
+    mobile: {
+      priority: 'secondary',
+      x: 10,
+      y: 52,
+      style:
+        '--node-r: 10deg; --node-r-active: 4deg; --node-drift-x: 7px; --node-drift-y: 6px; --node-return-x: -3px; --node-return-y: -5px; --node-delay: -5.1s; --node-duration: 10.2s;'
+    },
     progress: 0.88,
     style:
       '--r: 13deg; --s: 0.86; --float-x: -7px; --float-y: -5px; --tilt: -3deg; --delay: -4.1s; --duration: 8.8s;'
@@ -60,6 +88,13 @@ const adapterBadges = [
     edge: 'left',
     highlight: 'ai-partner',
     label: 'Copilot',
+    mobile: {
+      priority: 'secondary',
+      x: 90,
+      y: 67,
+      style:
+        '--node-r: -7deg; --node-r-active: -2deg; --node-drift-x: -7px; --node-drift-y: 5px; --node-return-x: 4px; --node-return-y: -4px; --node-delay: -0.9s; --node-duration: 9.7s;'
+    },
     progress: 0.68,
     style:
       '--r: 8deg; --s: 0.9; --float-x: 6px; --float-y: 8px; --tilt: -2deg; --delay: -0.7s; --duration: 7.9s;'
@@ -69,31 +104,26 @@ const adapterBadges = [
     edge: 'top',
     highlight: 'ai-partner',
     label: 'OpenCode',
+    mobile: {
+      priority: 'secondary',
+      x: 20,
+      y: 70,
+      style:
+        '--node-r: 6deg; --node-r-active: 1deg; --node-drift-x: 6px; --node-drift-y: -7px; --node-return-x: -5px; --node-return-y: 3px; --node-delay: -6.4s; --node-duration: 10.8s;'
+    },
     progress: 0.78,
     style:
       '--r: -11deg; --s: 0.88; --float-x: -6px; --float-y: 5px; --tilt: 2deg; --delay: -5.2s; --duration: 9.2s;'
   }
 ]
-const mobileAgentNodes = [
-  {
-    icon: claudeCodeIcon,
-    label: 'Claude Code',
-    style:
-      '--node-x: 15%; --node-y: 24%; --node-r: -8deg; --node-r-active: -3deg; --node-drift-x: 8px; --node-drift-y: -7px; --node-return-x: -4px; --node-return-y: 4px; --node-delay: -1.8s; --node-duration: 8.6s;'
-  },
-  {
-    icon: codexIcon,
-    label: 'Codex',
-    style:
-      '--node-x: 85%; --node-y: 22%; --node-r: 7deg; --node-r-active: 2deg; --node-drift-x: -6px; --node-drift-y: 8px; --node-return-x: 4px; --node-return-y: -3px; --node-delay: -4.2s; --node-duration: 9.4s;'
-  },
-  {
-    icon: kimiIcon,
-    label: 'Kimi',
-    style:
-      '--node-x: 88%; --node-y: 48%; --node-r: -5deg; --node-r-active: -1deg; --node-drift-x: -8px; --node-drift-y: -5px; --node-return-x: 3px; --node-return-y: 6px; --node-delay: -2.7s; --node-duration: 7.9s;'
-  }
-]
+const mobileAgentNodes = adapterBadges.map(({ icon, label, mobile }) => ({
+  icon,
+  label,
+  priority: mobile.priority,
+  style: `--node-x: ${mobile.x}%; --node-y: ${mobile.y}%; ${mobile.style}`,
+  x: mobile.x,
+  y: mobile.y
+}))
 const mobiusMarkLight = createMobiusSvg({
   mode: 'light',
   noBackground: true,
@@ -232,14 +262,27 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
-          <path d="M50 43 L15 24" />
-          <path d="M50 43 L85 22" />
-          <path d="M50 43 L88 48" />
+          {
+            mobileAgentNodes.map((agent) => (
+              <path
+                class:list={[
+                  'mobile-agent-network-line',
+                  agent.priority === 'secondary' &&
+                  'mobile-agent-network-line--secondary'
+                ]}
+                d={`M50 43 L${agent.x} ${agent.y}`}
+              />
+            ))
+          }
         </svg>
         {
           mobileAgentNodes.map((agent) => (
             <span
-              class="mobile-agent-node"
+              class:list={[
+                'mobile-agent-node',
+                agent.priority === 'secondary' &&
+                'mobile-agent-node--secondary'
+              ]}
               data-agent={agent.label}
               style={agent.style}
             >
@@ -283,7 +326,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
               data-homepage-download-link
               data-i18n="hero.download"
             >
-              下载 One Works
+              下载
             </a>
           </div>
         </div>
@@ -557,7 +600,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     }
     const homepageCopy: Record<HomepageLocale, Record<string, string>> = {
       en: {
-        'hero.download': 'Download One Works',
+        'hero.download': 'Download',
         'hero.summary':
           'One Works is a local workspace for AI coding partners, orchestrating Claude Code, Codex, Kimi, plugins, assets, tasks, and multi-agent workflows from one app.',
         'hero.title.suffix': 'AI coding workspace',
@@ -596,7 +639,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         languageLabel: 'Choose language'
       },
       zh: {
-        'hero.download': '下载 One Works',
+        'hero.download': '下载',
         'hero.summary':
           'One Works 是面向 AI 编程伙伴的本地工作台，用一个应用调度 Claude Code、Codex、Kimi 等工具，管理插件、资产、任务和协同流程。',
         'hero.title.suffix': 'AI 编程伙伴工作台',
