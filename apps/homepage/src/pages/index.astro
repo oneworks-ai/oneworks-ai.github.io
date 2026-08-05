@@ -362,7 +362,13 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
 
         <div class="product-window-stack">
           <div class="product-window">
-            <div class="window-preview" data-pwa-preview-host></div>
+            <div class="window-preview" data-pwa-preview-host>
+              <div class="window-preview-poster" data-pwa-preview-poster aria-hidden="true">
+                <span class="window-preview-poster-line"></span>
+                <span class="window-preview-poster-line window-preview-poster-line--short"></span>
+                <span class="window-preview-poster-panel"></span>
+              </div>
+            </div>
             <template data-pwa-preview-template>
               <iframe
                 data-pwa-preview-frame
@@ -520,6 +526,9 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     const pwaPreviewHost = document.querySelector<HTMLElement>(
       '[data-pwa-preview-host]'
     )
+    const pwaPreviewPoster = document.querySelector<HTMLElement>(
+      '[data-pwa-preview-poster]'
+    )
     const pwaPreviewTemplate = document.querySelector<HTMLTemplateElement>(
       '[data-pwa-preview-template]'
     )
@@ -578,6 +587,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     }
     type PreviewWindowAnchorRect = PreviewWindowRect & { documentTop: number }
     let previewWindowAnchorRect: PreviewWindowAnchorRect | undefined
+
     type HomepageLocale = 'en' | 'zh'
     type DownloadArchitecture = 'arm64' | 'unknown' | 'x64'
     type DownloadPlatform =
@@ -1132,8 +1142,15 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       }
 
       pwaPreviewFrame.removeEventListener('load', sendHomepagePreviewConfig)
+      pwaPreviewFrame.removeEventListener('load', revealPwaPreviewFrame)
       pwaPreviewFrame.remove()
       pwaPreviewFrame = undefined
+      pwaPreviewHost?.classList.remove('is-ready')
+      pwaPreviewPoster?.classList.remove('is-hidden')
+    }
+    const revealPwaPreviewFrame = () => {
+      pwaPreviewHost?.classList.add('is-ready')
+      pwaPreviewPoster?.classList.add('is-hidden')
     }
     const mountPwaPreviewFrame = () => {
       if (
@@ -1166,8 +1183,11 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       }
 
       frame.addEventListener('load', sendHomepagePreviewConfig)
+      frame.addEventListener('load', revealPwaPreviewFrame, { once: true })
+      pwaPreviewHost.classList.remove('is-ready')
+      pwaPreviewPoster?.classList.remove('is-hidden')
       frame.src = initialUrl
-      pwaPreviewHost.replaceChildren(frame)
+      pwaPreviewHost.append(frame)
     }
     const applyHomepageLocale = (
       locale: HomepageLocale,
