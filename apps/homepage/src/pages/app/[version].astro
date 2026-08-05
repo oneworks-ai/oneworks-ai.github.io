@@ -19,7 +19,13 @@ export async function getStaticPaths() {
 }
 
 const { release } = Astro.props as { release: DesktopRelease }
-const platformOrder: DownloadPlatform[] = ['mac', 'linux', 'windows']
+const platformOrder: DownloadPlatform[] = [
+  'mac',
+  'linux',
+  'windows',
+  'android',
+  'ios'
+]
 
 const platformLabel = (platform: DownloadPlatform) => {
   if (platform === 'mac') {
@@ -28,15 +34,24 @@ const platformLabel = (platform: DownloadPlatform) => {
   if (platform === 'linux') {
     return 'Linux'
   }
+  if (platform === 'android') {
+    return 'Android'
+  }
+  if (platform === 'ios') {
+    return 'iOS'
+  }
   return 'Windows'
 }
 
-const architectureLabel = (architecture: DownloadArchitecture) => {
+const architectureLabel = (
+  architecture: DownloadArchitecture,
+  platform: DownloadPlatform
+) => {
   if (architecture === 'arm64') {
-    return 'Apple Silicon / ARM64'
+    return platform === 'mac' ? 'Apple Silicon / ARM64' : 'ARM64'
   }
   if (architecture === 'x64') {
-    return 'Intel / x64'
+    return platform === 'mac' ? 'Intel / x64' : 'x64'
   }
   return '通用'
 }
@@ -92,7 +107,7 @@ const releasePlatforms = groupedPlatforms.map((group) =>
   platformLabel(group.platform)
 )
 const releasePageDescription =
-  `下载 One Works ${release.title} 桌面端安装包，支持 ${
+  `下载 One Works ${release.title} 应用安装包，支持 ${
     releasePlatforms.join('、')
   }。`
 const releaseStructuredData = [
@@ -120,7 +135,7 @@ const releaseStructuredData = [
       {
         '@type': 'ListItem',
         item: new URL('/app/', siteOrigin).toString(),
-        name: '桌面端下载',
+        name: '应用下载',
         position: 1
       },
       {
@@ -163,7 +178,7 @@ const releaseStructuredData = [
                 <path d="M15 5 8 12l7 7" />
               </svg>
             </a>
-            <a href="/app/">桌面端下载</a>
+            <a href="/app/">应用下载</a>
             <span aria-hidden="true">/</span>
             <span>{release.title}</span>
           </nav>
@@ -188,7 +203,8 @@ const releaseStructuredData = [
                   <span
                     class:list={[
                       'app-platform-icon',
-                      group.platform !== 'linux' &&
+                      (group.platform === 'mac' ||
+                        group.platform === 'windows') &&
                       'app-platform-icon--solid'
                     ]}
                     aria-hidden="true"
@@ -218,6 +234,24 @@ const releaseStructuredData = [
                         </svg>
                       )
                     }
+                    {
+                      group.platform === 'android' && (
+                        <svg viewBox="0 0 24 24" focusable="false">
+                          <path d="m8.2 7-1.4-2M15.8 7l1.4-2" />
+                          <path d="M7 10h10v7.5a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V10Z" />
+                          <path d="M7 10a5 5 0 0 1 10 0M4.5 11v5M19.5 11v5M9.5 19.5V22M14.5 19.5V22" />
+                          <path d="M9.5 8h.1M14.4 8h.1" />
+                        </svg>
+                      )
+                    }
+                    {
+                      group.platform === 'ios' && (
+                        <svg viewBox="0 0 24 24" focusable="false">
+                          <path d="M9 2.5h6a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-15a2 2 0 0 1 2-2Z" />
+                          <path d="M10.5 5h3M11.5 18.5h1" />
+                        </svg>
+                      )
+                    }
                   </span>
                   <span>{platformLabel(group.platform)}</span>
                 </h2>
@@ -235,7 +269,8 @@ const releaseStructuredData = [
                         asset.name
                       }</span>
                       <span class="app-release-detail-asset__meta">
-                        {architectureLabel(asset.architecture)} · {asset.format}
+                        {architectureLabel(asset.architecture, asset.platform)}
+                        {' · '}{asset.format}
                         {
                           formatAssetSize(asset.size) !== ''
                             ? ` · ${formatAssetSize(asset.size)}`

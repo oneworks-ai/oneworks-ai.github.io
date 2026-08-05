@@ -74,6 +74,26 @@ const adapterBadges = [
       '--r: -11deg; --s: 0.88; --float-x: -6px; --float-y: 5px; --tilt: 2deg; --delay: -5.2s; --duration: 9.2s;'
   }
 ]
+const mobileAgentNodes = [
+  {
+    icon: claudeCodeIcon,
+    label: 'Claude Code',
+    style:
+      '--node-x: 15%; --node-y: 24%; --node-r: -8deg; --node-r-active: -3deg; --node-drift-x: 8px; --node-drift-y: -7px; --node-return-x: -4px; --node-return-y: 4px; --node-delay: -1.8s; --node-duration: 8.6s;'
+  },
+  {
+    icon: codexIcon,
+    label: 'Codex',
+    style:
+      '--node-x: 85%; --node-y: 22%; --node-r: 7deg; --node-r-active: 2deg; --node-drift-x: -6px; --node-drift-y: 8px; --node-return-x: 4px; --node-return-y: -3px; --node-delay: -4.2s; --node-duration: 9.4s;'
+  },
+  {
+    icon: kimiIcon,
+    label: 'Kimi',
+    style:
+      '--node-x: 88%; --node-y: 48%; --node-r: -5deg; --node-r-active: -1deg; --node-drift-x: -8px; --node-drift-y: -5px; --node-return-x: 3px; --node-return-y: 6px; --node-delay: -2.7s; --node-duration: 7.9s;'
+  }
+]
 const mobiusMarkLight = createMobiusSvg({
   mode: 'light',
   noBackground: true,
@@ -122,7 +142,7 @@ const homepageStructuredData = {
     price: '0',
     priceCurrency: 'USD'
   },
-  operatingSystem: 'macOS, Windows, Linux',
+  operatingSystem: 'macOS, Windows, Linux, Android, iOS',
   sameAs: [githubRepositoryUrl],
   softwareHelp: new URL('/docs/', siteOrigin).toString(),
   url: new URL('/', siteOrigin).toString()
@@ -206,6 +226,31 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     <SiteHeader downloadUrl={homepageDownloadUrl} i18n showCornerDownload />
 
     <section class="hero" aria-labelledby="home-hero-title">
+      <div class="mobile-agent-network" aria-hidden="true">
+        <svg
+          class="mobile-agent-network-lines"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <path d="M50 43 L15 24" />
+          <path d="M50 43 L85 22" />
+          <path d="M50 43 L88 48" />
+        </svg>
+        {
+          mobileAgentNodes.map((agent) => (
+            <span
+              class="mobile-agent-node"
+              data-agent={agent.label}
+              style={agent.style}
+            >
+              <span class="mobile-agent-node-card">
+                <img src={agent.icon.src} alt="" loading="eager" />
+              </span>
+            </span>
+          ))
+        }
+      </div>
+
       <div class="hero-actions">
         <div id="download" class="download-panel">
           <div class="download-icon" aria-hidden="true">
@@ -238,7 +283,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
               data-homepage-download-link
               data-i18n="hero.download"
             >
-              下载桌面端
+              下载 One Works
             </a>
           </div>
         </div>
@@ -273,18 +318,18 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
 
         <div class="product-window-stack">
           <div class="product-window">
-            <div class="window-preview">
+            <div class="window-preview" data-pwa-preview-host></div>
+            <template data-pwa-preview-template>
               <iframe
                 data-pwa-preview-frame
                 data-new-src={pwaPreviewUrl}
                 data-room-src={pwaRoomPreviewUrl}
                 data-sidebar-src={pwaSidebarPreviewUrl}
-                src={pwaPreviewUrl}
                 title="One Works PWA preview"
                 loading="eager"
                 referrerpolicy="no-referrer"
               ></iframe>
-            </div>
+            </template>
           </div>
           <p class="window-tagline" data-window-tagline>
             <span class="tagline-text">
@@ -420,9 +465,13 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     )
     const productStage = document.querySelector<HTMLElement>('.product-stage')
     const previewWindow = document.querySelector('.product-window')
-    const pwaPreviewFrame = document.querySelector<HTMLIFrameElement>(
-      '[data-pwa-preview-frame]'
+    const pwaPreviewHost = document.querySelector<HTMLElement>(
+      '[data-pwa-preview-host]'
     )
+    const pwaPreviewTemplate = document.querySelector<HTMLTemplateElement>(
+      '[data-pwa-preview-template]'
+    )
+    let pwaPreviewFrame: HTMLIFrameElement | undefined
     const languageMenu = document.querySelector<HTMLDetailsElement>(
       '[data-language-menu]'
     )
@@ -443,10 +492,13 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     const windowTagline = document.querySelector<HTMLElement>(
       '[data-window-tagline]'
     )
-    const handles: Array<ReturnType<typeof mountOneWorksIconLoader>> = []
+    let decorativeIconHandles: Array<
+      ReturnType<typeof mountOneWorksIconLoader>
+    > = []
     const cleanupDragListeners: Array<() => void> = []
     let previewResizeObserver: ResizeObserver | undefined
     const systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const desktopPreviewQuery = window.matchMedia('(min-width: 761px)')
     const getSystemMode = (): 'light' | 'dark' =>
       systemDarkQuery.matches ? 'dark' : 'light'
     const githubReleasesUrl = homeShell?.dataset.githubReleasesUrl?.trim() ||
@@ -455,7 +507,6 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       homeShell?.dataset.downloadsManifestUrl?.trim() || '/downloads.json'
     let currentDownloadUrl = homeShell?.dataset.homepageDownloadUrl?.trim() ||
       githubReleasesUrl
-    const iconMode = getSystemMode()
     const adapterDragLimit = 72
     let adapterPositionFrame: number | undefined
     let scrollNarrativeFrame: number | undefined
@@ -477,7 +528,13 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     let previewWindowAnchorRect: PreviewWindowAnchorRect | undefined
     type HomepageLocale = 'en' | 'zh'
     type DownloadArchitecture = 'arm64' | 'unknown' | 'x64'
-    type DownloadPlatform = 'linux' | 'mac' | 'unknown' | 'windows'
+    type DownloadPlatform =
+      | 'android'
+      | 'ios'
+      | 'linux'
+      | 'mac'
+      | 'unknown'
+      | 'windows'
     type DesktopReleaseAsset = {
       architecture?: unknown
       downloadUrl?: unknown
@@ -500,7 +557,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     }
     const homepageCopy: Record<HomepageLocale, Record<string, string>> = {
       en: {
-        'hero.download': 'Download desktop app',
+        'hero.download': 'Download One Works',
         'hero.summary':
           'One Works is a local workspace for AI coding partners, orchestrating Claude Code, Codex, Kimi, plugins, assets, tasks, and multi-agent workflows from one app.',
         'hero.title.suffix': 'AI coding workspace',
@@ -539,7 +596,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         languageLabel: 'Choose language'
       },
       zh: {
-        'hero.download': '下载桌面端',
+        'hero.download': '下载 One Works',
         'hero.summary':
           'One Works 是面向 AI 编程伙伴的本地工作台，用一个应用调度 Claude Code、Codex、Kimi 等工具，管理插件、资产、任务和协同流程。',
         'hero.title.suffix': 'AI 编程伙伴工作台',
@@ -683,14 +740,21 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         navigator.platform,
         navigator.userAgent
       ].filter(Boolean).join(' ').toLowerCase()
-      const platform: DownloadPlatform =
-        platformText.includes('mac') || platformText.includes('darwin')
-          ? 'mac'
-          : platformText.includes('win')
-          ? 'windows'
-          : platformText.includes('linux')
-          ? 'linux'
-          : 'unknown'
+      const platform: DownloadPlatform = platformText.includes('android')
+        ? 'android'
+        : platformText.includes('iphone') ||
+            platformText.includes('ipad') ||
+            platformText.includes('ipod') ||
+            (platformText.includes('macintosh') &&
+              navigator.maxTouchPoints > 1)
+        ? 'ios'
+        : platformText.includes('mac') || platformText.includes('darwin')
+        ? 'mac'
+        : platformText.includes('win')
+        ? 'windows'
+        : platformText.includes('linux')
+        ? 'linux'
+        : 'unknown'
       const architecture: DownloadArchitecture =
         architectureText.includes('arm') ||
           architectureText.includes('aarch64')
@@ -795,6 +859,34 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         return score
       }
 
+      if (target.platform === 'android') {
+        if (assetFormat !== 'apk') {
+          return -1
+        }
+        let score = 100
+        if (
+          target.architecture !== 'unknown' &&
+          assetArchitecture === target.architecture
+        ) {
+          score += 30
+        }
+        return score + 20
+      }
+
+      if (target.platform === 'ios') {
+        let score = 100
+        if (
+          target.architecture !== 'unknown' &&
+          assetArchitecture === target.architecture
+        ) {
+          score += 30
+        }
+        if (assetFormat === 'ipa') {
+          score += 20
+        }
+        return score
+      }
+
       return -1
     }
     const pickDesktopDownloadAsset = (
@@ -837,8 +929,18 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         return githubReleasesUrl
       }
 
-      return pickDesktopDownloadAsset(releases, target) ??
-        (normalizeReleaseString(manifest?.fallbackUrl) || githubReleasesUrl)
+      const directDownloadUrl = pickDesktopDownloadAsset(releases, target)
+      if (directDownloadUrl != null) {
+        return directDownloadUrl
+      }
+      if (target.platform === 'android' || target.platform === 'ios') {
+        const downloadsUrl = new URL('/app/', window.location.href)
+        downloadsUrl.searchParams.set('channel', 'stable')
+        downloadsUrl.searchParams.set('platform', target.platform)
+        return downloadsUrl.toString()
+      }
+      return normalizeReleaseString(manifest?.fallbackUrl) ||
+        githubReleasesUrl
     }
     const syncPreviewDownloadUrl = (downloadUrl: string) => {
       if (!(pwaPreviewFrame instanceof HTMLIFrameElement)) {
@@ -969,6 +1071,49 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       if (nextSidebarSrc != null) {
         pwaPreviewFrame.dataset.sidebarSrc = nextSidebarSrc
       }
+    }
+    const unmountPwaPreviewFrame = () => {
+      if (!(pwaPreviewFrame instanceof HTMLIFrameElement)) {
+        return
+      }
+
+      pwaPreviewFrame.removeEventListener('load', sendHomepagePreviewConfig)
+      pwaPreviewFrame.remove()
+      pwaPreviewFrame = undefined
+    }
+    const mountPwaPreviewFrame = () => {
+      if (
+        !desktopPreviewQuery.matches ||
+        pwaPreviewFrame instanceof HTMLIFrameElement ||
+        !(pwaPreviewHost instanceof HTMLElement) ||
+        !(pwaPreviewTemplate instanceof HTMLTemplateElement)
+      ) {
+        return
+      }
+
+      const frame = pwaPreviewTemplate.content
+        .querySelector<HTMLIFrameElement>('[data-pwa-preview-frame]')
+        ?.cloneNode(true)
+      if (!(frame instanceof HTMLIFrameElement)) {
+        return
+      }
+
+      pwaPreviewFrame = frame
+      syncPreviewDownloadUrl(currentDownloadUrl)
+      syncPwaPreviewLocale(getHomepagePreviewLocale())
+      const initialUrl = previewMode === 'room'
+        ? frame.dataset.roomSrc
+        : previewMode === 'sidebar'
+        ? frame.dataset.sidebarSrc
+        : frame.dataset.newSrc
+      if (initialUrl == null || initialUrl.trim() === '') {
+        pwaPreviewFrame = undefined
+        return
+      }
+
+      frame.addEventListener('load', sendHomepagePreviewConfig)
+      frame.src = initialUrl
+      pwaPreviewHost.replaceChildren(frame)
     }
     const applyHomepageLocale = (
       locale: HomepageLocale,
@@ -1314,6 +1459,9 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     // Keep scrollY as the source of truth; snap only moves scroll, and this derives the window state.
     const syncScrollNarrative = () => {
       scrollNarrativeFrame = undefined
+      if (!desktopPreviewQuery.matches) {
+        return
+      }
       if (window.scrollY < 8) {
         rememberPreviewWindowAnchorRect()
       }
@@ -1507,6 +1655,9 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     }
 
     const handleScroll = () => {
+      if (!desktopPreviewQuery.matches) {
+        return
+      }
       const nextScrollY = window.scrollY
       if (Math.abs(nextScrollY - lastScrollY) > 1) {
         scrollDirection = nextScrollY > lastScrollY ? 'down' : 'up'
@@ -1860,48 +2011,74 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       }
     }
 
-    if (backgroundHost instanceof HTMLElement) {
-      handles.push(mountOneWorksIconLoader(backgroundHost, {
-        appearance: 'system',
-        background: true,
-        canvasClassName: 'linear-background-canvas',
-        className: 'linear-background-loader',
-        fullscreen: true,
-        mode: iconMode,
-        motion: true,
-        seed: 'homepage-linear-background',
-        shadow: false,
-        size: '100%',
-        theme: homepageBrandIconTheme
-      }))
+    const unmountDecorativeIcons = () => {
+      for (const handle of decorativeIconHandles) handle.dispose()
+      decorativeIconHandles = []
     }
+    const mountDecorativeIcons = () => {
+      if (!desktopPreviewQuery.matches || decorativeIconHandles.length > 0) {
+        return
+      }
 
-    if (host instanceof HTMLElement) {
-      handles.push(mountOneWorksIconLoader(host, {
-        appearance: 'system',
-        background: false,
-        canvasClassName: 'mobius-ribbon-canvas',
-        className: 'mobius-ribbon-loader',
-        mode: iconMode,
-        motion: true,
-        seed: 'oneworks',
-        shadow: false,
-        size: '100%',
-        theme: homepageBrandIconTheme
-      }))
+      if (backgroundHost instanceof HTMLElement) {
+        decorativeIconHandles.push(mountOneWorksIconLoader(backgroundHost, {
+          appearance: 'system',
+          background: true,
+          canvasClassName: 'linear-background-canvas',
+          className: 'linear-background-loader',
+          fullscreen: true,
+          mode: getSystemMode(),
+          motion: true,
+          seed: 'homepage-linear-background',
+          shadow: false,
+          size: '100%',
+          theme: homepageBrandIconTheme
+        }))
+      }
 
-      host.querySelectorAll('[data-mobius-static]').forEach((element) =>
-        element.remove()
-      )
+      if (host instanceof HTMLElement) {
+        decorativeIconHandles.push(mountOneWorksIconLoader(host, {
+          appearance: 'system',
+          background: false,
+          canvasClassName: 'mobius-ribbon-canvas',
+          className: 'mobius-ribbon-loader',
+          mode: getSystemMode(),
+          motion: true,
+          seed: 'oneworks',
+          shadow: false,
+          size: '100%',
+          theme: homepageBrandIconTheme
+        }))
+
+        host.querySelectorAll('[data-mobius-static]').forEach((element) =>
+          element.remove()
+        )
+      }
     }
 
     const handleColorSchemeChange = () => {
       const mode = getSystemMode()
-      for (const handle of handles) handle.update({ mode })
+      for (const handle of decorativeIconHandles) handle.update({ mode })
       sendHomepagePreviewConfig()
     }
 
-    pwaPreviewFrame?.addEventListener('load', sendHomepagePreviewConfig)
+    const syncPwaPreviewAvailability = () => {
+      if (desktopPreviewQuery.matches) {
+        mountDecorativeIcons()
+        mountPwaPreviewFrame()
+        scheduleScrollNarrative()
+        return
+      }
+
+      unmountDecorativeIcons()
+      unmountPwaPreviewFrame()
+      clearScrollSnapTimers()
+      homeShell?.classList.remove('is-sidebar-showcase-mode')
+      setPreviewMode('new')
+      resetFixedWindowState()
+    }
+
+    syncPwaPreviewAvailability()
     void resolveDesktopDownloadUrl().then((downloadUrl) => {
       applyDesktopDownloadUrl(downloadUrl)
       sendHomepagePreviewConfig()
@@ -1918,6 +2095,10 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     window.addEventListener('resize', scheduleAdapterBadgePositions)
     window.addEventListener('resize', scheduleScrollNarrative)
     systemDarkQuery.addEventListener('change', handleColorSchemeChange)
+    desktopPreviewQuery.addEventListener(
+      'change',
+      syncPwaPreviewAvailability
+    )
 
     let didCleanupHomepage = false
     const cleanupHomepage = () => {
@@ -1927,7 +2108,11 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
 
       didCleanupHomepage = true
       systemDarkQuery.removeEventListener('change', handleColorSchemeChange)
-      pwaPreviewFrame?.removeEventListener('load', sendHomepagePreviewConfig)
+      desktopPreviewQuery.removeEventListener(
+        'change',
+        syncPwaPreviewAvailability
+      )
+      unmountPwaPreviewFrame()
       for (const option of languageOptions) {
         option.removeEventListener('click', handleLanguageOptionClick)
       }
@@ -1951,7 +2136,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       resetFixedWindowState()
       previewResizeObserver?.disconnect()
       for (const cleanup of cleanupDragListeners) cleanup()
-      for (const handle of handles) handle.dispose()
+      unmountDecorativeIcons()
     }
 
     window.addEventListener('pagehide', cleanupHomepage, { once: true })

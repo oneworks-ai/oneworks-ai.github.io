@@ -785,6 +785,10 @@ a {
   transition: opacity 360ms ease, transform 520ms cubic-bezier(.22, 1, .36, 1);
 }
 
+.mobile-agent-network {
+  display: none;
+}
+
 .home-shell.is-room-mode .hero-actions {
   opacity: 0;
   pointer-events: none;
@@ -1055,7 +1059,7 @@ a {
 
 .app-download-panel {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 390px);
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 520px);
   gap: var(--app-release-grid-gap);
   margin-top: var(--app-release-block-gap);
   padding: 0;
@@ -1127,7 +1131,7 @@ a {
 }
 
 .app-platform-tabs {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .app-channel-tabs button,
@@ -2879,23 +2883,100 @@ a {
     --hero-padding-top: 112px;
     --hero-padding-bottom: 96px;
     grid-template-columns: 1fr;
-    align-content: start;
+    align-content: center;
     gap: 32px;
     min-height: 100svh;
   }
 
   .hero-actions {
-    order: 2;
-    align-self: start;
+    order: 1;
+    align-self: center;
+  }
+
+  .mobile-agent-network {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: block;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .mobile-agent-network-lines {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .mobile-agent-network-lines path {
+    fill: none;
+    stroke: color-mix(in srgb, var(--linear-brand-fill) 22%, transparent);
+    stroke-dasharray: 2 5;
+    stroke-linecap: round;
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .mobile-agent-node {
+    position: absolute;
+    top: var(--node-y);
+    left: var(--node-x);
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    animation: mobile-agent-drift var(--node-duration) ease-in-out
+      var(--node-delay) infinite;
+    transform: translate(-50%, -50%) rotate(var(--node-r));
+    will-change: transform;
+  }
+
+  .mobile-agent-node-card {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid var(--adapter-card-border);
+    border-radius: 13px;
+    background: var(--adapter-card-bg);
+    box-shadow: var(--adapter-card-shadow);
+    backdrop-filter: blur(14px) saturate(1.12);
+    -webkit-backdrop-filter: blur(14px) saturate(1.12);
+  }
+
+  .mobile-agent-node-card::before {
+    position: absolute;
+    inset: 1px;
+    z-index: 0;
+    border-radius: 12px;
+    background: var(--adapter-card-highlight);
+    content: '';
+    opacity: .7;
+  }
+
+  .mobile-agent-node-card img {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+    filter: var(--adapter-icon-filter);
   }
 
   .download-panel {
-    justify-items: start;
-    text-align: left;
+    justify-items: center;
+    text-align: center;
   }
 
   .download-actions {
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .app-release-shell,
@@ -2910,6 +2991,19 @@ a {
     grid-template-columns: 1fr;
     margin-top: var(--app-release-block-gap);
     padding: 0;
+  }
+
+  .app-platform-tabs {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .app-platform-tabs button {
+    grid-column: span 2;
+  }
+
+  .app-platform-tabs [data-platform-option='android'],
+  .app-platform-tabs [data-platform-option='ios'] {
+    grid-column: span 3;
   }
 
   .app-download-result {
@@ -3012,11 +3106,11 @@ a {
     text-align: left;
   }
 
-  .product-stage {
-    --window-copy-offset: 34px;
-    order: 1;
-    justify-self: center;
-    min-height: min(82vw, 430px);
+  .product-stage,
+  .room-scroll-section,
+  .linear-background,
+  .mobius-ribbon {
+    display: none;
   }
 
   .product-window-stack {
@@ -3126,6 +3220,25 @@ a {
   }
 }
 
+@keyframes mobile-agent-drift {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translate3d(0, 0, 0) rotate(var(--node-r));
+  }
+
+  43% {
+    transform: translate(-50%, -50%)
+      translate3d(var(--node-drift-x), var(--node-drift-y), 0)
+      rotate(var(--node-r-active));
+  }
+
+  72% {
+    transform: translate(-50%, -50%)
+      translate3d(var(--node-return-x), var(--node-return-y), 0)
+      rotate(var(--node-r));
+  }
+}
+
 @media (max-width: 460px) {
   .download-wordmark {
     font-size: clamp(34px, 12vw, 48px);
@@ -3157,6 +3270,10 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .adapter-badge {
+    animation: none;
+  }
+
+  .mobile-agent-node {
     animation: none;
   }
 
