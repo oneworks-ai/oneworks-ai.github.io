@@ -316,8 +316,9 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
             </span>
           </h1>
           <p class="visually-hidden" data-i18n="hero.summary">
-            One Works 是面向 AI 编程伙伴的本地工作台，用一个应用调度 Claude
-            Code、Codex、Kimi 等工具，管理插件、资产、任务和协同流程。
+            One Works 是一站式 AI 编程伙伴工作台，在一个应用里管理 Codex、Claude
+            Code、OpenCode、Copilot
+            等工具的会话，连接模型服务与多台设备，并通过插件扩展业务工作流。
           </p>
           <div class="download-actions">
             <a
@@ -392,10 +393,11 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
             </span>
           </p>
           <div class="room-mode-copy">
-            <h2 data-i18n="room.title">多智能体协同编排</h2>
+            <h2 data-i18n="room.title">跨工具接续每一段会话</h2>
             <p data-i18n="room.body">
-              将规划、实现、验证和交付拆分给不同 AI
-              编程伙伴，并在同一个上下文里持续追踪进展与确认节点。
+              在 Codex、Claude Code、OpenCode、Copilot
+              等工具之间迁移、管理和阅读会话，让人和多个 Agent
+              在同一个上下文里接力协作。
             </p>
           </div>
         </div>
@@ -430,12 +432,46 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       aria-label="Sidebar workspace showcase"
     >
       <div class="sidebar-showcase-copy">
-        <p class="section-eyebrow" data-i18n="sidebar.eyebrow">可扩展侧栏</p>
-        <h2 data-i18n="sidebar.title">为 AI 工作流准备的可扩展空间</h2>
+        <p class="section-eyebrow" data-i18n="sidebar.eyebrow">工作台能力</p>
+        <h2>
+          <span data-i18n="sidebar.title.line1">模型、设备与工具</span>
+          <span data-i18n="sidebar.title.line2">统一管理</span>
+        </h2>
         <p class="sidebar-showcase-lede" data-i18n="sidebar.body">
-          左侧不只是会话列表。你可以接入自己的插件，也可以直接使用内置的资产管理、任务安排等能力。
+          跨工具会话只是起点。One Works 还能统一管理常见 API
+          平台的模型服务，打通手机与电脑，并通过插件把资产管理、任务安排和业务专用交互带进同一条工作流。
         </p>
         <div class="sidebar-feature-cards" aria-label="Sidebar capabilities">
+          <article class="sidebar-feature-card">
+            <span class="sidebar-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <ellipse cx="12" cy="5.5" rx="7" ry="2.5" />
+                <path d="M5 5.5v5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-5" />
+                <path d="M5 10.5v5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-5" />
+              </svg>
+            </span>
+            <span class="sidebar-feature-index">01</span>
+            <h3 data-i18n="sidebar.card.models.title">多模型服务</h3>
+            <p data-i18n="sidebar.card.models.body">
+              集中管理常见 API 平台、模型与账号，让不同 Agent
+              按任务使用合适的服务。
+            </p>
+          </article>
+          <article class="sidebar-feature-card">
+            <span class="sidebar-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="4" width="12" height="9" rx="1.5" />
+                <path d="M9 13v3m-3 0h6" />
+                <rect x="15" y="8" width="6" height="12" rx="1.5" />
+                <path d="M17.5 17h1" />
+              </svg>
+            </span>
+            <span class="sidebar-feature-index">02</span>
+            <h3 data-i18n="sidebar.card.devices.title">多端协同</h3>
+            <p data-i18n="sidebar.card.devices.body">
+              手机和电脑互联，随时接续任务、查看进展并控制正在运行的工作流。
+            </p>
+          </article>
           <article class="sidebar-feature-card">
             <span class="sidebar-feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -444,38 +480,11 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
                 <path d="M6 6.5 8 8m10-1.5L16 8M6 17.5 8 16m10 1.5L16 16" />
               </svg>
             </span>
-            <span class="sidebar-feature-index">01</span>
-            <h3 data-i18n="sidebar.card.sessions.title">自定义插件</h3>
-            <p data-i18n="sidebar.card.sessions.body">
-              把团队自己的工具、入口和工作流组件接到侧栏里。
-            </p>
-          </article>
-          <article class="sidebar-feature-card">
-            <span class="sidebar-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M4 7.5h6l1.7 2H20v8.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
-                <path d="M4 7.5V6a2 2 0 0 1 2-2h3.3L11 6h7a2 2 0 0 1 2 2v1.5" />
-                <path d="M8 14h8M8 17h5" />
-              </svg>
-            </span>
-            <span class="sidebar-feature-index">02</span>
-            <h3 data-i18n="sidebar.card.assets.title">资产管理</h3>
-            <p data-i18n="sidebar.card.assets.body">
-              项目文件、规则、素材和知识库集中整理，随时带入会话。
-            </p>
-          </article>
-          <article class="sidebar-feature-card">
-            <span class="sidebar-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M6 5h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" />
-                <path d="M8 3v4m8-4v4M4 10h16" />
-                <path d="m8 15 2 2 5-5" />
-              </svg>
-            </span>
             <span class="sidebar-feature-index">03</span>
-            <h3 data-i18n="sidebar.card.tasks.title">任务安排</h3>
-            <p data-i18n="sidebar.card.tasks.body">
-              定时任务、项目计划和待确认节点都能放在同一个入口。
+            <h3 data-i18n="sidebar.card.plugins.title">插件化工具</h3>
+            <p data-i18n="sidebar.card.plugins.body">
+              扩展界面、命令与本地能力，为 Web、React Native、Android 和 iOS
+              等研发场景搭建专用工具。
             </p>
           </article>
         </div>
@@ -602,7 +611,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       en: {
         'hero.download': 'Download',
         'hero.summary':
-          'One Works is a local workspace for AI coding partners, orchestrating Claude Code, Codex, Kimi, plugins, assets, tasks, and multi-agent workflows from one app.',
+          'One Works is an all-in-one workspace for AI coding partners. Manage sessions across Codex, Claude Code, OpenCode, Copilot, and more; connect model services and devices; and extend real workflows with plugins.',
         'hero.title.suffix': 'AI coding workspace',
         'footer.copyright': '© 2026 One Works. All rights reserved.',
         'footer.links.docs': 'Docs',
@@ -621,27 +630,28 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         'nav.product': 'Product',
         'nav.pwa': 'PWA',
         'room.body':
-          'Split planning, implementation, verification, and delivery across different AI coding partners while keeping progress and confirmations in one shared context.',
-        'room.title': 'Multi-agent orchestration',
+          'Move, manage, and review sessions across Codex, Claude Code, OpenCode, Copilot, and more, so people and agents can keep collaborating in one shared context.',
+        'room.title': 'Carry every session across tools',
         'sidebar.body':
-          'The left side is more than a chat list. Bring in your own plugins, or use built-in asset management and task scheduling right away.',
-        'sidebar.card.assets.body':
-          'Keep project files, rules, visual assets, and knowledge organized, ready to bring into a conversation.',
-        'sidebar.card.assets.title': 'Asset management',
-        'sidebar.card.sessions.body':
-          'Connect your team tools, entry points, and workflow components into the sidebar.',
-        'sidebar.card.sessions.title': 'Custom plugins',
-        'sidebar.card.tasks.body':
-          'Keep scheduled work, project plans, and pending confirmations in one place.',
-        'sidebar.card.tasks.title': 'Task scheduling',
-        'sidebar.eyebrow': 'Extensible sidebar',
-        'sidebar.title': 'An extensible space for AI workflows',
+          'Cross-tool sessions are only the start. One Works also manages model services from common API platforms, links phones and computers, and lets plugins bring asset management, task scheduling, and workflow-specific interactions into the same flow.',
+        'sidebar.card.devices.body':
+          'Connect phone and computer to continue work, check progress, and control active workflows from the right device.',
+        'sidebar.card.devices.title': 'Multi-device collaboration',
+        'sidebar.card.models.body':
+          'Manage API platforms, models, and accounts in one place, so each agent can use the right service for the task.',
+        'sidebar.card.models.title': 'Model services',
+        'sidebar.card.plugins.body':
+          'Extend UI, commands, and local capabilities for workflow-specific Web, React Native, Android, and iOS tooling.',
+        'sidebar.card.plugins.title': 'Plugin-built tools',
+        'sidebar.eyebrow': 'Workspace capabilities',
+        'sidebar.title.line1': 'Models, devices, tools',
+        'sidebar.title.line2': 'One workspace',
         languageLabel: 'Choose language'
       },
       zh: {
         'hero.download': '下载',
         'hero.summary':
-          'One Works 是面向 AI 编程伙伴的本地工作台，用一个应用调度 Claude Code、Codex、Kimi 等工具，管理插件、资产、任务和协同流程。',
+          'One Works 是一站式 AI 编程伙伴工作台，在一个应用里管理 Codex、Claude Code、OpenCode、Copilot 等工具的会话，连接模型服务与多台设备，并通过插件扩展业务工作流。',
         'hero.title.suffix': 'AI 编程伙伴工作台',
         'footer.copyright': '© 2026 One Works. 保留所有权利。',
         'footer.links.docs': '文档',
@@ -660,21 +670,22 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         'nav.product': '产品',
         'nav.pwa': 'PWA',
         'room.body':
-          '将规划、实现、验证和交付拆分给不同 AI 编程伙伴，并在同一个上下文里持续追踪进展与确认节点。',
-        'room.title': '多智能体协同编排',
+          '在 Codex、Claude Code、OpenCode、Copilot 等工具之间迁移、管理和阅读会话，让人和多个 Agent 在同一个上下文里接力协作。',
+        'room.title': '跨工具接续每一段会话',
         'sidebar.body':
-          '左侧不只是会话列表。你可以接入自己的插件，也可以直接使用内置的资产管理、任务安排等能力。',
-        'sidebar.card.assets.body':
-          '项目文件、规则、素材和知识库集中整理，随时带入会话。',
-        'sidebar.card.assets.title': '资产管理',
-        'sidebar.card.sessions.body':
-          '把团队自己的工具、入口和工作流组件接到侧栏里。',
-        'sidebar.card.sessions.title': '自定义插件',
-        'sidebar.card.tasks.body':
-          '定时任务、项目计划和待确认节点都能放在同一个入口。',
-        'sidebar.card.tasks.title': '任务安排',
-        'sidebar.eyebrow': '可扩展侧栏',
-        'sidebar.title': '为 AI 工作流准备的可扩展空间',
+          '跨工具会话只是起点。One Works 还能统一管理常见 API 平台的模型服务，打通手机与电脑，并通过插件把资产管理、任务安排和业务专用交互带进同一条工作流。',
+        'sidebar.card.devices.body':
+          '手机和电脑互联，随时接续任务、查看进展并控制正在运行的工作流。',
+        'sidebar.card.devices.title': '多端协同',
+        'sidebar.card.models.body':
+          '集中管理常见 API 平台、模型与账号，让不同 Agent 按任务使用合适的服务。',
+        'sidebar.card.models.title': '多模型服务',
+        'sidebar.card.plugins.body':
+          '扩展界面、命令与本地能力，为 Web、React Native、Android 和 iOS 等研发场景搭建专用工具。',
+        'sidebar.card.plugins.title': '插件化工具',
+        'sidebar.eyebrow': '工作台能力',
+        'sidebar.title.line1': '模型、设备与工具',
+        'sidebar.title.line2': '统一管理',
         languageLabel: '选择语言'
       }
     }

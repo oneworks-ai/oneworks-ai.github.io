@@ -5,6 +5,7 @@
 - New homepage pages must use `src/components/SiteHeader.astro` for the top brand, primary tabs, product dropdown, language menu, GitHub action, and homepage download shortcut. Do not copy header markup into individual pages.
 - New homepage pages must use `src/components/SiteFooter.astro` for the common footer. Do not copy footer markup into individual pages.
 - The landing page uses the default `site-header` / `room-corner-brand` styling and passes `showCornerDownload`; app release pages pass `className="app-release-header"` and `brandClassName="app-release-brand"`.
+- At `max-width: 760px`, shared content-page headers using `app-release-header` must keep the icon-only `app-release-brand` home link immediately before the primary navigation. Keep its click geometry aligned with the other header icon buttons, hide only the brand wordmark, and leave the landing-page header unchanged so the mobile hero still has a single One Works mark.
 - Keep product dropdown entries, header action icons, footer links, and footer social actions in the shared components; page-level changes should only choose variants through props.
 - `SiteHeader.astro` owns the fixed top scrim (`.site-header-scrim`) that prevents scrolled content from visually colliding with the header. New pages should not add separate header masks or brand glass chips; reuse `SiteHeader` so the homepage and release pages keep the same scroll readability behavior.
 - When adding or changing homepage pages, verify the shared header on `/`, `/app/`, `/app/:version/`, `/blog/`, and `/blog/:slug/` as one visual set. The top tabs, product dropdown, language/GitHub actions, glass background, overlay z-index, and footer must remain consistent across those pages.
@@ -50,3 +51,4 @@
 
 - For visible Chinese hero or section copy, propose a few options and get confirmation before committing wording when the user is discussing tone or positioning.
 - Avoid literal translation phrasing. Prefer direct product language that sounds natural in Chinese, then align English i18n to the confirmed meaning.
+- Keep the homepage product narrative broader than chat: introduce One Works as an all-in-one AI coding-partner workspace, then cover cross-adapter session continuity, model-service management, phone/computer collaboration, and plugin-built workflow tools. Preserve asset management and task scheduling as concrete built-in examples instead of letting the page collapse into an abstract feature list.
