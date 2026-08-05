@@ -11,7 +11,8 @@
 
 ## App Release Pages
 
-- Desktop download and release detail pages are first-class homepage pages. They must keep the same shared header/footer behavior as the homepage, including the product menu, language action, GitHub action, and footer.
+- Application download and release detail pages are first-class homepage pages. They must keep the same shared header/footer behavior as the homepage, including the product menu, language action, GitHub action, and footer.
+- Keep macOS, Linux, Windows, Android, and iOS visible as the stable platform set on `/app/`, even when a platform has no published asset yet. `src/utils/desktop-releases.ts` is the release-manifest source of truth: mobile release tags and APK/AAB/IPA assets must flow through the same channel/version UI, and phone landing-page downloads should fall back to the matching empty platform tab until a direct asset exists.
 - Do not style release page top-level wrappers as cards. Page-level wrappers such as `.app-download-panel`, `.app-version-list`, and `.app-release-detail` should stay transparent, borderless, shadowless, and unpadded; use inner controls, rows, and asset buttons for framed UI.
 - Keep release page layout rhythm centralized in `src/styles/global.css` under `.app-release-shell`. Use `--app-release-block-gap` for top-level vertical spacing and `--app-release-content-max-width` for the shared content width instead of adding one-off margins or max-width values.
 - The release page block gap is currently `10px`. New release subpages should inherit that spacing rather than introducing separate `clamp(...)`, `18px`, or page-specific top margins.
@@ -21,7 +22,7 @@
 
 - On desktop, keep one PWA iframe instance. Do not remount the iframe or swap the iframe DOM when moving between homepage scenes.
 - Never replace the PWA preview with screenshots, static mockups, or a second iframe. If a scene needs a different app state, reuse the existing iframe and drive it with preview URL params plus `postMessage`.
-- At the mobile breakpoint (`max-width: 760px`), do not instantiate the PWA iframe or the decorative background / Mobius canvas loaders. Keep the iframe template inert, center the single primary brand / download group in the first viewport, hide the preview-only product stage and room scroll spacer, and only mount the deferred desktop visuals after the viewport enters the desktop range. This is the mobile performance exception to the desktop narrative.
+- At the mobile breakpoint (`max-width: 760px`), do not instantiate the PWA iframe or the decorative background / Mobius canvas loaders. Keep the iframe template inert, center the single primary brand / download group in the first viewport, and use only the lightweight SVG/CSS Claude Code, Codex, and Kimi relationship nodes as ambient context; never duplicate the One Works mark. Hide the preview-only product stage and room scroll spacer, and only mount the deferred desktop visuals after the viewport enters the desktop range. This is the mobile performance exception to the desktop narrative.
 - Treat scroll position as the source of truth: `scrollY -> progress -> rect/mode/copy`.
 - Scene-to-scene window movement must be continuous. When moving from one section layout to another, interpolate the same rect fields (`left`, `top`, `width`, `height`) from the previous scene to the next.
 - Offscreen previews should move the real window offscreen by its rect, for example exposing half of the existing iframe window. Do not build a cropped duplicate window to fake this.

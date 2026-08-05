@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 
 export type DownloadArchitecture = 'arm64' | 'unknown' | 'x64'
 export type DownloadChannel = 'alpha' | 'beta' | 'rc' | 'stable'
-export type DownloadPlatform = 'linux' | 'mac' | 'windows'
+export type DownloadPlatform = 'android' | 'ios' | 'linux' | 'mac' | 'windows'
 
 export type DesktopReleaseAsset = {
   architecture: DownloadArchitecture
@@ -60,12 +60,33 @@ const getReleaseAssets = (release: GithubRelease) => {
   return Array.isArray(release.assets) ? release.assets as GithubReleaseAsset[] : []
 }
 
-const isDesktopRelease = (release: GithubRelease) => {
+const isAppRelease = (release: GithubRelease) => {
   const tagName = normalizeReleaseString(release.tag_name)
-  return tagName.startsWith('pkg/oneworks-desktop/v') || tagName.startsWith('desktop-v')
+  const hasMobileAsset = getReleaseAssets(release).some((asset) => {
+    const assetName = normalizeReleaseString(asset.name).toLowerCase()
+    return assetName.endsWith('.aab') || assetName.endsWith('.apk') ||
+      assetName.endsWith('.ipa')
+  })
+  return hasMobileAsset || [
+    'pkg/oneworks-android/v',
+    'pkg/oneworks-desktop/v',
+    'pkg/oneworks-ios/v',
+    'android-v',
+    'desktop-v',
+    'ios-v'
+  ].some((prefix) => tagName.startsWith(prefix))
 }
 
 const getAssetPlatform = (assetName: string): DownloadPlatform | undefined => {
+  if (
+    assetName.includes('android') || assetName.endsWith('.apk') ||
+    assetName.endsWith('.aab')
+  ) {
+    return 'android'
+  }
+  if (assetName.includes('-ios-') || assetName.endsWith('.ipa')) {
+    return 'ios'
+  }
   if (assetName.includes('-mac-')) {
     return 'mac'
   }
@@ -112,7 +133,7 @@ const shouldUseAsset = (asset: GithubReleaseAsset) => {
 
 const normalizeReleaseTitle = (release: GithubRelease) => {
   const rawName = normalizeReleaseString(release.name) || normalizeReleaseString(release.tag_name)
-  return rawName.replace(/^pkg\/oneworks-desktop\/v/, '')
+  return rawName.replace(/^pkg\/oneworks-(?:android|desktop|ios)\/v/, '')
 }
 
 const getReleaseChannel = (release: GithubRelease): DownloadChannel => {
@@ -199,7 +220,7 @@ const loadGithubReleaseDataFromCli = () => {
 
 const normalizeDesktopReleases = (releaseData: GithubRelease[]) => {
   return releaseData
-    .filter((release) => release.draft !== true && isDesktopRelease(release))
+    .filter((release) => release.draft !== true && isAppRelease(release))
     .map(buildDesktopRelease)
     .filter((release): release is DesktopRelease => release != null)
 }
