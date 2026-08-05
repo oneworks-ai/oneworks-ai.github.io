@@ -3,7 +3,7 @@ export const siteName = 'One Works'
 export const homePageTitle = 'One Works - AI 编程伙伴工作台'
 
 export const siteDescription =
-  'One Works 是面向 AI 编程伙伴的本地工作台，用一个应用调度 Claude Code、Codex、Kimi 等工具，管理插件、资产、任务和协同流程。'
+  'One Works 是一站式 AI 编程伙伴工作台，统一管理跨工具会话、模型服务与多台设备，并通过插件扩展真实业务工作流。'
 
 export const appPageDescription =
   '下载 One Works，按发布通道、操作系统和版本选择 macOS、Windows、Linux、Android 或 iOS 安装包。'
