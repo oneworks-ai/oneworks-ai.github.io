@@ -7,6 +7,7 @@ import copilotIcon from '../assets/adapters/copilot.svg'
 import geminiIcon from '../assets/adapters/gemini.svg'
 import kimiIcon from '../assets/adapters/kimi.svg'
 import opencodeIcon from '../assets/adapters/opencode.svg'
+import piIcon from '../assets/adapters/pi.svg'
 import SiteFooter from '../components/SiteFooter.astro'
 import SiteHeader from '../components/SiteHeader.astro'
 import PageLayout from '../layouts/PageLayout.astro'
@@ -114,6 +115,22 @@ const adapterBadges = [
     progress: 0.78,
     style:
       '--r: -11deg; --s: 0.88; --float-x: -6px; --float-y: 5px; --tilt: 2deg; --delay: -5.2s; --duration: 9.2s;'
+  },
+  {
+    icon: piIcon,
+    edge: 'right',
+    highlight: 'ai-partner',
+    label: 'Pi',
+    mobile: {
+      priority: 'secondary',
+      x: 54,
+      y: 78,
+      style:
+        '--node-r: 5deg; --node-r-active: 1deg; --node-drift-x: -5px; --node-drift-y: 6px; --node-return-x: 4px; --node-return-y: -3px; --node-delay: -3.3s; --node-duration: 9.1s;'
+    },
+    progress: 0.62,
+    style:
+      '--r: -8deg; --s: 0.91; --float-x: -5px; --float-y: 7px; --tilt: 2deg; --delay: -2.1s; --duration: 8.4s;'
   }
 ]
 const mobileAgentNodes = adapterBadges.map(({ icon, label, mobile }) => ({
@@ -317,7 +334,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
           </h1>
           <p class="visually-hidden" data-i18n="hero.summary">
             One Works 是一站式 AI 编程伙伴工作台，在一个应用里管理 Codex、Claude
-            Code、OpenCode、Copilot
+            Code、OpenCode、Copilot、Pi
             等工具的会话，连接模型服务与多台设备，并通过插件扩展业务工作流。
           </p>
           <div class="download-actions">
@@ -392,6 +409,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
               <span>、</span>
               <span class="tagline-token" data-highlight-token="kimi"
               >Kimi</span>
+              <span>、Pi</span>
               <span> 等 </span>
               <span class="tagline-token" data-highlight-token="ai-partner"
               >AI 编程伙伴</span>
@@ -401,7 +419,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
           <div class="room-mode-copy">
             <h2 data-i18n="room.title">跨工具接续每一段会话</h2>
             <p data-i18n="room.body">
-              在 Codex、Claude Code、OpenCode、Copilot
+              在 Codex、Claude Code、OpenCode、Copilot、Pi
               等工具之间迁移、管理和阅读会话，让人和多个 Agent
               在同一个上下文里接力协作。
             </p>
@@ -621,7 +639,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       en: {
         'hero.download': 'Download',
         'hero.summary':
-          'One Works is an all-in-one workspace for AI coding partners. Manage sessions across Codex, Claude Code, OpenCode, Copilot, and more; connect model services and devices; and extend real workflows with plugins.',
+          'One Works is an all-in-one workspace for AI coding partners. Manage sessions across Codex, Claude Code, OpenCode, Copilot, Pi, and more; connect model services and devices; and extend real workflows with plugins.',
         'hero.title.suffix': 'AI coding workspace',
         'footer.copyright': '© 2026 One Works. All rights reserved.',
         'footer.links.docs': 'Docs',
@@ -640,7 +658,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         'nav.product': 'Product',
         'nav.pwa': 'PWA',
         'room.body':
-          'Move, manage, and review sessions across Codex, Claude Code, OpenCode, Copilot, and more, so people and agents can keep collaborating in one shared context.',
+          'Move, manage, and review sessions across Codex, Claude Code, OpenCode, Copilot, Pi, and more, so people and agents can keep collaborating in one shared context.',
         'room.title': 'Carry every session across tools',
         'sidebar.body':
           'Cross-tool sessions are only the start. One Works also manages model services from common API platforms, links phones and computers, and lets plugins bring asset management, task scheduling, and workflow-specific interactions into the same flow.',
@@ -661,7 +679,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       zh: {
         'hero.download': '下载',
         'hero.summary':
-          'One Works 是一站式 AI 编程伙伴工作台，在一个应用里管理 Codex、Claude Code、OpenCode、Copilot 等工具的会话，连接模型服务与多台设备，并通过插件扩展业务工作流。',
+          'One Works 是一站式 AI 编程伙伴工作台，在一个应用里管理 Codex、Claude Code、OpenCode、Copilot、Pi 等工具的会话，连接模型服务与多台设备，并通过插件扩展业务工作流。',
         'hero.title.suffix': 'AI 编程伙伴工作台',
         'footer.copyright': '© 2026 One Works. 保留所有权利。',
         'footer.links.docs': '文档',
@@ -680,7 +698,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         'nav.product': '产品',
         'nav.pwa': 'PWA',
         'room.body':
-          '在 Codex、Claude Code、OpenCode、Copilot 等工具之间迁移、管理和阅读会话，让人和多个 Agent 在同一个上下文里接力协作。',
+          '在 Codex、Claude Code、OpenCode、Copilot、Pi 等工具之间迁移、管理和阅读会话，让人和多个 Agent 在同一个上下文里接力协作。',
         'room.title': '跨工具接续每一段会话',
         'sidebar.body':
           '跨工具会话只是起点。One Works 还能统一管理常见 API 平台的模型服务，打通手机与电脑，并通过插件把资产管理、任务安排和业务专用交互带进同一条工作流。',
@@ -708,6 +726,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         '<span class="tagline-token" data-highlight-token="codex">Codex</span>',
         '<span>, </span>',
         '<span class="tagline-token" data-highlight-token="kimi">Kimi</span>',
+        '<span>, Pi</span>',
         '<span> and more </span>',
         '<span class="tagline-token" data-highlight-token="ai-partner">AI coding partners</span>',
         '<span> from one app.</span>',
@@ -721,6 +740,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         '<span class="tagline-token" data-highlight-token="codex">Codex</span>',
         '<span>、</span>',
         '<span class="tagline-token" data-highlight-token="kimi">Kimi</span>',
+        '<span>、Pi</span>',
         '<span> 等 </span>',
         '<span class="tagline-token" data-highlight-token="ai-partner">AI 编程伙伴</span>',
         '<span>。</span>',
@@ -1055,7 +1075,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
             {
               role: 'assistant',
               content:
-                'You can choose Claude Code, Codex, Kimi, and other coding agents from one app. Download the desktop app when you want to connect a real local project, terminal, or IM channel.'
+                'You can choose Claude Code, Codex, Kimi, Pi, and other coding agents from one app. Download the desktop app when you want to connect a real local project, terminal, or IM channel.'
             }
           ]
         }
@@ -1072,7 +1092,7 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
           {
             role: 'assistant',
             content:
-              '你可以在一个应用里选择 Claude Code、Codex、Kimi 等 AI 编程伙伴。需要真实连接本地项目、终端或 IM 时，下载桌面端就能继续。'
+              '你可以在一个应用里选择 Claude Code、Codex、Kimi、Pi 等 AI 编程伙伴。需要真实连接本地项目、终端或 IM 时，下载桌面端就能继续。'
           }
         ]
       }
