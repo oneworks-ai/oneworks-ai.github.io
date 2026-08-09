@@ -90,6 +90,10 @@ body {
   margin-right: 8px;
 }
 
+.oneworks-doc-brand-product picture {
+  display: inline-flex;
+}
+
 .oneworks-doc-brand-divider {
   margin: 0 7px;
   color: var(--vp-c-text-3);

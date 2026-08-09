@@ -6,13 +6,21 @@ const homepageUrl = import.meta.env.VITE_ONEWORKS_DOCS_HOMEPAGE_URL ?? '/'
 const { localeIndex } = useData()
 const route = useRoute()
 
-function createLogo(): HTMLImageElement {
+function createLogo(): HTMLPictureElement {
+  const picture = document.createElement('picture')
+  const dark = document.createElement('source')
+  dark.media = '(prefers-color-scheme: dark)'
+  dark.srcset = withBase('/oneworks-dark.svg')
+  const light = document.createElement('source')
+  light.media = '(prefers-color-scheme: light)'
+  light.srcset = withBase('/oneworks-light.svg')
   const logo = document.createElement('img')
   logo.alt = 'One Works'
   logo.className = 'VPImage logo'
   logo.decoding = 'async'
-  logo.src = withBase('/oneworks.svg')
-  return logo
+  logo.src = withBase('/oneworks-light.svg')
+  picture.append(dark, light, logo)
+  return picture
 }
 
 function renderTitle(): void {

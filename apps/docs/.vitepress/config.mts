@@ -206,7 +206,8 @@ export default defineConfig({
   cleanUrls: true,
   description: 'One Works 使用文档、接入方式和运行说明。',
   head: [
-    ['link', { href: '/docs/oneworks.svg', rel: 'icon', type: 'image/svg+xml' }]
+    ['link', { href: '/docs/oneworks-light.svg', media: '(prefers-color-scheme: light)', rel: 'icon', type: 'image/svg+xml' }],
+    ['link', { href: '/docs/oneworks-dark.svg', media: '(prefers-color-scheme: dark)', rel: 'icon', type: 'image/svg+xml' }]
   ],
   lang: 'zh-CN',
   lastUpdated: true,
@@ -340,7 +341,8 @@ export default defineConfig({
     },
     logo: {
       alt: 'One Works',
-      src: '/oneworks.svg'
+      dark: '/oneworks-dark.svg',
+      light: '/oneworks-light.svg'
     },
     logoLink: homepageUrl,
     nav: [
