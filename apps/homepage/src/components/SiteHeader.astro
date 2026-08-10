@@ -1,7 +1,6 @@
 ---
-import { createMobiusSvg } from '@oneworks/icon/svg'
-
-import { homepageBrandIconTheme } from '../utils/brand-icon-theme'
+import brandMarkDark from '../assets/brand/favicon-linear-dark-transparent.png'
+import brandMarkLight from '../assets/brand/favicon-linear-light-transparent.png'
 
 type Props = {
   brandClassName?: string
@@ -30,37 +29,27 @@ const cliDocsUrl = appendDocsPath(docsUrl, 'usage/cli')
 const scrimClassName = className.includes('app-release-header')
   ? 'site-header-scrim app-release-header-scrim'
   : 'site-header-scrim'
-const brandMarkLight = createMobiusSvg({
-  mode: 'light',
-  noBackground: true,
-  shadow: false,
-  size: 96,
-  theme: homepageBrandIconTheme,
-  title: 'One Works mark'
-}).replace(/^<\?xml[^>]*>\s*/, '')
-const brandMarkDark = createMobiusSvg({
-  mode: 'dark',
-  noBackground: true,
-  shadow: false,
-  size: 96,
-  theme: homepageBrandIconTheme,
-  title: 'One Works mark'
-}).replace(/^<\?xml[^>]*>\s*/, '')
 ---
 
 <div class={scrimClassName} aria-hidden="true"></div>
 <header class={className} aria-label="Site header">
   <a class={brandClassName} href="/" aria-label="One Works home">
-    <span
+    <img
       class="site-header-brand-mark site-header-brand-mark--light"
+      src={brandMarkLight.src}
+      alt=""
       aria-hidden="true"
-      set:html={brandMarkLight}
-    ></span>
-    <span
+      width="24"
+      height="24"
+    />
+    <img
       class="site-header-brand-mark site-header-brand-mark--dark"
+      src={brandMarkDark.src}
+      alt=""
       aria-hidden="true"
-      set:html={brandMarkDark}
-    ></span>
+      width="24"
+      height="24"
+    />
     <span>One Works</span>
   </a>
   <nav class="top-nav" aria-label="Primary navigation">

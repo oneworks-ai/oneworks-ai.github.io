@@ -7,6 +7,7 @@ import copilotIcon from '../assets/adapters/copilot.svg'
 import geminiIcon from '../assets/adapters/gemini.svg'
 import kimiIcon from '../assets/adapters/kimi.svg'
 import opencodeIcon from '../assets/adapters/opencode.svg'
+import BrandGravityScene from '../components/BrandGravityScene.astro'
 import SiteFooter from '../components/SiteFooter.astro'
 import SiteHeader from '../components/SiteHeader.astro'
 import PageLayout from '../layouts/PageLayout.astro'
@@ -24,13 +25,6 @@ const adapterBadges = [
     edge: 'left',
     highlight: 'claude-code',
     label: 'Claude Code',
-    mobile: {
-      priority: 'primary',
-      x: 15,
-      y: 24,
-      style:
-        '--node-r: -8deg; --node-r-active: -3deg; --node-drift-x: 8px; --node-drift-y: -7px; --node-return-x: -4px; --node-return-y: 4px; --node-delay: -1.8s; --node-duration: 8.6s;'
-    },
     progress: 0.24,
     style:
       '--r: -14deg; --s: 0.96; --float-x: 7px; --float-y: -6px; --tilt: 2deg; --delay: -1.2s; --duration: 7.2s;'
@@ -40,13 +34,6 @@ const adapterBadges = [
     edge: 'top',
     highlight: 'codex',
     label: 'Codex',
-    mobile: {
-      priority: 'primary',
-      x: 85,
-      y: 22,
-      style:
-        '--node-r: 7deg; --node-r-active: 2deg; --node-drift-x: -6px; --node-drift-y: 8px; --node-return-x: 4px; --node-return-y: -3px; --node-delay: -4.2s; --node-duration: 9.4s;'
-    },
     progress: 0.2,
     style:
       '--r: 9deg; --s: 1.04; --float-x: -5px; --float-y: 7px; --tilt: -2deg; --delay: -3.6s; --duration: 8.1s;'
@@ -56,13 +43,6 @@ const adapterBadges = [
     edge: 'top',
     highlight: 'kimi',
     label: 'Kimi',
-    mobile: {
-      priority: 'primary',
-      x: 88,
-      y: 48,
-      style:
-        '--node-r: -5deg; --node-r-active: -1deg; --node-drift-x: -8px; --node-drift-y: -5px; --node-return-x: 3px; --node-return-y: 6px; --node-delay: -2.7s; --node-duration: 7.9s;'
-    },
     progress: 0.48,
     style:
       '--r: -5deg; --s: 0.98; --float-x: 6px; --float-y: 5px; --tilt: 2deg; --delay: -2.4s; --duration: 7.6s;'
@@ -72,13 +52,6 @@ const adapterBadges = [
     edge: 'bottom',
     highlight: 'ai-partner',
     label: 'Gemini',
-    mobile: {
-      priority: 'secondary',
-      x: 10,
-      y: 52,
-      style:
-        '--node-r: 10deg; --node-r-active: 4deg; --node-drift-x: 7px; --node-drift-y: 6px; --node-return-x: -3px; --node-return-y: -5px; --node-delay: -5.1s; --node-duration: 10.2s;'
-    },
     progress: 0.88,
     style:
       '--r: 13deg; --s: 0.86; --float-x: -7px; --float-y: -5px; --tilt: -3deg; --delay: -4.1s; --duration: 8.8s;'
@@ -88,13 +61,6 @@ const adapterBadges = [
     edge: 'left',
     highlight: 'ai-partner',
     label: 'Copilot',
-    mobile: {
-      priority: 'secondary',
-      x: 90,
-      y: 67,
-      style:
-        '--node-r: -7deg; --node-r-active: -2deg; --node-drift-x: -7px; --node-drift-y: 5px; --node-return-x: 4px; --node-return-y: -4px; --node-delay: -0.9s; --node-duration: 9.7s;'
-    },
     progress: 0.68,
     style:
       '--r: 8deg; --s: 0.9; --float-x: 6px; --float-y: 8px; --tilt: -2deg; --delay: -0.7s; --duration: 7.9s;'
@@ -104,26 +70,11 @@ const adapterBadges = [
     edge: 'top',
     highlight: 'ai-partner',
     label: 'OpenCode',
-    mobile: {
-      priority: 'secondary',
-      x: 20,
-      y: 70,
-      style:
-        '--node-r: 6deg; --node-r-active: 1deg; --node-drift-x: 6px; --node-drift-y: -7px; --node-return-x: -5px; --node-return-y: 3px; --node-delay: -6.4s; --node-duration: 10.8s;'
-    },
     progress: 0.78,
     style:
       '--r: -11deg; --s: 0.88; --float-x: -6px; --float-y: 5px; --tilt: 2deg; --delay: -5.2s; --duration: 9.2s;'
   }
 ]
-const mobileAgentNodes = adapterBadges.map(({ icon, label, mobile }) => ({
-  icon,
-  label,
-  priority: mobile.priority,
-  style: `--node-x: ${mobile.x}%; --node-y: ${mobile.y}%; ${mobile.style}`,
-  x: mobile.x,
-  y: mobile.y
-}))
 const mobiusMarkLight = createMobiusSvg({
   mode: 'light',
   noBackground: true,
@@ -139,22 +90,6 @@ const mobiusMarkDark = createMobiusSvg({
   size: 900,
   theme: homepageBrandIconTheme,
   title: 'One Works Mobius mark'
-}).replace(/^<\?xml[^>]*>\s*/, '')
-const downloadMarkLight = createMobiusSvg({
-  mode: 'light',
-  noBackground: true,
-  shadow: false,
-  size: 160,
-  theme: homepageBrandIconTheme,
-  title: 'One Works mark'
-}).replace(/^<\?xml[^>]*>\s*/, '')
-const downloadMarkDark = createMobiusSvg({
-  mode: 'dark',
-  noBackground: true,
-  shadow: false,
-  size: 160,
-  theme: homepageBrandIconTheme,
-  title: 'One Works mark'
 }).replace(/^<\?xml[^>]*>\s*/, '')
 const githubReleasesUrl = 'https://github.com/oneworks-ai/app/releases'
 const downloadsManifestUrl = '/downloads.json'
@@ -178,63 +113,46 @@ const homepageStructuredData = {
   url: new URL('/', siteOrigin).toString()
 }
 const homepagePreviewLocale = 'zh'
-const homepagePreviewSessionId = 'homepage-preview'
-const previewRoomId = 'homepage-agent-room'
 const officialPwaBaseUrl = new URL(
   '/pwa/',
   Astro.site ?? 'https://oneworks.cloud/'
 ).toString()
-const buildHomepagePreviewUrl = (
-  baseUrl: string,
-  mode: 'new' | 'room' | 'sidebar'
-) => {
+const buildHomepagePreviewUrl = (baseUrl: string) => {
   const url = new URL(baseUrl)
   const basePath = url.pathname.endsWith('/')
     ? url.pathname
     : `${url.pathname}/`
-  if (mode === 'room') {
-    url.pathname = `${basePath}rooms/${previewRoomId}`.replace(/\/{2,}/g, '/')
-  } else if (mode === 'sidebar') {
-    url.pathname = `${basePath}session/${homepagePreviewSessionId}`.replace(
-      /\/{2,}/g,
-      '/'
-    )
-  } else {
-    url.pathname = basePath.replace(/\/{2,}/g, '/')
-  }
+  url.pathname = basePath.replace(/\/{2,}/g, '/')
   url.searchParams.set('owPreview', 'homepage')
   url.searchParams.set('locale', homepagePreviewLocale)
   url.searchParams.set('downloadUrl', homepageDownloadUrl)
   url.searchParams.set('iconTheme', homepageBrandIconTheme)
   url.searchParams.set('__oneworks_desktop', 'macos')
   url.searchParams.set('senderHeader', 'collapsed')
-  url.searchParams.set('sidebar', mode === 'sidebar' ? 'expanded' : 'collapsed')
-  if (mode === 'new') {
-    url.searchParams.set('adapterSelect', 'open')
-  }
+  url.searchParams.set('sidebar', 'collapsed')
+  url.searchParams.set('adapterSelect', 'open')
   return url.toString()
 }
 const localPwaPreviewUrl = buildHomepagePreviewUrl(
-  import.meta.env.PUBLIC_PWA_PREVIEW_URL ?? 'http://localhost:4173/',
-  'new'
-)
-const localPwaRoomPreviewUrl = buildHomepagePreviewUrl(
-  import.meta.env.PUBLIC_PWA_PREVIEW_URL ?? 'http://localhost:4173/',
-  'room'
-)
-const localPwaSidebarPreviewUrl = buildHomepagePreviewUrl(
-  import.meta.env.PUBLIC_PWA_PREVIEW_URL ?? 'http://localhost:4173/',
-  'sidebar'
+  import.meta.env.PUBLIC_PWA_PREVIEW_URL ?? 'http://localhost:4173/'
 )
 const pwaPreviewUrl = import.meta.env.DEV
   ? localPwaPreviewUrl
-  : buildHomepagePreviewUrl(officialPwaBaseUrl, 'new')
-const pwaRoomPreviewUrl = import.meta.env.DEV
-  ? localPwaRoomPreviewUrl
-  : buildHomepagePreviewUrl(officialPwaBaseUrl, 'room')
-const pwaSidebarPreviewUrl = import.meta.env.DEV
-  ? localPwaSidebarPreviewUrl
-  : buildHomepagePreviewUrl(officialPwaBaseUrl, 'sidebar')
+  : buildHomepagePreviewUrl(officialPwaBaseUrl)
+const buildHomepageConfigPreviewUrl = (tab: 'channels' | 'modelServices') => {
+  const url = new URL(pwaPreviewUrl)
+  const basePath = url.pathname.endsWith('/')
+    ? url.pathname
+    : `${url.pathname}/`
+  url.pathname = `${basePath}config/${tab}`.replace(/\/{2,}/g, '/')
+  url.searchParams.delete('adapterSelect')
+  url.searchParams.set('sidebar', 'collapsed')
+  return url.toString()
+}
+const pwaModelServicesPreviewUrl = buildHomepageConfigPreviewUrl(
+  'modelServices'
+)
+const pwaChannelsPreviewUrl = buildHomepageConfigPreviewUrl('channels')
 ---
 
 <PageLayout
@@ -256,84 +174,64 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     <SiteHeader downloadUrl={homepageDownloadUrl} i18n showCornerDownload />
 
     <section class="hero" aria-labelledby="home-hero-title">
-      <div class="mobile-agent-network" aria-hidden="true">
-        <svg
-          class="mobile-agent-network-lines"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          {
-            mobileAgentNodes.map((agent) => (
-              <path
-                class:list={[
-                  'mobile-agent-network-line',
-                  agent.priority === 'secondary' &&
-                  'mobile-agent-network-line--secondary'
-                ]}
-                d={`M50 43 L${agent.x} ${agent.y}`}
-              />
-            ))
-          }
-        </svg>
-        {
-          mobileAgentNodes.map((agent) => (
-            <span
-              class:list={[
-                'mobile-agent-node',
-                agent.priority === 'secondary' &&
-                'mobile-agent-node--secondary'
-              ]}
-              data-agent={agent.label}
-              style={agent.style}
-            >
-              <span class="mobile-agent-node-card">
-                <img src={agent.icon.src} alt="" loading="eager" />
-              </span>
-            </span>
-          ))
-        }
+      <div class="brand-scene">
+        <BrandGravityScene />
       </div>
 
       <div class="hero-actions">
         <div id="download" class="download-panel">
-          <div class="download-icon" aria-hidden="true">
-            <span
-              class="download-icon-mark download-icon-mark--light"
-              set:html={downloadMarkLight}
-            ></span>
-            <span
-              class="download-icon-mark download-icon-mark--dark"
-              set:html={downloadMarkDark}
-            ></span>
-          </div>
-          <h1
-            id="home-hero-title"
-            class="download-wordmark"
-          >
-            One Works
-            <span class="visually-hidden" data-i18n="hero.title.suffix">
-              AI 编程伙伴工作台
-            </span>
+          <h1 id="home-hero-title" class="visually-hidden" data-i18n="hero.title.line1">
+            每一个 AI，每一个频道。一个工作台。
           </h1>
           <p class="visually-hidden" data-i18n="hero.summary">
-            One Works 是一站式 AI 编程伙伴工作台，在一个应用里管理 Codex、Claude
-            Code、OpenCode、Copilot
-            等工具的会话，连接模型服务与多台设备，并通过插件扩展业务工作流。
+            把 AI 编程伙伴、模型服务和常用频道连接到一个工作台，让上下文在工具与设备之间持续流动。
           </p>
           <div class="download-actions">
             <a
-              class="download-button"
+              class="download-button download-button--gravity"
               href={homepageDownloadUrl}
               data-homepage-download-link
-              data-i18n="hero.download"
             >
-              下载
+              <svg
+                class="download-button__gravity-shape"
+                viewBox="0 0 176 68"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <defs>
+                  <linearGradient
+                    id="download-gravity-border"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="1"
+                  >
+                    <stop offset="0" class="download-button__border-start" />
+                    <stop offset=".5" class="download-button__border-mid" />
+                    <stop offset="1" class="download-button__border-end" />
+                  </linearGradient>
+                </defs>
+                <path
+                  class="download-button__gravity-surface"
+                  d="M14 17 Q88 3 162 17 Q174 19 174 31 L174 48 Q174 60 162 62 Q88 48 14 62 Q2 60 2 48 L2 31 Q2 19 14 17 Z"
+                />
+                <path
+                  class="download-button__gravity-highlight"
+                  d="M14 19 Q88 6 162 19"
+                />
+              </svg>
+              <span class="download-button__gravity-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 3V15M7.5 10.5 12 15l4.5-4.5M5 20h14" />
+                </svg>
+              </span>
+              <span class="visually-hidden" data-i18n="hero.download">下载</span>
             </a>
           </div>
         </div>
       </div>
 
-      <div class="product-stage">
+      <div class="product-stage" inert>
         <div class="adapter-badges" aria-label="Supported adapters">
           {
             adapterBadges.map((adapter) => (
@@ -373,8 +271,8 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
               <iframe
                 data-pwa-preview-frame
                 data-new-src={pwaPreviewUrl}
-                data-room-src={pwaRoomPreviewUrl}
-                data-sidebar-src={pwaSidebarPreviewUrl}
+                data-model-services-src={pwaModelServicesPreviewUrl}
+                data-channels-src={pwaChannelsPreviewUrl}
                 title="One Works PWA preview"
                 loading="eager"
                 referrerpolicy="no-referrer"
@@ -398,14 +296,6 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
               <span>。</span>
             </span>
           </p>
-          <div class="room-mode-copy">
-            <h2 data-i18n="room.title">跨工具接续每一段会话</h2>
-            <p data-i18n="room.body">
-              在 Codex、Claude Code、OpenCode、Copilot
-              等工具之间迁移、管理和阅读会话，让人和多个 Agent
-              在同一个上下文里接力协作。
-            </p>
-          </div>
         </div>
       </div>
 
@@ -421,78 +311,6 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
           data-mobius-static
           set:html={mobiusMarkDark}
         >
-        </div>
-      </div>
-    </section>
-
-    <section
-      class="room-scroll-section"
-      data-room-section
-      aria-label="Agent Room showcase"
-    >
-    </section>
-
-    <section
-      class="sidebar-showcase-section"
-      data-sidebar-section
-      aria-label="Sidebar workspace showcase"
-    >
-      <div class="sidebar-showcase-copy">
-        <p class="section-eyebrow" data-i18n="sidebar.eyebrow">工作台能力</p>
-        <h2>
-          <span data-i18n="sidebar.title.line1">模型、设备与工具</span>
-          <span data-i18n="sidebar.title.line2">统一管理</span>
-        </h2>
-        <p class="sidebar-showcase-lede" data-i18n="sidebar.body">
-          跨工具会话只是起点。One Works 还能统一管理常见 API
-          平台的模型服务，打通手机与电脑，并通过插件把资产管理、任务安排和业务专用交互带进同一条工作流。
-        </p>
-        <div class="sidebar-feature-cards" aria-label="Sidebar capabilities">
-          <article class="sidebar-feature-card">
-            <span class="sidebar-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <ellipse cx="12" cy="5.5" rx="7" ry="2.5" />
-                <path d="M5 5.5v5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-5" />
-                <path d="M5 10.5v5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-5" />
-              </svg>
-            </span>
-            <span class="sidebar-feature-index">01</span>
-            <h3 data-i18n="sidebar.card.models.title">多模型服务</h3>
-            <p data-i18n="sidebar.card.models.body">
-              集中管理常见 API 平台、模型与账号，让不同 Agent
-              按任务使用合适的服务。
-            </p>
-          </article>
-          <article class="sidebar-feature-card">
-            <span class="sidebar-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <rect x="3" y="4" width="12" height="9" rx="1.5" />
-                <path d="M9 13v3m-3 0h6" />
-                <rect x="15" y="8" width="6" height="12" rx="1.5" />
-                <path d="M17.5 17h1" />
-              </svg>
-            </span>
-            <span class="sidebar-feature-index">02</span>
-            <h3 data-i18n="sidebar.card.devices.title">多端协同</h3>
-            <p data-i18n="sidebar.card.devices.body">
-              手机和电脑互联，随时接续任务、查看进展并控制正在运行的工作流。
-            </p>
-          </article>
-          <article class="sidebar-feature-card">
-            <span class="sidebar-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M8 8h8v8H8z" />
-                <path d="M12 3v5m0 8v5M3 12h5m8 0h5" />
-                <path d="M6 6.5 8 8m10-1.5L16 8M6 17.5 8 16m10 1.5L16 16" />
-              </svg>
-            </span>
-            <span class="sidebar-feature-index">03</span>
-            <h3 data-i18n="sidebar.card.plugins.title">插件化工具</h3>
-            <p data-i18n="sidebar.card.plugins.body">
-              扩展界面、命令与本地能力，为 Web、React Native、Android 和 iOS
-              等研发场景搭建专用工具。
-            </p>
-          </article>
         </div>
       </div>
     </section>
@@ -515,12 +333,6 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       return
     }
     homeShell.dataset.homepageInitialized = 'true'
-    const roomSection = document.querySelector<HTMLElement>(
-      '[data-room-section]'
-    )
-    const sidebarSection = document.querySelector<HTMLElement>(
-      '[data-sidebar-section]'
-    )
     const productStage = document.querySelector<HTMLElement>('.product-stage')
     const previewWindow = document.querySelector('.product-window')
     const pwaPreviewHost = document.querySelector<HTMLElement>(
@@ -570,24 +382,19 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       githubReleasesUrl
     const adapterDragLimit = 72
     let adapterPositionFrame: number | undefined
-    let scrollNarrativeFrame: number | undefined
-    let scrollSnapTimer: number | undefined
-    let scrollSnapFrame: number | undefined
-    let isAutoSnapping = false
-    let lastScrollY = window.scrollY
-    let scrollDirection: 'down' | 'up' | undefined
-    type PreviewMode = 'new' | 'room' | 'sidebar'
-    type SnapPage = 'new' | 'room' | 'sidebar'
-    let previewMode: PreviewMode = 'new'
+    type OrbitFocusKind = 'adapter' | 'channel' | 'model-service'
+    let orbitFocusKind: OrbitFocusKind | undefined
+    let orbitFocusFrame: number | undefined
+    let orbitFocusProgress = 0
+    let orbitFocusVelocity = 0
+    let orbitFocusTarget = 0
+    let orbitFocusLastTime = performance.now()
     type PreviewWindowRect = {
       height: number
       left: number
       top: number
       width: number
     }
-    type PreviewWindowAnchorRect = PreviewWindowRect & { documentTop: number }
-    let previewWindowAnchorRect: PreviewWindowAnchorRect | undefined
-
     type HomepageLocale = 'en' | 'zh'
     type DownloadArchitecture = 'arm64' | 'unknown' | 'x64'
     type DownloadPlatform =
@@ -621,8 +428,8 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       en: {
         'hero.download': 'Download',
         'hero.summary':
-          'One Works is an all-in-one workspace for AI coding partners. Manage sessions across Codex, Claude Code, OpenCode, Copilot, and more; connect model services and devices; and extend real workflows with plugins.',
-        'hero.title.suffix': 'AI coding workspace',
+          'Connect AI coding partners, model services, and everyday channels in one workspace, with context that keeps moving across tools and devices.',
+        'hero.title.line1': 'Every AI. Every channel.',
         'footer.copyright': '© 2026 One Works. All rights reserved.',
         'footer.links.docs': 'Docs',
         'footer.links.download': 'Download',
@@ -639,30 +446,13 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         'nav.docs': 'Docs',
         'nav.product': 'Product',
         'nav.pwa': 'PWA',
-        'room.body':
-          'Move, manage, and review sessions across Codex, Claude Code, OpenCode, Copilot, and more, so people and agents can keep collaborating in one shared context.',
-        'room.title': 'Carry every session across tools',
-        'sidebar.body':
-          'Cross-tool sessions are only the start. One Works also manages model services from common API platforms, links phones and computers, and lets plugins bring asset management, task scheduling, and workflow-specific interactions into the same flow.',
-        'sidebar.card.devices.body':
-          'Connect phone and computer to continue work, check progress, and control active workflows from the right device.',
-        'sidebar.card.devices.title': 'Multi-device collaboration',
-        'sidebar.card.models.body':
-          'Manage API platforms, models, and accounts in one place, so each agent can use the right service for the task.',
-        'sidebar.card.models.title': 'Model services',
-        'sidebar.card.plugins.body':
-          'Extend UI, commands, and local capabilities for workflow-specific Web, React Native, Android, and iOS tooling.',
-        'sidebar.card.plugins.title': 'Plugin-built tools',
-        'sidebar.eyebrow': 'Workspace capabilities',
-        'sidebar.title.line1': 'Models, devices, tools',
-        'sidebar.title.line2': 'One workspace',
         languageLabel: 'Choose language'
       },
       zh: {
         'hero.download': '下载',
         'hero.summary':
-          'One Works 是一站式 AI 编程伙伴工作台，在一个应用里管理 Codex、Claude Code、OpenCode、Copilot 等工具的会话，连接模型服务与多台设备，并通过插件扩展业务工作流。',
-        'hero.title.suffix': 'AI 编程伙伴工作台',
+          '把 AI 编程伙伴、模型服务和常用频道连接到一个工作台，让上下文在工具与设备之间持续流动。',
+        'hero.title.line1': '每一个 AI，每一个频道。',
         'footer.copyright': '© 2026 One Works. 保留所有权利。',
         'footer.links.docs': '文档',
         'footer.links.download': '下载',
@@ -679,23 +469,6 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         'nav.docs': '文档',
         'nav.product': '产品',
         'nav.pwa': 'PWA',
-        'room.body':
-          '在 Codex、Claude Code、OpenCode、Copilot 等工具之间迁移、管理和阅读会话，让人和多个 Agent 在同一个上下文里接力协作。',
-        'room.title': '跨工具接续每一段会话',
-        'sidebar.body':
-          '跨工具会话只是起点。One Works 还能统一管理常见 API 平台的模型服务，打通手机与电脑，并通过插件把资产管理、任务安排和业务专用交互带进同一条工作流。',
-        'sidebar.card.devices.body':
-          '手机和电脑互联，随时接续任务、查看进展并控制正在运行的工作流。',
-        'sidebar.card.devices.title': '多端协同',
-        'sidebar.card.models.body':
-          '集中管理常见 API 平台、模型与账号，让不同 Agent 按任务使用合适的服务。',
-        'sidebar.card.models.title': '多模型服务',
-        'sidebar.card.plugins.body':
-          '扩展界面、命令与本地能力，为 Web、React Native、Android 和 iOS 等研发场景搭建专用工具。',
-        'sidebar.card.plugins.title': '插件化工具',
-        'sidebar.eyebrow': '工作台能力',
-        'sidebar.title.line1': '模型、设备与工具',
-        'sidebar.title.line2': '统一管理',
         languageLabel: '选择语言'
       }
     }
@@ -726,6 +499,27 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         '<span>。</span>',
         '</span>'
       ].join('')
+    }
+    const orbitFocusCopy: Record<
+      HomepageLocale,
+      Record<OrbitFocusKind, string>
+    > = {
+      en: {
+        adapter:
+          '<span class="tagline-text"><strong>Adapters</strong> connect Claude Code, Codex, Gemini, Kimi, Copilot, OpenCode, and Pi in one workspace.</span>',
+        channel:
+          '<span class="tagline-text"><strong>Channels</strong> bring ongoing AI work into the conversations and devices you already use.</span>',
+        'model-service':
+          '<span class="tagline-text"><strong>Model services</strong> keep providers, models, and accounts ready for every coding partner.</span>'
+      },
+      zh: {
+        adapter:
+          '<span class="tagline-text"><strong>Adapter</strong> 把 Claude Code、Codex、Gemini、Kimi、Copilot、OpenCode 和 Pi 连接到同一个工作台。</span>',
+        channel:
+          '<span class="tagline-text"><strong>Channel</strong> 把进行中的 AI 工作带到你常用的会话与设备里。</span>',
+        'model-service':
+          '<span class="tagline-text"><strong>Model Service</strong> 统一管理供应商、模型与账号，为每个 AI 编程伙伴提供服务。</span>'
+      }
     }
     const normalizeHomepageLocale = (
       locale: string | null | undefined
@@ -758,6 +552,10 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         return
       }
 
+      if (orbitFocusKind != null) {
+        windowTagline.innerHTML = orbitFocusCopy[locale][orbitFocusKind]
+        return
+      }
       const activeTarget = windowTagline.querySelector<HTMLElement>(
         '.tagline-token.is-highlighted'
       )?.dataset.highlightToken
@@ -1022,16 +820,18 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       }
 
       const nextNewSrc = syncUrl(pwaPreviewFrame.dataset.newSrc)
-      const nextRoomSrc = syncUrl(pwaPreviewFrame.dataset.roomSrc)
-      const nextSidebarSrc = syncUrl(pwaPreviewFrame.dataset.sidebarSrc)
+      const nextModelServicesSrc = syncUrl(
+        pwaPreviewFrame.dataset.modelServicesSrc
+      )
+      const nextChannelsSrc = syncUrl(pwaPreviewFrame.dataset.channelsSrc)
       if (nextNewSrc != null) {
         pwaPreviewFrame.dataset.newSrc = nextNewSrc
       }
-      if (nextRoomSrc != null) {
-        pwaPreviewFrame.dataset.roomSrc = nextRoomSrc
+      if (nextModelServicesSrc != null) {
+        pwaPreviewFrame.dataset.modelServicesSrc = nextModelServicesSrc
       }
-      if (nextSidebarSrc != null) {
-        pwaPreviewFrame.dataset.sidebarSrc = nextSidebarSrc
+      if (nextChannelsSrc != null) {
+        pwaPreviewFrame.dataset.channelsSrc = nextChannelsSrc
       }
     }
     const applyDesktopDownloadUrl = (downloadUrl: string) => {
@@ -1085,10 +885,12 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         return
       }
 
-      const navigationUrl = previewMode === 'room'
-        ? pwaPreviewFrame.dataset.roomSrc
-        : previewMode === 'sidebar'
-        ? pwaPreviewFrame.dataset.sidebarSrc
+      const navigationUrl = orbitFocusKind === 'model-service'
+        ? pwaPreviewFrame.dataset.modelServicesSrc
+        : orbitFocusKind === 'channel'
+        ? pwaPreviewFrame.dataset.channelsSrc
+        : orbitFocusKind === 'adapter'
+        ? pwaPreviewFrame.dataset.newSrc
         : pwaPreviewFrame.dataset.newSrc
       const targetOrigin =
         new URL(pwaPreviewFrame.src, window.location.href).origin
@@ -1124,16 +926,18 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       }
 
       const nextNewSrc = syncLocale(pwaPreviewFrame.dataset.newSrc)
-      const nextRoomSrc = syncLocale(pwaPreviewFrame.dataset.roomSrc)
-      const nextSidebarSrc = syncLocale(pwaPreviewFrame.dataset.sidebarSrc)
+      const nextModelServicesSrc = syncLocale(
+        pwaPreviewFrame.dataset.modelServicesSrc
+      )
+      const nextChannelsSrc = syncLocale(pwaPreviewFrame.dataset.channelsSrc)
       if (nextNewSrc != null) {
         pwaPreviewFrame.dataset.newSrc = nextNewSrc
       }
-      if (nextRoomSrc != null) {
-        pwaPreviewFrame.dataset.roomSrc = nextRoomSrc
+      if (nextModelServicesSrc != null) {
+        pwaPreviewFrame.dataset.modelServicesSrc = nextModelServicesSrc
       }
-      if (nextSidebarSrc != null) {
-        pwaPreviewFrame.dataset.sidebarSrc = nextSidebarSrc
+      if (nextChannelsSrc != null) {
+        pwaPreviewFrame.dataset.channelsSrc = nextChannelsSrc
       }
     }
     const unmountPwaPreviewFrame = () => {
@@ -1172,10 +976,12 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       pwaPreviewFrame = frame
       syncPreviewDownloadUrl(currentDownloadUrl)
       syncPwaPreviewLocale(getHomepagePreviewLocale())
-      const initialUrl = previewMode === 'room'
-        ? frame.dataset.roomSrc
-        : previewMode === 'sidebar'
-        ? frame.dataset.sidebarSrc
+      const initialUrl = orbitFocusKind === 'model-service'
+        ? frame.dataset.modelServicesSrc
+        : orbitFocusKind === 'channel'
+        ? frame.dataset.channelsSrc
+        : orbitFocusKind === 'adapter'
+        ? frame.dataset.newSrc
         : frame.dataset.newSrc
       if (initialUrl == null || initialUrl.trim() === '') {
         pwaPreviewFrame = undefined
@@ -1279,63 +1085,6 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     document.addEventListener('pointerdown', handleLanguageOutsidePointerDown)
     document.addEventListener('keydown', handleLanguageKeyDown)
 
-    const readPreviewWindowRect = () => {
-      if (!(previewWindow instanceof HTMLElement)) {
-        return undefined
-      }
-
-      const rect = previewWindow.getBoundingClientRect()
-      return {
-        height: rect.height,
-        left: rect.left,
-        top: rect.top,
-        width: rect.width
-      }
-    }
-
-    const rememberPreviewWindowAnchorRect = () => {
-      const rect = readPreviewWindowRect()
-      if (rect == null) {
-        return
-      }
-
-      previewWindowAnchorRect = {
-        ...rect,
-        documentTop: rect.top + window.scrollY
-      }
-    }
-
-    const getRoomWindowRect = (): PreviewWindowRect => {
-      const horizontalInset = Math.min(
-        128,
-        Math.max(32, window.innerWidth * 0.08)
-      )
-      const width = Math.min(
-        960,
-        Math.max(320, window.innerWidth - horizontalInset)
-      )
-      const height = width * 9 / 16
-
-      return {
-        height,
-        left: (window.innerWidth - width) / 2,
-        top: (window.innerHeight - height) / 2,
-        width
-      }
-    }
-
-    const getSidebarWindowRect = (): PreviewWindowRect => {
-      const width = Math.min(960, Math.max(640, window.innerWidth * 0.72))
-      const height = width * 9 / 16
-
-      return {
-        height,
-        left: window.innerWidth - width / 2,
-        top: (window.innerHeight - height) / 2,
-        width
-      }
-    }
-
     const getFixedStageHeight = (
       rect: PreviewWindowRect,
       includeCopySpace = true
@@ -1376,380 +1125,161 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     }
 
     const resetFixedWindowState = () => {
-      homeShell?.classList.remove('is-window-fixed', 'is-window-jump')
+      productStage?.classList.add('is-orbit-preview-hidden')
+      productStage?.setAttribute('inert', '')
+      homeShell?.classList.remove('is-window-fixed')
+      homeShell?.classList.remove('is-orbit-copy-hidden')
+      homeShell?.style.removeProperty('--orbit-pane-width')
+      homeShell?.style.removeProperty('--hero-scroll-offset')
       if (productStage instanceof HTMLElement) {
+        productStage.style.removeProperty('--orbit-preview-opacity')
         productStage.style.removeProperty('--fixed-stage-left')
         productStage.style.removeProperty('--fixed-stage-top')
         productStage.style.removeProperty('--fixed-stage-width')
         productStage.style.removeProperty('--fixed-stage-height')
-        productStage.style.removeProperty('--room-copy-opacity')
-        productStage.style.removeProperty('--room-copy-y')
-        productStage.style.removeProperty('--window-tagline-opacity')
-        productStage.style.removeProperty('--window-tagline-y')
       }
-    }
-
-    const setPreviewMode = (nextMode: PreviewMode) => {
-      if (previewMode === nextMode) {
-        return
-      }
-
-      previewMode = nextMode
-      homeShell?.classList.toggle('is-showcase-mode', nextMode !== 'new')
-      homeShell?.classList.toggle('is-room-mode', nextMode === 'room')
-      scheduleAdapterBadgePositions()
-      sendHomepagePreviewConfig()
     }
 
     const clamp = (value: number, min: number, max: number) =>
       Math.min(max, Math.max(min, value))
-    const clamp01 = (value: number) => clamp(value, 0, 1)
     const lerp = (from: number, to: number, progress: number) =>
       from + (to - from) * progress
-    const smoothstep = (progress: number) =>
-      progress * progress * (3 - 2 * progress)
 
-    const getRoomModeThreshold = () => {
-      if (!(roomSection instanceof HTMLElement)) {
-        return window.innerHeight * 0.42
-      }
-
-      return Math.max(120, roomSection.offsetTop - window.innerHeight * 0.46)
-    }
-
-    const getScrollAnimationStart = () => {
-      const threshold = getRoomModeThreshold()
-      return Math.max(48, Math.min(threshold - 1, window.innerHeight * 0.14))
-    }
-
-    const getScrollAnimationEnd = () => {
-      if (!(roomSection instanceof HTMLElement)) {
-        return getRoomModeThreshold()
-      }
-
-      return Math.max(getRoomModeThreshold() + 1, roomSection.offsetTop)
-    }
-
-    const getSidebarTransitionRange = () => {
-      if (!(sidebarSection instanceof HTMLElement)) {
-        return {
-          end: Number.POSITIVE_INFINITY,
-          start: Number.POSITIVE_INFINITY
-        }
-      }
-
-      const sectionTop = sidebarSection.offsetTop
-      const start = Math.max(
-        getRoomPageScrollY() + 1,
-        sectionTop - window.innerHeight * 0.72
-      )
-      const end = Math.max(start + 1, sectionTop - window.innerHeight * 0.08)
-
-      return { end, start }
-    }
-
-    const getSidebarTransitionProgress = () => {
-      const { end, start } = getSidebarTransitionRange()
-      return clamp01((window.scrollY - start) / Math.max(1, end - start))
-    }
-
-    const getScrollAnimationProgress = () => {
-      const start = getScrollAnimationStart()
-      const end = Math.max(start + 1, getScrollAnimationEnd())
-      return clamp01((window.scrollY - start) / (end - start))
-    }
-
-    const getNaturalWindowRectAtScroll = (scrollY: number) => {
-      if (previewWindowAnchorRect == null) {
-        rememberPreviewWindowAnchorRect()
-      }
-      if (previewWindowAnchorRect == null) {
-        return readPreviewWindowRect()
-      }
-
+    const getOrbitFocusWindowRect = (): PreviewWindowRect => {
+      const width = Math.min(820, Math.max(600, window.innerWidth * .58))
+      const height = width * 9 / 16
+      const copyGap = Math.min(28, Math.max(20, window.innerHeight * .026))
+      const copyHeight = 54
+      const groupHeight = height + copyGap + copyHeight
       return {
-        height: previewWindowAnchorRect.height,
-        left: previewWindowAnchorRect.left,
-        top: previewWindowAnchorRect.documentTop - scrollY,
-        width: previewWindowAnchorRect.width
+        height,
+        left: window.innerWidth - width - Math.max(28, window.innerWidth * .035),
+        top: Math.max(92, (window.innerHeight - groupHeight) / 2),
+        width
       }
     }
 
-    const interpolateWindowRect = (
-      progress: number
-    ): PreviewWindowRect | undefined => {
-      const start = getScrollAnimationStart()
-      const fromRect = getNaturalWindowRectAtScroll(start)
-      const toRect = getRoomWindowRect()
-      if (fromRect == null) {
-        return undefined
-      }
+    const applyOrbitFocusProgress = () => {
+      const scene = document.querySelector<HTMLElement>('.brand-gravity-scene')
+      const windowRect = getOrbitFocusWindowRect()
+      const stageLeft = lerp(window.innerWidth + 72, windowRect.left, orbitFocusProgress)
+      const orbitPaneWidth = Math.max(1, windowRect.left)
+      const orbitTargetCenter = orbitPaneWidth * .47
+      const orbitTargetShiftX = orbitTargetCenter - window.innerWidth * .5
+      const orbitTargetScale = clamp(orbitPaneWidth / window.innerWidth * 1.35, .46, .56)
+      const orbitTargetShiftY = window.innerHeight * (.5 - .41)
+      const orbitShiftX = orbitTargetShiftX * orbitFocusProgress
+      const orbitShiftY = orbitTargetShiftY * orbitFocusProgress
+      const orbitScale = lerp(1, orbitTargetScale, orbitFocusProgress)
 
-      return {
-        height: lerp(fromRect.height, toRect.height, progress),
-        left: lerp(fromRect.left, toRect.left, progress),
-        top: lerp(fromRect.top, toRect.top, progress),
-        width: lerp(fromRect.width, toRect.width, progress)
-      }
-    }
-
-    const interpolatePreviewWindowRect = (
-      fromRect: PreviewWindowRect,
-      toRect: PreviewWindowRect,
-      progress: number
-    ): PreviewWindowRect => {
-      return {
-        height: lerp(fromRect.height, toRect.height, progress),
-        left: lerp(fromRect.left, toRect.left, progress),
-        top: lerp(fromRect.top, toRect.top, progress),
-        width: lerp(fromRect.width, toRect.width, progress)
-      }
-    }
-
-    const setNarrativeProgress = (progress: number) => {
-      if (!(productStage instanceof HTMLElement)) {
-        return
-      }
-
-      const copyProgress = clamp01((progress - 0.62) / 0.38)
-      productStage.style.setProperty(
-        '--room-copy-opacity',
-        copyProgress.toFixed(3)
+      homeShell?.style.setProperty(
+        '--orbit-pane-width',
+        `${orbitPaneWidth.toFixed(2)}px`
       )
-      productStage.style.setProperty(
-        '--room-copy-y',
-        `${(18 * (1 - copyProgress)).toFixed(2)}px`
-      )
-      productStage.style.setProperty(
-        '--window-tagline-opacity',
-        (1 - copyProgress).toFixed(3)
-      )
-      productStage.style.setProperty(
-        '--window-tagline-y',
-        `${(-10 * copyProgress).toFixed(2)}px`
-      )
-    }
-
-    // Keep scrollY as the source of truth; snap only moves scroll, and this derives the window state.
-    const syncScrollNarrative = () => {
-      scrollNarrativeFrame = undefined
-      if (!desktopPreviewQuery.matches) {
-        return
-      }
-      if (window.scrollY < 8) {
-        rememberPreviewWindowAnchorRect()
-      }
-      const sidebarProgress = getSidebarTransitionProgress()
-      const isSidebarShowcase = sidebarProgress > 0
-      homeShell?.classList.toggle(
-        'is-sidebar-showcase-mode',
-        isSidebarShowcase
-      )
-      if (isSidebarShowcase) {
-        const rect = interpolatePreviewWindowRect(
-          getRoomWindowRect(),
-          getSidebarWindowRect(),
-          smoothstep(sidebarProgress)
+      scene?.dispatchEvent(new CustomEvent('oneworks:brand-focus-progress', {
+        detail: { scale: orbitScale, shiftX: orbitShiftX, shiftY: orbitShiftY }
+      }))
+      if (productStage instanceof HTMLElement) {
+        productStage.style.setProperty(
+          '--orbit-preview-opacity',
+          clamp(orbitFocusProgress / .12, 0, 1).toFixed(4)
         )
-        if (homeShell instanceof HTMLElement) {
-          homeShell.classList.add('is-window-fixed')
+        setFixedWindowRect({ ...windowRect, left: stageLeft }, {
+          includeCopySpace: false
+        })
+      }
+      homeShell?.classList.toggle(
+        'is-orbit-focus-active',
+        orbitFocusKind != null || orbitFocusProgress > .001
+      )
+      if (orbitFocusProgress > .001) {
+        homeShell?.classList.add('is-window-fixed')
+        productStage?.removeAttribute('inert')
+      }
+    }
+
+    const animateOrbitFocus = (time: number) => {
+      const elapsed = Math.min(.032, Math.max(0, (time - orbitFocusLastTime) / 1000))
+      orbitFocusLastTime = time
+      const displacement = orbitFocusProgress - orbitFocusTarget
+      const acceleration = -92 * displacement - 18 * orbitFocusVelocity
+      orbitFocusVelocity += acceleration * elapsed
+      orbitFocusProgress += orbitFocusVelocity * elapsed
+      applyOrbitFocusProgress()
+
+      if (
+        Math.abs(orbitFocusProgress - orbitFocusTarget) < .0006 &&
+        Math.abs(orbitFocusVelocity) < .003
+      ) {
+        orbitFocusProgress = orbitFocusTarget
+        orbitFocusVelocity = 0
+        applyOrbitFocusProgress()
+        orbitFocusFrame = undefined
+        if (orbitFocusTarget === 0) {
+          orbitFocusKind = undefined
+          homeShell?.classList.remove('is-orbit-focus-active')
+          homeShell?.style.removeProperty('--orbit-pane-width')
+          resetFixedWindowState()
         }
-        setFixedWindowRect(rect, { includeCopySpace: false })
-        setNarrativeProgress(1)
-        setPreviewMode('sidebar')
-        scheduleAdapterBadgePositions()
         return
       }
-      const progress = getScrollAnimationProgress()
-      const nextMode = progress >= 0.62 ? 'room' : 'new'
-
-      if (!(homeShell instanceof HTMLElement) || progress <= 0) {
-        setPreviewMode('new')
-        resetFixedWindowState()
-        return
-      }
-
-      const rect = interpolateWindowRect(progress)
-      if (rect != null) {
-        homeShell.classList.add('is-window-fixed')
-        setFixedWindowRect(rect)
-        setNarrativeProgress(progress)
-      }
-
-      setPreviewMode(nextMode)
-      scheduleAdapterBadgePositions()
+      orbitFocusFrame = window.requestAnimationFrame(animateOrbitFocus)
     }
 
-    const scheduleScrollNarrative = () => {
-      if (scrollNarrativeFrame != null) {
-        return
+    const setOrbitFocus = (kind: OrbitFocusKind | undefined) => {
+      orbitFocusKind = kind
+      orbitFocusTarget = kind == null ? 0 : 1
+      orbitFocusLastTime = performance.now()
+      homeShell?.classList.toggle('is-orbit-copy-hidden', kind != null)
+      if (kind != null) {
+        productStage?.classList.remove('is-orbit-preview-hidden')
+        mountPwaPreviewFrame()
+        sendHomepagePreviewConfig()
       }
-
-      scrollNarrativeFrame = window.requestAnimationFrame(syncScrollNarrative)
+      renderWindowTagline(getHomepagePreviewLocale())
+      if (orbitFocusFrame == null) {
+        orbitFocusFrame = window.requestAnimationFrame(animateOrbitFocus)
+      }
     }
 
-    const clearScrollSnapTimers = () => {
-      if (scrollSnapTimer != null) {
-        window.clearTimeout(scrollSnapTimer)
-        scrollSnapTimer = undefined
+    const resetOrbitFocus = () => {
+      if (orbitFocusFrame != null) {
+        window.cancelAnimationFrame(orbitFocusFrame)
+        orbitFocusFrame = undefined
       }
-      if (scrollSnapFrame != null) {
-        window.cancelAnimationFrame(scrollSnapFrame)
-        scrollSnapFrame = undefined
-      }
-      isAutoSnapping = false
+      orbitFocusKind = undefined
+      orbitFocusTarget = 0
+      orbitFocusProgress = 0
+      orbitFocusVelocity = 0
+      orbitFocusLastTime = performance.now()
+      homeShell?.classList.remove('is-orbit-copy-hidden')
+      homeShell?.classList.remove('is-orbit-focus-active')
+      homeShell?.style.removeProperty('--orbit-pane-width')
+      document.querySelector<HTMLElement>('.brand-gravity-scene')
+        ?.dispatchEvent(new CustomEvent('oneworks:brand-focus-progress', {
+          detail: { scale: 1, shiftX: 0, shiftY: 0 }
+        }))
+      renderWindowTagline(getHomepagePreviewLocale())
     }
 
-    const getRoomPageScrollY = () => {
-      if (!(roomSection instanceof HTMLElement)) {
-        return getRoomModeThreshold()
-      }
-
-      return Math.max(1, roomSection.offsetTop)
+    const handleOrbitSelect = (event: Event) => {
+      if (!desktopPreviewQuery.matches || window.scrollY >= 8) return
+      const kind = (event as CustomEvent<{ kind?: OrbitFocusKind }>).detail?.kind
+      if (kind == null) return
+      setOrbitFocus(orbitFocusKind === kind ? undefined : kind)
     }
 
-    const getSidebarPageScrollY = () => {
-      if (!(sidebarSection instanceof HTMLElement)) {
-        return getRoomPageScrollY()
-      }
-
-      return Math.max(getRoomPageScrollY() + 1, sidebarSection.offsetTop)
+    const handleHeroPointerDown = (event: PointerEvent) => {
+      if (orbitFocusKind == null || !(event.target instanceof Element)) return
+      if (event.target.closest('.orbit-hit, .product-stage') != null) return
+      setOrbitFocus(undefined)
     }
 
-    const getSnapPages = (): Array<{ page: SnapPage; y: number }> => {
-      return [
-        { page: 'new', y: 0 },
-        { page: 'room', y: getRoomPageScrollY() },
-        { page: 'sidebar', y: getSidebarPageScrollY() }
-      ]
-    }
-
-    const getSnapPageScrollY = (page: SnapPage) => {
-      if (page === 'sidebar') {
-        return getSidebarPageScrollY()
-      }
-
-      if (page === 'room') {
-        return getRoomPageScrollY()
-      }
-
-      return 0
-    }
-
-    const getPageSnapProgress = (fromY: number, toY: number) => {
-      return clamp01((window.scrollY - fromY) / Math.max(1, toY - fromY))
-    }
-
-    const getSnapTargetPage = (): SnapPage | undefined => {
-      const pages = getSnapPages()
-      const activeIndex = pages.findIndex((page, index) => {
-        const nextPage = pages[index + 1]
-        return nextPage != null && window.scrollY > page.y &&
-          window.scrollY < nextPage.y
-      })
-      if (activeIndex < 0) {
-        return undefined
-      }
-
-      const currentPage = pages[activeIndex]
-      const nextPage = pages[activeIndex + 1]
-      if (nextPage == null) {
-        return undefined
-      }
-
-      const progress = getPageSnapProgress(currentPage.y, nextPage.y)
-      if (scrollDirection === 'down') {
-        return progress >= 0.2 ? nextPage.page : currentPage.page
-      }
-      if (scrollDirection === 'up') {
-        return progress <= 0.8 ? currentPage.page : nextPage.page
-      }
-
-      return progress >= 0.5 ? nextPage.page : currentPage.page
-    }
-
-    const snapToPage = (page: SnapPage) => {
-      clearScrollSnapTimers()
-      isAutoSnapping = true
-      const fromY = window.scrollY
-      const toY = getSnapPageScrollY(page)
-      const distance = Math.abs(toY - fromY)
-      const duration = Math.min(1320, Math.max(1040, distance * 1.85))
-      const startedAt = performance.now()
-
-      if (distance < 1) {
-        isAutoSnapping = false
-        scheduleScrollNarrative()
-        return
-      }
-
-      const animateSnap = (time: number) => {
-        const progress = clamp01((time - startedAt) / duration)
-        const easedProgress = 0.5 - Math.cos(Math.PI * progress) / 2
-        window.scrollTo(0, fromY + (toY - fromY) * easedProgress)
-        if (scrollNarrativeFrame != null) {
-          window.cancelAnimationFrame(scrollNarrativeFrame)
-          scrollNarrativeFrame = undefined
-        }
-        syncScrollNarrative()
-
-        if (progress < 1) {
-          scrollSnapFrame = window.requestAnimationFrame(animateSnap)
-          return
-        }
-
-        scrollSnapFrame = undefined
-        isAutoSnapping = false
-        lastScrollY = window.scrollY
-        scheduleScrollNarrative()
-      }
-
-      scrollSnapFrame = window.requestAnimationFrame(animateSnap)
-    }
-
-    const schedulePageSnap = () => {
-      if (isAutoSnapping) {
-        scheduleScrollNarrative()
-        return
-      }
-
-      if (scrollSnapTimer != null) {
-        window.clearTimeout(scrollSnapTimer)
-      }
-
-      scrollSnapTimer = window.setTimeout(() => {
-        scrollSnapTimer = undefined
-        const targetPage = getSnapTargetPage()
-        if (targetPage == null) {
-          return
-        }
-
-        snapToPage(targetPage)
-      }, 50)
-    }
-
-    const handleScroll = () => {
-      if (!desktopPreviewQuery.matches) {
-        return
-      }
-      const nextScrollY = window.scrollY
-      if (Math.abs(nextScrollY - lastScrollY) > 1) {
-        scrollDirection = nextScrollY > lastScrollY ? 'down' : 'up'
-        lastScrollY = nextScrollY
-      }
-
-      scheduleScrollNarrative()
-      schedulePageSnap()
-    }
-
-    const handleScrollSnapInterrupt = () => {
-      if (!isAutoSnapping) {
-        return
-      }
-
-      clearScrollSnapTimers()
-      scheduleScrollNarrative()
-      schedulePageSnap()
+    const handleViewportScroll = () => {
+      homeShell?.style.setProperty(
+        '--hero-scroll-offset',
+        `${window.scrollY.toFixed(2)}px`
+      )
     }
 
     const clampDragOffset = (x: number, y: number) => {
@@ -2070,9 +1600,6 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
           '--pwa-preview-scale',
           `${width / sourceWidth}`
         )
-        if (previewMode === 'new' && window.scrollY < 8) {
-          rememberPreviewWindowAnchorRect()
-        }
         scheduleAdapterBadgePositions()
       }
 
@@ -2139,17 +1666,14 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
     const syncPwaPreviewAvailability = () => {
       if (desktopPreviewQuery.matches) {
         mountDecorativeIcons()
-        mountPwaPreviewFrame()
-        scheduleScrollNarrative()
         return
       }
 
       unmountDecorativeIcons()
       unmountPwaPreviewFrame()
-      clearScrollSnapTimers()
-      homeShell?.classList.remove('is-sidebar-showcase-mode')
-      setPreviewMode('new')
+      resetOrbitFocus()
       resetFixedWindowState()
+      productStage?.setAttribute('inert', '')
     }
 
     syncPwaPreviewAvailability()
@@ -2158,16 +1682,14 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
       sendHomepagePreviewConfig()
     })
     window.setTimeout(sendHomepagePreviewConfig, 0)
-    window.setTimeout(syncScrollNarrative, 0)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('touchstart', handleScrollSnapInterrupt, {
-      passive: true
-    })
-    window.addEventListener('wheel', handleScrollSnapInterrupt, {
-      passive: true
-    })
+    document.addEventListener('oneworks:brand-orbit-select', handleOrbitSelect)
+    document.querySelector('.hero')?.addEventListener(
+      'pointerdown',
+      handleHeroPointerDown as EventListener
+    )
     window.addEventListener('resize', scheduleAdapterBadgePositions)
-    window.addEventListener('resize', scheduleScrollNarrative)
+    window.addEventListener('scroll', handleViewportScroll, { passive: true })
+    handleViewportScroll()
     systemDarkQuery.addEventListener('change', handleColorSchemeChange)
     desktopPreviewQuery.addEventListener(
       'change',
@@ -2195,18 +1717,23 @@ const pwaSidebarPreviewUrl = import.meta.env.DEV
         handleLanguageOutsidePointerDown
       )
       document.removeEventListener('keydown', handleLanguageKeyDown)
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('touchstart', handleScrollSnapInterrupt)
-      window.removeEventListener('wheel', handleScrollSnapInterrupt)
+      document.removeEventListener(
+        'oneworks:brand-orbit-select',
+        handleOrbitSelect
+      )
+      document.querySelector('.hero')?.removeEventListener(
+        'pointerdown',
+        handleHeroPointerDown as EventListener
+      )
       window.removeEventListener('resize', scheduleAdapterBadgePositions)
-      window.removeEventListener('resize', scheduleScrollNarrative)
+      window.removeEventListener('scroll', handleViewportScroll)
       if (adapterPositionFrame != null) {
         window.cancelAnimationFrame(adapterPositionFrame)
       }
-      if (scrollNarrativeFrame != null) {
-        window.cancelAnimationFrame(scrollNarrativeFrame)
+      if (orbitFocusFrame != null) {
+        window.cancelAnimationFrame(orbitFocusFrame)
       }
-      clearScrollSnapTimers()
+      resetOrbitFocus()
       resetFixedWindowState()
       previewResizeObserver?.disconnect()
       for (const cleanup of cleanupDragListeners) cleanup()
