@@ -1,7 +1,5 @@
 ---
-import { createMobiusSvg } from '@oneworks/icon/svg'
-
-import { homepageBrandIconTheme } from '../utils/brand-icon-theme'
+import footerMarkDark from '../assets/brand/favicon-linear-dark-transparent.png'
 
 type Props = {
   docsUrl?: string
@@ -19,14 +17,6 @@ const supportEmail = 'support@oneworks.cloud'
 const supportUrl = `mailto:${supportEmail}`
 const pwaUrl = new URL('/pwa/', Astro.site ?? 'https://oneworks.cloud/').toString()
 const i18nAttrs = (key: string) => i18n ? { 'data-i18n': key } : {}
-const footerMarkDark = createMobiusSvg({
-  mode: 'dark',
-  noBackground: true,
-  shadow: false,
-  size: 96,
-  theme: homepageBrandIconTheme,
-  title: 'One Works mark'
-}).replace(/^<\?xml[^>]*>\s*/, '')
 ---
 
 <footer class="site-footer" aria-label="One Works footer">
@@ -39,11 +29,14 @@ const footerMarkDark = createMobiusSvg({
         rel="noreferrer"
         aria-label="One Works home"
       >
-        <span
+        <img
           class="footer-brand-mark"
+          src={footerMarkDark.src}
+          alt=""
           aria-hidden="true"
-          set:html={footerMarkDark}
-        ></span>
+          width="46"
+          height="46"
+        />
         <span>One Works</span>
       </a>
       <p {...i18nAttrs('footer.tagline')}>一个应用，调度你的 AI 编程伙伴。</p>
