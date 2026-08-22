@@ -275,3 +275,13 @@ body {
     display: none !important;
   }
 }
+
+@media (max-width: 767px) {
+  .VPNav {
+    backdrop-filter: none;
+  }
+
+  .VPNavBar {
+    backdrop-filter: blur(18px) saturate(150%);
+  }
+}
