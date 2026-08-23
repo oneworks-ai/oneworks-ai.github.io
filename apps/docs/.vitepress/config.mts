@@ -23,6 +23,7 @@ const usageSidebar: DefaultTheme.SidebarItem[] = [
     collapsed: false,
     items: [
       { link: '/usage/install', text: '安装与准备' },
+      { link: '/usage/avatar', text: 'Avatar 编辑器' },
       { link: '/usage/workspaces', text: 'Workspace 调度' },
       { link: '/usage/examples', text: '示例目录' }
     ],
@@ -114,6 +115,7 @@ const englishUsageSidebar: DefaultTheme.SidebarItem[] = [
     collapsed: false,
     items: [
       { link: '/en/usage/install', text: 'Install and Prepare' },
+      { link: '/en/usage/avatar', text: 'Avatar Editor' },
       { link: '/en/usage/workspaces', text: 'Workspace Scheduling' },
       { link: '/en/usage/examples', text: 'Examples Directory' }
     ],
@@ -244,9 +246,10 @@ export default defineConfig({
         logoLink: homepageUrl,
         nav: [
           {
-            activeMatch: '/en/usage/(install|workspaces|examples|desktop|web|pwa|vscode-extension)',
+            activeMatch: '/en/usage/(install|avatar|workspaces|examples|desktop|web|pwa|vscode-extension)',
             items: [
               { link: '/en/usage/install', text: 'Install and Prepare' },
+              { link: '/en/usage/avatar', text: 'Avatar Editor' },
               { link: '/en/usage/workspaces', text: 'Workspace Scheduling' },
               { link: '/en/usage/examples', text: 'Examples Directory' },
               { link: '/en/usage/desktop', text: 'Desktop App' },
@@ -347,9 +350,10 @@ export default defineConfig({
     logoLink: homepageUrl,
     nav: [
       {
-        activeMatch: '/usage/(install|workspaces|examples|desktop|web|pwa|vscode-extension)',
+        activeMatch: '/usage/(install|avatar|workspaces|examples|desktop|web|pwa|vscode-extension)',
         items: [
           { link: '/usage/install', text: '安装与准备' },
+          { link: '/usage/avatar', text: 'Avatar 编辑器' },
           { link: '/usage/workspaces', text: 'Workspace 调度' },
           { link: '/usage/examples', text: '示例目录' },
           { link: '/usage/desktop', text: '桌面应用' },
